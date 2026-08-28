@@ -831,9 +831,9 @@
   }
 
   /* ---------------------------------------------------------
-     8. 完成画面（商品ご提案シート）
+     8. 完成画面（商品ご提案シート／横A4詳細資料）
   --------------------------------------------------------- */
-  function renderResult() {
+  function computeDerived() {
     const skills = [...state.s5_skills.filter((s) => s !== "その他"),
       ...(state.s5_skills.includes("その他") && state.s5_other ? [state.s5_other] : [])];
 
@@ -854,6 +854,108 @@
     ].filter(Boolean).join("\n\n");
 
     const productName = state.s9_name || "（仮）はじめの一品";
+
+    return { skills, extras, styleLabel, countLabel, durationLabel, priceDisplay, whyText, productName };
+  }
+
+  /* ---------- 横A4・詳細資料（デッキ）の生成 ---------- */
+  function statementPageInner(eyebrow, label, value) {
+    return `
+      <p class="sheet__eyebrow">${esc(eyebrow)}</p>
+      <div class="deck-page__center">
+        <div>
+          <p class="sheet__label" style="text-align:center;">${esc(label)}</p>
+          <p class="deck-page__statement">${esc(value)}</p>
+        </div>
+      </div>`;
+  }
+
+  function buildDeckPages() {
+    const d = computeDerived();
+    const tpl = state.sheetTemplate || "natural";
+    const pages = [];
+
+    pages.push({
+      extraClass: "deck-page--cover",
+      html: `
+        <div class="deck-page__cover-inner">
+          <p class="sheet__eyebrow">MY FIRST SOUL PRODUCT</p>
+          ${state.photo ? `<img class="sheet__photo" style="width:120px;height:120px;margin:0 auto 22px;" src="${state.photo}" alt="">` : ""}
+          <h1 class="sheet__name">${esc(d.productName)}</h1>
+          <p class="sheet__name-sub">SOUL PRODUCT PROPOSAL SHEET</p>
+        </div>`,
+    });
+
+    if (state.s1_who) pages.push({ html: statementPageInner("WHO ｜ 対象者", "この商品を届けたい人", state.s1_who) });
+    if (state.s2_now) pages.push({ html: statementPageInner("NOW ｜ 現在地", "今、一番困っていること", state.s2_now) });
+    if (state.s3_future) pages.push({ html: statementPageInner("FUTURE ｜ 目指す未来", "受け終わったときの未来", state.s3_future) });
+    if (state.s4_1) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ①", "私自身も昔、こんなことで悩んでいました", state.s4_1) });
+    if (state.s4_2) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ②", "でも、こんな経験・変化・学びがありました", state.s4_2) });
+    if (state.s4_3) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ③", "だから今、こんな人に届けたい", state.s4_3) });
+
+    pages.push({
+      html: `
+        <p class="sheet__eyebrow">WHAT I OFFER ｜ 提供するもの</p>
+        <h2 class="deck-page__heading">使用するスキル・経験　／　サポート内容</h2>
+        <div class="deck-page__cols">
+          <div>
+            <p class="sheet__label">✨ 使用するスキル・経験</p>
+            <div class="sheet__tags">${d.skills.map((s) => `<span class="sheet__tag">${esc(s)}</span>`).join("") || "-"}</div>
+          </div>
+          <div>
+            <p class="sheet__label">🤝 サポート内容</p>
+            <div class="sheet__tags">${d.extras.map((s) => `<span class="sheet__tag">${esc(s)}</span>`).join("") || "-"}</div>
+          </div>
+        </div>`,
+    });
+
+    pages.push({
+      html: `
+        <p class="sheet__eyebrow">STRUCTURE ｜ 提供の形</p>
+        <h2 class="deck-page__heading">提供スタイル・回数・価格</h2>
+        <div class="sheet__grid">
+          <div class="sheet__stat"><div class="sheet__stat-label">提供スタイル</div><div class="sheet__stat-value">${esc(d.styleLabel) || "-"}</div></div>
+          <div class="sheet__stat"><div class="sheet__stat-label">回数</div><div class="sheet__stat-value">${esc(d.countLabel) || "-"}</div></div>
+          <div class="sheet__stat"><div class="sheet__stat-label">1回の時間</div><div class="sheet__stat-value">${esc(d.durationLabel) || "-"}</div></div>
+          <div class="sheet__stat"><div class="sheet__stat-label">合計セッション</div><div class="sheet__stat-value">${esc(d.countLabel) || "-"}</div></div>
+        </div>
+        <div class="sheet__price"><div class="sheet__price-label">PRICE</div><div class="sheet__price-value">${d.priceDisplay}</div></div>`,
+    });
+
+    pages.push({
+      extraClass: "deck-page--cover",
+      html: `
+        <div class="deck-page__cover-inner">
+          <p class="sheet__eyebrow">THANK YOU</p>
+          <h2 class="deck-page__statement">まず、<br>ひとりに届けよう。</h2>
+          <p class="sheet__name-sub" style="margin-top:18px;">${esc(d.productName)} ｜ ここらぼ 魂商品作成キット</p>
+        </div>`,
+    });
+
+    const total = pages.length;
+    return {
+      total,
+      html: pages.map((p, i) => `
+        <div class="a4-shell">
+          <div class="a4-page sheet sheet--${tpl} ${p.extraClass || ""}" data-page="${i + 1}">
+            ${p.html}
+            <p class="a4-page__pageno">${i + 1} / ${total}</p>
+          </div>
+        </div>`).join(""),
+    };
+  }
+
+  function scaleDeckPages() {
+    qsa(".a4-shell").forEach((shell) => {
+      const page = shell.querySelector(".a4-page");
+      if (!page) return;
+      const scale = shell.clientWidth / 1122;
+      page.style.transform = `scale(${scale})`;
+    });
+  }
+
+  function renderResult() {
+    const { skills, extras, styleLabel, countLabel, durationLabel, priceDisplay, whyText, productName } = computeDerived();
 
     const existingChecklist = state.persona && state.persona !== "new" ? `
       <div class="card checklist-card">
@@ -977,11 +1079,32 @@
       <button class="btn btn--ghost" id="editBtn" type="button">← 入力内容を修正する</button>
     </div>
 
+    ${renderDeckSection()}
+
     ${existingChecklist}
 
     <div class="restart-row"><button id="restartBtn" type="button">最初からやり直す</button></div>
     `;
   }
+
+  function renderDeckSection() {
+    const { total, html } = buildDeckPages();
+    return `
+    <div class="card deck-intro">
+      <span class="eyebrow">詳細版｜横A4</span>
+      <h2 class="step-title deck-intro__count" style="font-size:19px;">全${total}ページの詳細資料を見る</h2>
+      <p class="step-desc">同じ内容を、商談やSNSでも使いやすい横A4の資料としても書き出せます。</p>
+      <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">詳細資料を表示する</button>
+    </div>
+    <div id="deckSection" hidden>
+      <div class="deck" id="deckPrintArea">${html}</div>
+      <div class="card result-actions">
+        <button class="btn btn--primary" id="printDeckBtn" type="button">詳細資料を印刷 / PDFで保存する（横A4・全${total}ページ）</button>
+      </div>
+    </div>`;
+  }
+
+  let deckResizeBound = false;
 
   function finalChecklistLabels() {
     return [
@@ -1020,6 +1143,25 @@
     });
 
     qs("#printBtn").addEventListener("click", () => window.print());
+
+    qs("#toggleDeckBtn").addEventListener("click", () => {
+      const section = qs("#deckSection");
+      const btn = qs("#toggleDeckBtn");
+      section.hidden = !section.hidden;
+      btn.textContent = section.hidden ? "詳細資料を表示する" : "詳細資料を閉じる";
+      if (!section.hidden) requestAnimationFrame(scaleDeckPages);
+    });
+
+    qs("#printDeckBtn").addEventListener("click", () => {
+      document.body.classList.add("print-mode-deck");
+      window.print();
+    });
+
+    if (!deckResizeBound) {
+      window.addEventListener("resize", scaleDeckPages);
+      window.addEventListener("afterprint", () => document.body.classList.remove("print-mode-deck"));
+      deckResizeBound = true;
+    }
 
     qs("#downloadImgBtn").addEventListener("click", async () => {
       if (typeof window.html2canvas !== "function") {

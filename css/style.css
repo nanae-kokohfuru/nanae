@@ -754,6 +754,76 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   box-shadow: var(--shadow-sm);
 }
 
+/* ================= 詳細版：横A4資料（デッキ） ================= */
+
+.deck-intro{ margin-top: 22px; }
+.deck-intro__count{ font-size: 15px; }
+
+.deck{
+  display:flex; flex-direction:column; gap: 22px;
+  margin: 18px 0;
+}
+
+.a4-shell{
+  width: 100%;
+  aspect-ratio: 1122 / 794;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line-soft);
+  background: var(--card);
+  position: relative;
+}
+
+.a4-page{
+  width: 1122px;
+  height: 794px;
+  box-sizing: border-box;
+  padding: 68px 84px;
+  border-radius: 0;
+  box-shadow: none;
+  display:flex;
+  flex-direction: column;
+  transform-origin: top left;
+}
+
+.a4-page.deck-page--cover{ align-items:center; justify-content:center; }
+
+.a4-page.sheet::before{ width: 420px; height: 420px; top: -160px; right: -140px; }
+.a4-page.sheet::after{ width: 340px; height: 340px; bottom: -140px; left: -120px; }
+
+.a4-page .sheet__eyebrow{ font-size: 15px; letter-spacing: 0.24em; margin-bottom: 10px; }
+.a4-page .sheet__label{ font-size: 15px; margin-bottom: 10px; }
+.a4-page .sheet__value{ font-size: 22px; line-height: 1.75; }
+.a4-page .sheet__name{ font-size: 44px; }
+.a4-page .sheet__name-sub{ font-size: 13px; }
+.a4-page .sheet__tag{ font-size: 16px; padding: 9px 18px; }
+.a4-page .sheet__divider{ margin: 26px 0; }
+.a4-page .sheet__grid{ gap: 22px; margin: 24px 0; }
+.a4-page .sheet__stat{ padding: 16px 18px; }
+.a4-page .sheet__stat-label{ font-size: 13px; }
+.a4-page .sheet__stat-value{ font-size: 21px; }
+.a4-page .sheet__price{ padding: 24px; margin: 22px 0 0; }
+.a4-page .sheet__price-value{ font-size: 38px; }
+
+.deck-page__cover-inner{ text-align:center; }
+.deck-page__heading{ font-family: var(--font-serif); font-size: 32px; text-align:center; margin: 4px 0 34px; color: var(--ink); }
+.deck-page__center{ flex:1; display:flex; align-items:center; justify-content:center; }
+.deck-page__statement{
+  font-family: var(--font-serif); font-size: 38px; line-height: 1.8; text-align:center;
+  color: var(--ink); white-space: pre-line; max-width: 840px; margin: 14px auto 0;
+}
+.deck-page__cols{ display:grid; grid-template-columns: 1fr 1fr; gap: 54px; flex:1; align-content:start; margin-top: 8px; }
+
+.sheet--simple .deck-page__heading, .sheet--simple .deck-page__statement{ color:#1F1F1F; font-family: var(--font-sans); font-weight: 700; }
+.sheet--elegant .deck-page__heading, .sheet--elegant .deck-page__statement{ color:#F3E4C6; }
+
+.a4-page__pageno{
+  position:absolute; right:0; bottom:0;
+  font-size: 13px; letter-spacing: 0.15em; color: var(--ink-faint);
+}
+.sheet--elegant .a4-page__pageno{ color:#6E522A; }
+
 /* photo upload control */
 .photo-upload{
   display:flex; align-items:center; gap: 14px;
@@ -871,9 +941,12 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 /* ================= 印刷対応 ================= */
 
+@page deckpage{ size: A4 landscape; margin: 0; }
+.a4-page{ page: deckpage; }
+
 @media print{
   body *{ visibility: hidden; }
-  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay, .template-switch{ display:none !important; }
+  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay, .template-switch, .deck-intro{ display:none !important; }
   #printArea, #printArea *{ visibility: visible; }
   #printArea{
     position: absolute; left:0; top:0; width:100%;
@@ -881,6 +954,19 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   }
   .sheet{ box-shadow:none; border:none; }
   @page{ size: A4; margin: 14mm; }
+
+  /* 詳細版（横A4・全ページ）印刷モード */
+  body.print-mode-deck #printArea{ display:none !important; }
+  body.print-mode-deck #deckPrintArea, body.print-mode-deck #deckPrintArea *{ visibility: visible; }
+  body.print-mode-deck #deckPrintArea{ position: absolute; left:0; top:0; width:100%; }
+  body.print-mode-deck .deck{ gap:0; margin:0; }
+  body.print-mode-deck .a4-shell{
+    width: 297mm; height: 210mm; aspect-ratio: auto; overflow: visible;
+    box-shadow: none; border: none; border-radius: 0;
+    page-break-after: always; break-after: page;
+  }
+  body.print-mode-deck .a4-shell:last-child{ page-break-after: auto; break-after: auto; }
+  body.print-mode-deck .a4-page{ transform: none !important; }
 }
 
 /* ================= レスポンシブ ================= */
