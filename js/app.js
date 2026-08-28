@@ -9,7 +9,7 @@
      0. 定数・状態管理
   --------------------------------------------------------- */
   const STORAGE_KEY = "soulProductKit_v1";
-  const TOTAL_STEPS = 9;
+  const TOTAL_STEPS = 10;
 
   const defaultState = () => ({
     currentStep: 0, // 0 = START, 1-9 = STEP, 10 = 完成
@@ -38,6 +38,8 @@
     s8_price: "",
 
     s9_name: "",
+
+    sheetTemplate: "",
 
     photo: "",
 
@@ -298,7 +300,8 @@
     if (!state.s7_count) return 7;
     if (!state.s8_range && !state.s8_price) return 8;
     if (!state.s9_name) return 9;
-    return 10;
+    if (!state.sheetTemplate) return 10;
+    return 11;
   }
 
   /* ---------------------------------------------------------
@@ -323,7 +326,7 @@
   function renderStep(n) {
     const renderers = {
       1: renderStep1, 2: renderStep2, 3: renderStep3, 4: renderStep4, 5: renderStep5,
-      6: renderStep6, 7: renderStep7, 8: renderStep8, 9: renderStep9,
+      6: renderStep6, 7: renderStep7, 8: renderStep8, 9: renderStep9, 10: renderStep10,
     };
     return renderers[n]();
   }
@@ -338,7 +341,7 @@
 
     const binders = {
       1: bindStep1, 2: bindStep2, 3: bindStep3, 4: bindStep4, 5: bindStep5,
-      6: bindStep6, 7: bindStep7, 8: bindStep8, 9: bindStep9,
+      6: bindStep6, 7: bindStep7, 8: bindStep8, 9: bindStep9, 10: bindStep10,
     };
     binders[n]();
   }
@@ -766,6 +769,45 @@
     });
   }
 
+  /* ---------- STEP 10 ---------- */
+  const SHEET_TEMPLATES = [
+    { id: "natural", swatchClass: "template-card__swatch--natural", swatchLabel: "Aa",
+      name: "ナチュラル", badge: "おすすめ", desc: "あたたかく、親しみやすい印象に" },
+    { id: "simple", swatchClass: "template-card__swatch--simple", swatchLabel: "Aa",
+      name: "シンプル", badge: "", desc: "余白を活かした、洗練されたミニマル印象に" },
+    { id: "elegant", swatchClass: "template-card__swatch--elegant", swatchLabel: "Aa",
+      name: "エレガント", badge: "", desc: "ダーク×ゴールドで、特別な一品感を" },
+  ];
+  function renderStep10() {
+    if (!state.sheetTemplate) state.sheetTemplate = "natural"; // 初回訪問時のおすすめデフォルト
+    const cards = SHEET_TEMPLATES.map((t, i) => `
+      <label class="template-card" for="tpl_${t.id}">
+        <input type="radio" name="sheetTemplate" id="tpl_${t.id}" value="${t.id}" ${state.sheetTemplate === t.id ? "checked" : ""}>
+        <div class="template-card__swatch ${t.swatchClass}">${t.swatchLabel}</div>
+        <div class="template-card__body">
+          <p class="template-card__name">${esc(t.name)} ${t.badge ? `<span class="template-card__badge">${esc(t.badge)}</span>` : ""}</p>
+          <p class="template-card__desc">${esc(t.desc)}</p>
+        </div>
+      </label>`).join("");
+
+    return stepShell({
+      stepNo: 10,
+      eyebrow: "STEP 10 ｜資料のテイストを選ぶ",
+      title: "最後に、資料のテイストを選ぼう",
+      bodyHtml: `
+        <p class="step-desc">中身はここまで入力した内容そのまま。見せ方だけ選べます。<br>あとからいつでも変更できるので、直感でOK。</p>
+        <div class="template-grid">${cards}</div>
+        <p class="hint">迷ったら「ナチュラル」でOK。あなたらしさは中身にちゃんと出るから。</p>
+      `,
+    });
+  }
+  function bindStep10() {
+    qsa('input[name="sheetTemplate"]').forEach((r) => {
+      r.addEventListener("change", () => { state.sheetTemplate = r.value; saveState(); });
+    });
+    qs("#nextBtn").addEventListener("click", () => goNext(10));
+  }
+
   /* ---------- 共通：次へ進む/バリデーション ---------- */
   function requireText(val, warnId, msg) {
     if (!val || !val.trim()) {
@@ -783,7 +825,7 @@
     el.classList.add("show");
   }
   function goNext(n) {
-    state.currentStep = n === TOTAL_STEPS ? 10 : n + 1;
+    state.currentStep = n === TOTAL_STEPS ? TOTAL_STEPS + 1 : n + 1;
     saveState();
     render();
   }
@@ -852,8 +894,12 @@
       </div>
     </div>
 
+    <div class="template-switch" role="group" aria-label="資料のテイスト切り替え">
+      ${SHEET_TEMPLATES.map((t) => `<button type="button" class="template-switch__btn${state.sheetTemplate === t.id ? " is-active" : ""}" data-template-switch="${t.id}">${esc(t.name)}</button>`).join("")}
+    </div>
+
     <div class="sheet-wrap" id="printArea">
-      <div class="sheet" id="sheetCapture">
+      <div class="sheet sheet--${esc(state.sheetTemplate || "natural")}" id="sheetCapture">
         <div class="sheet__inner">
           <p class="sheet__eyebrow">MY FIRST SOUL PRODUCT</p>
           <p class="sheet__title">私の、はじめの一品</p>
@@ -963,6 +1009,14 @@
         render();
       };
       reader.readAsDataURL(file);
+    });
+
+    qsa("[data-template-switch]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.sheetTemplate = btn.dataset.templateSwitch;
+        saveState();
+        render();
+      });
     });
 
     qs("#printBtn").addEventListener("click", () => window.print());

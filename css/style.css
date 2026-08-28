@@ -675,6 +675,85 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   letter-spacing: 0.1em;
 }
 
+/* ================= 資料テイスト選択カード（STEP10） ================= */
+
+.template-grid{ display:grid; gap: 14px; }
+
+.template-card{
+  display:flex; align-items:center; gap: 14px;
+  padding: 14px; border: 1.5px solid var(--line); border-radius: var(--radius-md);
+  background: var(--card-soft); cursor: pointer;
+  transition: border-color .18s, background .18s, transform .12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.template-card:active{ transform: scale(0.99); }
+.template-card input{ display:none; }
+.template-card:has(input:checked){ border-color: var(--gold); background: #FFF9F1; box-shadow: var(--shadow-sm); }
+
+.template-card__swatch{
+  width: 64px; height: 64px; border-radius: 14px; flex: none;
+  display:flex; align-items:center; justify-content:center;
+  font-family: var(--font-serif); font-size: 20px; font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+.template-card__swatch--natural{ background: linear-gradient(160deg, #FFFDF9, #FBF1E4 60%, #F6E6D6); color: #A97A4C; }
+.template-card__swatch--simple{ background: #FAFAF8; color: #2B2B2B; font-family: var(--font-sans); font-weight: 900; }
+.template-card__swatch--elegant{ background: linear-gradient(160deg, #3B1220, #241017); color: #D8B876; }
+
+.template-card__body{ flex:1; }
+.template-card__name{ font-size: 15px; font-weight: 700; color: var(--ink); display:flex; align-items:center; gap:8px; }
+.template-card__badge{ font-size: 10.5px; font-weight: 700; color: var(--gold-deep); background: var(--gold-pale); padding: 2px 9px; border-radius: 999px; }
+.template-card__desc{ font-size: 12.5px; color: var(--ink-faint); margin-top: 3px; }
+
+/* ---- 資料テイスト：シンプル ---- */
+.sheet--simple{ background: #FAFAF8; border: 1px solid #E2DDD3; }
+.sheet--simple::before, .sheet--simple::after{ display:none; }
+.sheet--simple .sheet__eyebrow{ color: #2B2B2B; letter-spacing: 0.28em; }
+.sheet--simple .sheet__title{ color: #8A8375; }
+.sheet--simple .sheet__name{ font-family: var(--font-sans); color: #1F1F1F; font-weight: 900; }
+.sheet--simple .sheet__divider{ border-top: 1px solid #E2DDD3; opacity: 1; }
+.sheet--simple .sheet__label{ color: #1F1F1F; letter-spacing: 0.12em; }
+.sheet--simple .sheet__value{ color: #3A3A3A; }
+.sheet--simple .sheet__tag{ background: #fff; color: #1F1F1F; border: 1px solid #D8D2C6; }
+.sheet--simple .sheet__stat{ background: #fff; border: 1px solid #E2DDD3; }
+.sheet--simple .sheet__stat-value{ color: #1F1F1F; }
+.sheet--simple .sheet__price{ background: #1F1F1F; border-radius: 10px; }
+.sheet--simple .sheet__footer{ color: #B4AEA2; }
+
+/* ---- 資料テイスト：エレガント ---- */
+.sheet--elegant{ background: linear-gradient(160deg, #3B1220, #2A1019 60%, #1E0C13); border: 1px solid #8C6A34; }
+.sheet--elegant::before{ background: radial-gradient(circle, rgba(201,164,106,0.22), transparent 70%); }
+.sheet--elegant::after{ background: radial-gradient(circle, rgba(201,164,106,0.14), transparent 70%); }
+.sheet--elegant .sheet__eyebrow{ color: #D8B876; letter-spacing: 0.28em; }
+.sheet--elegant .sheet__title{ color: #B79C74; }
+.sheet--elegant .sheet__name{ color: #F3E4C6; }
+.sheet--elegant .sheet__name-sub{ color: #9C8562; }
+.sheet--elegant .sheet__divider{ border-top: 1px solid #8C6A34; opacity: .8; }
+.sheet--elegant .sheet__label{ color: #D8B876; }
+.sheet--elegant .sheet__value{ color: #F0E6D4; }
+.sheet--elegant .sheet__tag{ background: transparent; border: 1px solid #8C6A34; color: #D8B876; }
+.sheet--elegant .sheet__stat{ background: rgba(255,255,255,0.06); border: 1px solid #6E522A; }
+.sheet--elegant .sheet__stat-label{ color: #9C8562; }
+.sheet--elegant .sheet__stat-value{ color: #F3E4C6; }
+.sheet--elegant .sheet__price{ background: linear-gradient(135deg, #D8B876, #8C6A34); color: #241017; }
+.sheet--elegant .sheet__footer{ color: #6E522A; }
+
+/* ---- 完成画面：資料テイストの即時切り替え ---- */
+.template-switch{
+  display:flex; justify-content:center; gap: 8px;
+  margin: 4px 0 18px;
+}
+.template-switch__btn{
+  appearance:none; border: 1.5px solid var(--line); background: var(--card);
+  color: var(--ink-soft); font-weight: 700; font-size: 13px;
+  padding: 8px 18px; border-radius: 999px; cursor:pointer;
+  transition: all .15s;
+}
+.template-switch__btn.is-active{
+  border-color: var(--gold); background: var(--gold); color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
 /* photo upload control */
 .photo-upload{
   display:flex; align-items:center; gap: 14px;
@@ -794,7 +873,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 @media print{
   body *{ visibility: hidden; }
-  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay{ display:none !important; }
+  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay, .template-switch{ display:none !important; }
   #printArea, #printArea *{ visibility: visible; }
   #printArea{
     position: absolute; left:0; top:0; width:100%;
