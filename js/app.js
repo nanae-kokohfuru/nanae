@@ -22,7 +22,7 @@
     s4_1: "", s4_2: "", s4_3: "",
 
     s5_skills: [],
-    s5_other: "",
+    s5_freeform: "",
 
     s6_style: "",
     s6_style_other: "",
@@ -42,6 +42,7 @@
     sheetTemplate: "",
 
     photo: "",
+    deckPhotos: {},
 
     finalChecklist: [false, false, false, false, false],
   });
@@ -295,7 +296,7 @@
     if (!state.s2_now) return 2;
     if (!state.s3_future) return 3;
     if (!state.s4_1 && !state.s4_2 && !state.s4_3) return 4;
-    if (state.s5_skills.length === 0) return 5;
+    if (state.s5_skills.length === 0 && !state.s5_freeform) return 5;
     if (!state.s6_style) return 6;
     if (!state.s7_count) return 7;
     if (!state.s8_range && !state.s8_price) return 8;
@@ -478,7 +479,7 @@
 
   /* ---------- STEP 5 ---------- */
   const SKILL_OPTIONS = [
-    "話を聞く", "コーチング", "カウンセリング", "診断", "ヨガ・身体", "アロマ",
+    "話を聞く", "コーチング", "カウンセリング", "セラピー", "診断", "ヨガ・身体", "アロマ",
     "数秘・占術", "潜在意識", "自分自身の経験", "専門知識", "技術を教える", "一緒に実践する",
   ];
   function renderStep5() {
@@ -486,7 +487,6 @@
       type: "checkbox", name: "s5_skill", value: label, id: "s5_" + i,
       checked: state.s5_skills.includes(label), label,
     })).join("");
-    const otherChecked = state.s5_skills.includes("その他");
     return stepShell({
       stepNo: 5,
       eyebrow: "STEP 5 ｜「何を使う？」を決める",
@@ -494,13 +494,11 @@
       bodyHtml: `
         <p class="step-desc">STEP4で、あなたの物語を思い出しました。<br>では次に、STEP1の人をSTEP2の現在地からSTEP3の未来へ連れていくために、あなたの何が使えるでしょう？<br><br>大事なのは「私は何ができる？」だけではなく、「この人がゴールへ行くために本当に何が必要？」です。</p>
         <p class="step-question">最大3つまで選んでね</p>
-        <div class="choice-grid">
-          ${cards}
-          ${choiceCard({ type: "checkbox", name: "s5_skill", value: "その他", id: "s5_other_cb",
-            checked: otherChecked, label: "その他" })}
-        </div>
-        <div class="inline-input" id="s5OtherWrap" ${otherChecked ? "" : "hidden"}>
-          <input type="text" id="s5_other" placeholder="その他の内容を入力" value="${esc(state.s5_other)}">
+        <div class="choice-grid">${cards}</div>
+        <div class="field" style="margin-top:20px;">
+          <label class="field__label">上記にない、あなただけの専門ジャンルは？（任意）</label>
+          <textarea id="s5_freeform" placeholder="例）チャイルドケアセラピー、骨盤ケア、風水鑑定　など（複数OK、読点区切りで）">${esc(state.s5_freeform)}</textarea>
+          <p class="hint">この欄は3つの制限に含みません。載っていない専門用語・技術名も自由に書いてね。</p>
         </div>
       `,
       warnId: "warn5",
@@ -508,12 +506,6 @@
   }
   function bindStep5() {
     const boxes = qsa('input[name="s5_skill"]');
-    const otherWrap = qs("#s5OtherWrap");
-
-    function syncOther() {
-      const otherBox = qs("#s5_other_cb");
-      otherWrap.hidden = !otherBox.checked;
-    }
 
     boxes.forEach((box) => {
       box.addEventListener("change", () => {
@@ -526,16 +518,15 @@
         qs("#warn5").classList.remove("show");
         state.s5_skills = boxes.filter((b) => b.checked).map((b) => b.value);
         saveState();
-        syncOther();
       });
     });
 
-    const otherInput = qs("#s5_other");
-    otherInput.addEventListener("input", () => { state.s5_other = otherInput.value; saveState(); });
+    const freeformInput = qs("#s5_freeform");
+    freeformInput.addEventListener("input", () => { state.s5_freeform = freeformInput.value; saveState(); });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (state.s5_skills.length === 0) {
-        showWarn("warn5", "使うものを、最低ひとつ選んでみよう。");
+      if (state.s5_skills.length === 0 && !state.s5_freeform.trim()) {
+        showWarn("warn5", "使うものを、最低ひとつ選ぶか書いてみよう。");
         return;
       }
       goNext(5);
@@ -834,8 +825,8 @@
      8. 完成画面（商品ご提案シート／横A4詳細資料）
   --------------------------------------------------------- */
   function computeDerived() {
-    const skills = [...state.s5_skills.filter((s) => s !== "その他"),
-      ...(state.s5_skills.includes("その他") && state.s5_other ? [state.s5_other] : [])];
+    const freeformSkills = state.s5_freeform.split(/[、,\n]/).map((s) => s.trim()).filter(Boolean);
+    const skills = [...state.s5_skills, ...freeformSkills];
 
     const extras = [...state.s6_extras.filter((s) => s !== "その他"),
       ...(state.s6_extras.includes("その他") && state.s6_extras_other ? [state.s6_extras_other] : [])];
@@ -859,13 +850,37 @@
   }
 
   /* ---------- 横A4・詳細資料（デッキ）の生成 ---------- */
-  function statementPageInner(eyebrow, label, value) {
+  const DECK_PHOTO_SLOTS = [
+    { key: "s1_who", label: "対象者ページ" },
+    { key: "s2_now", label: "現在地ページ" },
+    { key: "s3_future", label: "目指す未来ページ" },
+    { key: "s4_1", label: "物語① ページ" },
+    { key: "s4_2", label: "物語② ページ" },
+    { key: "s4_3", label: "物語③ ページ" },
+  ];
+
+  let deckSplitCount = 0; // 左右交互のレイアウトに使う簡易カウンター
+
+  function statementPageInner(eyebrow, label, value, photoUrl) {
+    if (!photoUrl) {
+      return `
+        <p class="sheet__eyebrow">${esc(eyebrow)}</p>
+        <div class="deck-page__center">
+          <div>
+            <p class="sheet__label" style="text-align:center;">${esc(label)}</p>
+            <p class="deck-page__statement">${esc(value)}</p>
+          </div>
+        </div>`;
+    }
+    const reverse = deckSplitCount % 2 === 1;
+    deckSplitCount += 1;
     return `
       <p class="sheet__eyebrow">${esc(eyebrow)}</p>
-      <div class="deck-page__center">
-        <div>
-          <p class="sheet__label" style="text-align:center;">${esc(label)}</p>
-          <p class="deck-page__statement">${esc(value)}</p>
+      <div class="deck-page__split${reverse ? " deck-page__split--reverse" : ""}">
+        <div class="deck-page__photo-col"><img class="deck-page__photo" src="${photoUrl}" alt=""></div>
+        <div class="deck-page__text-col">
+          <p class="sheet__label">${esc(label)}</p>
+          <p class="deck-page__statement deck-page__statement--left">${esc(value)}</p>
         </div>
       </div>`;
   }
@@ -874,6 +889,7 @@
     const d = computeDerived();
     const tpl = state.sheetTemplate || "natural";
     const pages = [];
+    deckSplitCount = 0;
 
     pages.push({
       extraClass: "deck-page--cover",
@@ -886,12 +902,12 @@
         </div>`,
     });
 
-    if (state.s1_who) pages.push({ html: statementPageInner("WHO ｜ 対象者", "この商品を届けたい人", state.s1_who) });
-    if (state.s2_now) pages.push({ html: statementPageInner("NOW ｜ 現在地", "今、一番困っていること", state.s2_now) });
-    if (state.s3_future) pages.push({ html: statementPageInner("FUTURE ｜ 目指す未来", "受け終わったときの未来", state.s3_future) });
-    if (state.s4_1) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ①", "私自身も昔、こんなことで悩んでいました", state.s4_1) });
-    if (state.s4_2) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ②", "でも、こんな経験・変化・学びがありました", state.s4_2) });
-    if (state.s4_3) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ③", "だから今、こんな人に届けたい", state.s4_3) });
+    if (state.s1_who) pages.push({ html: statementPageInner("WHO ｜ 対象者", "この商品を届けたい人", state.s1_who, state.deckPhotos.s1_who) });
+    if (state.s2_now) pages.push({ html: statementPageInner("NOW ｜ 現在地", "今、一番困っていること", state.s2_now, state.deckPhotos.s2_now) });
+    if (state.s3_future) pages.push({ html: statementPageInner("FUTURE ｜ 目指す未来", "受け終わったときの未来", state.s3_future, state.deckPhotos.s3_future) });
+    if (state.s4_1) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ①", "私自身も昔、こんなことで悩んでいました", state.s4_1, state.deckPhotos.s4_1) });
+    if (state.s4_2) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ②", "でも、こんな経験・変化・学びがありました", state.s4_2, state.deckPhotos.s4_2) });
+    if (state.s4_3) pages.push({ html: statementPageInner("MY STORY ｜ 私の物語 ③", "だから今、こんな人に届けたい", state.s4_3, state.deckPhotos.s4_3) });
 
     pages.push({
       html: `
@@ -1087,6 +1103,25 @@
     `;
   }
 
+  function renderDeckPhotoPanel() {
+    const items = DECK_PHOTO_SLOTS.filter((item) => state[item.key]);
+    if (items.length === 0) return "";
+    return `
+    <div class="card deck-photo-panel">
+      <span class="eyebrow">写真を追加（任意）</span>
+      <p class="step-desc" style="margin-bottom:14px;">ページごとに写真を差し込むと、資料の印象がぐっと柔らかくなります。</p>
+      ${items.map((item) => `
+        <div class="deck-photo-row">
+          <div class="deck-photo-row__preview">${state.deckPhotos[item.key] ? `<img src="${state.deckPhotos[item.key]}" alt="">` : "🖼"}</div>
+          <div class="deck-photo-row__body">
+            <p class="deck-photo-row__label">${esc(item.label)}</p>
+            <label class="btn btn--outline-gold btn--sm" for="deckPhoto_${item.key}" style="display:inline-block;cursor:pointer;">写真を選ぶ</label>
+            <input type="file" id="deckPhoto_${item.key}" data-deck-photo-key="${item.key}" accept="image/*" style="display:none;">
+          </div>
+        </div>`).join("")}
+    </div>`;
+  }
+
   function renderDeckSection() {
     const { total, html } = buildDeckPages();
     return `
@@ -1094,9 +1129,10 @@
       <span class="eyebrow">詳細版｜横A4</span>
       <h2 class="step-title deck-intro__count" style="font-size:19px;">全${total}ページの詳細資料を見る</h2>
       <p class="step-desc">同じ内容を、商談やSNSでも使いやすい横A4の資料としても書き出せます。</p>
-      <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">詳細資料を表示する</button>
+      <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">${deckExpanded ? "詳細資料を閉じる" : "詳細資料を表示する"}</button>
     </div>
-    <div id="deckSection" hidden>
+    <div id="deckSection" ${deckExpanded ? "" : "hidden"}>
+      ${renderDeckPhotoPanel()}
       <div class="deck" id="deckPrintArea">${html}</div>
       <div class="card result-actions">
         <button class="btn btn--primary" id="printDeckBtn" type="button">詳細資料を印刷 / PDFで保存する（横A4・全${total}ページ）</button>
@@ -1105,6 +1141,7 @@
   }
 
   let deckResizeBound = false;
+  let deckExpanded = false;
 
   function finalChecklistLabels() {
     return [
@@ -1145,11 +1182,12 @@
     qs("#printBtn").addEventListener("click", () => window.print());
 
     qs("#toggleDeckBtn").addEventListener("click", () => {
+      deckExpanded = !deckExpanded;
       const section = qs("#deckSection");
       const btn = qs("#toggleDeckBtn");
-      section.hidden = !section.hidden;
-      btn.textContent = section.hidden ? "詳細資料を表示する" : "詳細資料を閉じる";
-      if (!section.hidden) requestAnimationFrame(scaleDeckPages);
+      section.hidden = !deckExpanded;
+      btn.textContent = deckExpanded ? "詳細資料を閉じる" : "詳細資料を表示する";
+      if (deckExpanded) requestAnimationFrame(scaleDeckPages);
     });
 
     qs("#printDeckBtn").addEventListener("click", () => {
@@ -1157,11 +1195,32 @@
       window.print();
     });
 
+    qsa("[data-deck-photo-key]").forEach((input) => {
+      input.addEventListener("change", () => {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 4 * 1024 * 1024) {
+          showToast("写真サイズが大きすぎます。4MB以下の画像を選んでね");
+          return;
+        }
+        const key = input.dataset.deckPhotoKey;
+        const reader = new FileReader();
+        reader.onload = () => {
+          state.deckPhotos[key] = reader.result;
+          saveState();
+          render();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
     if (!deckResizeBound) {
       window.addEventListener("resize", scaleDeckPages);
       window.addEventListener("afterprint", () => document.body.classList.remove("print-mode-deck"));
       deckResizeBound = true;
     }
+
+    if (deckExpanded) requestAnimationFrame(scaleDeckPages);
 
     qs("#downloadImgBtn").addEventListener("click", async () => {
       if (typeof window.html2canvas !== "function") {
