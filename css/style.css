@@ -419,14 +419,13 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   padding: 18px 4px 8px;
 }
 
-.hero__mascots{
-  display:flex;
-  justify-content:center;
-  gap: 8px;
-  margin-bottom: 6px;
+.hero__mascot-img{
+  display:block;
+  width: 62%;
+  max-width: 230px;
+  height: auto;
+  margin: 0 auto 8px;
 }
-
-.hero__mascots svg{ width: 54px; height: 54px; }
 
 .hero__brand{
   font-size: 13px;
@@ -553,6 +552,14 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 }
 
 .sheet__inner{ position:relative; z-index:1; }
+
+.sheet__mascot-img{
+  display:block;
+  width: 46%;
+  max-width: 150px;
+  height: auto;
+  margin: 0 auto 12px;
+}
 
 .sheet__eyebrow{
   text-align:center;
@@ -807,6 +814,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .a4-page .sheet__price-value{ font-size: 38px; }
 
 .deck-page__cover-inner{ text-align:center; }
+.deck-page__mascot-img{ display:block; width: 32%; max-width: 240px; height: auto; margin: 0 auto 20px; }
 .deck-page__heading{ font-family: var(--font-serif); font-size: 32px; text-align:center; margin: 4px 0 34px; color: var(--ink); }
 .deck-page__center{ flex:1; display:flex; align-items:center; justify-content:center; }
 .deck-page__statement{

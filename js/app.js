@@ -137,10 +137,13 @@
     </svg>`;
   }
   const MASCOTS = [mascotOwl, mascotAlpaca, mascotCat];
-  function mascotRow() {
-    const colors = ["#B67C7C", "#C8996B", "#A8968A"];
-    return `<div class="hero__mascots">${MASCOTS.map((m, i) => m(colors[i])).join("")}</div>`;
+
+  /* 表紙用キャラクター（実画像・そのまま使用／変形なし・背景透過） */
+  const MASCOT_IMG_SRC = "assets/mascot-trio.png";
+  function mascotImg(className) {
+    return `<img src="${MASCOT_IMG_SRC}" alt="ここらぼキャラクター" class="${className}">`;
   }
+
   function stepMascot(stepNo) {
     const colors = ["#B67C7C", "#C8996B", "#A8968A"];
     const idx = (stepNo - 1) % MASCOTS.length;
@@ -208,7 +211,7 @@
 
     return `
     <div class="card hero">
-      ${mascotRow()}
+      ${mascotImg("hero__mascot-img")}
       <p class="hero__brand">ここらぼ直伝！</p>
       <h1 class="hero__title">魂商品作成キット</h1>
       <span class="hero__subtitle">はじめの一品編</span>
@@ -895,6 +898,7 @@
       extraClass: "deck-page--cover",
       html: `
         <div class="deck-page__cover-inner">
+          ${mascotImg("deck-page__mascot-img")}
           <p class="sheet__eyebrow">MY FIRST SOUL PRODUCT</p>
           ${state.photo ? `<img class="sheet__photo" style="width:120px;height:120px;margin:0 auto 22px;" src="${state.photo}" alt="">` : ""}
           <h1 class="sheet__name">${esc(d.productName)}</h1>
@@ -1019,6 +1023,7 @@
     <div class="sheet-wrap" id="printArea">
       <div class="sheet sheet--${esc(state.sheetTemplate || "natural")}" id="sheetCapture">
         <div class="sheet__inner">
+          ${mascotImg("sheet__mascot-img")}
           <p class="sheet__eyebrow">MY FIRST SOUL PRODUCT</p>
           <p class="sheet__title">私の、はじめの一品</p>
 
