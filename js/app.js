@@ -176,6 +176,10 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toast.classList.remove("show"), duration || 2400);
   }
+  function hideToast() {
+    clearTimeout(toastTimer);
+    document.getElementById("toast").classList.remove("show");
+  }
 
   function scrollTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 
@@ -303,6 +307,9 @@
     } else if (state.screen === "studio") {
       app.className = "app-main app-main--studio";
       app.innerHTML = renderStudio(); bindStudio();
+    } else if (state.screen === "celebrate") {
+      app.className = "app-main";
+      app.innerHTML = renderCelebrate(); bindCelebrate();
     } else {
       app.className = "app-main app-main--wide";
       app.innerHTML = renderComplete(); bindComplete();
@@ -353,7 +360,35 @@
       <h1 class="hero__title">魂商品作成<br>ミラクルキット</h1>
       <span class="hero__subtitle">商品をカタチにする10の扉</span>
       <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
+
+      <div class="cover-intro">
+        <p class="cover-intro__eyebrow">chotoNANAP・チョッピーから<br>親愛なるここらーの皆へ</p>
+        <p class="cover-intro__gift">スペシャルプレゼント🎁</p>
+        <p class="cover-pullquote">質問に答えていくだけで<br>なんと、最後に<br>魂商品＝ご提案書の叩き台が<br>できちゃう・・・・！！</p>
+        <p class="cover-intro__sub">ゴイゴイスーなものを<br>開発してしまいましたよ〜</p>
+      </div>
+
       <p class="hero__catch">チョッピー（nanaeAI）が<br>あなたのモヤモヤを<br>一緒に整理します</p>
+
+      <div class="cover-message">
+        <p class="cover-pullquote cover-pullquote--md">目の前のひとりを<br>幸せにする</p>
+        <p class="cover-body">まずは、自分の物語でお金をいただく体験をする</p>
+        <p class="cover-pullquote cover-pullquote--md">「はじめの一品」を<br>つくってください</p>
+        <p class="cover-body">いくら、頭の中で考えても<br>届けてみないと何も始まらない</p>
+        <p class="cover-body">いきなり完璧な講座を作らなくていいんです<br>そもそも、魂商品に完成も完璧もないんです</p>
+        <p class="cover-body">1人に届ける▶︎反応を見る▶︎ブラッシュアップする▶︎そして、また届ける<br><br>ずっとこの繰り返し</p>
+        <p class="cover-body">だからこそ</p>
+        <p class="cover-pullquote cover-pullquote--md">魂商品は「つくるもの」ではなく<br>いったんささっと作って<br>お客様と一緒に<br>「育てていくもの」</p>
+        <p class="cover-body">何ヶ月かかって商品作りをする時代は終焉しました</p>
+        <p class="cover-body">ここまで1000人以上の受講生と<br>私自身の実績から<br>全ての叡智をぶっこんで、</p>
+        <p class="cover-pullquote cover-pullquote--md">「はじめの一品」キット</p>
+        <p class="cover-body">チョッピーAIから贈ります🎁</p>
+        <p class="cover-body">今回ここらぼのファイナルシーズン期間限定で<br>無料で使っていただけます！</p>
+        <p class="cover-body">時間がない、それでも夢を叶えたい<br><br>そんな国宝&amp;仏の皆が最速で<br>次元上昇できる方法を考えることが<br>ここらぼのミッションです</p>
+        <p class="cover-pullquote cover-pullquote--md">だって、ここらー<br>全員可能性の塊だから</p>
+        <p class="cover-pullquote cover-pullquote--lg">ほっとけないんだもーーーーん💌</p>
+        <p class="cover-closing">では、早速<br>ワックワクでいってみよう！</p>
+      </div>
 
       <div class="hero__desc">商品がまだない人は
 ここからカタチに。
@@ -392,13 +427,13 @@
   --------------------------------------------------------- */
   const SELF1_OPTIONS = [
     { id: "new", label: "① まだ商品・サービスがない", sub: "ゼロから　誰に何を届けるかをカタチにする",
-      msg: "いいね。\n何もないからこそ自由に作れる。\n\nまずは\nひとりを幸せにする商品から始めよう。",
+      msg: "何もないからこそ自由に作れる\n\nここから、産み出す喜びを\nワクワクしながら作って行きましょう！\n\nまずは\nひとりを幸せにする商品から始めよう",
       btn: "商品をカタチにする" },
     { id: "polish", label: "② 商品はある。もう一度　磨きたい", sub: "今の商品をシンプルに整理して　選ばれる理由をくっきりさせる",
-      msg: "商品があるなら\n材料はもうある。\n\n足す前に\nいったん磨こう。\n\nぼやけているところが見えたら\n商品はもっと強くなる。",
+      msg: "商品があるなら\n材料はもうある\n\n足す前に\nいったん磨こう\n\nぼやけているところが見えたら\n商品はもっと強くなる",
       btn: "今の商品を磨いてみる" },
     { id: "grow", label: "③ 売れている商品を　もっと育てたい", sub: "実際のお客様の反応をもとに　今の商品を再点検してブラッシュアップする",
-      msg: "売れたから完成\nではありません。\n\nお客様に届けた今だから\n見える答えがあります。\n\n売れた商品を\nさらに育てよう。",
+      msg: "売れたから完成\nではありません\n\nお客様に届けた今だから\n見える答えがあります\n\n売れた商品を\nさらに育てよう",
       btn: "売れた商品をもう一度ひらく" },
   ];
 
@@ -486,9 +521,16 @@
   }
 
   function goNextDoor(n) {
+    if (n === TOTAL_DOORS) {
+      // 最後の扉は専用の完成演出画面へ（節目トーストは出さず、演出そのものに譲る）
+      hideToast();
+      state.screen = "celebrate";
+      saveState();
+      render();
+      return;
+    }
     const before = n - 1;
     const after = n;
-    saveState();
     // 扉が開くたびの軽い演出＋10％ごとの節目メッセージ
     const doorOpenLine = `扉${n} OPEN✨`;
     if (MILESTONE_TEXT[after * 10] && after * 10 > before * 10) {
@@ -497,11 +539,7 @@
     } else {
       showToast(doorOpenLine, 1800);
     }
-    if (n === TOTAL_DOORS) {
-      state.screen = "complete";
-    } else {
-      state.doorIndex = n + 1;
-    }
+    state.doorIndex = n + 1;
     saveState();
     render();
   }
@@ -1801,7 +1839,7 @@ ${who}の
     return `
     <div class="card deck-intro">
       <span class="eyebrow">実際の相談で使える｜ご提案書</span>
-      <h2 class="step-title" style="font-size:19px;">この商品の「ご提案書」をつくろう</h2>
+      <h2 class="step-title" style="font-size:19px;">いよいよ、ご提案書の叩き台ができちゃいますよ〜ワクワク</h2>
       <p class="step-desc">ここまでの回答をもとにした、全${total}ページの横A4ご提案書です。<br>これは回答をまとめた報告書ではなく、そのままお客様との相談で使える資料の下書きです。<br>文章はあとから直せます。写真は入れても入れなくても大丈夫。</p>
       <div class="note-box">使い方のお約束：ここにある文章は、あなたの回答をもとにした下書きです。<br>盛った実績や、言っていない約束を足すことはしません。<br>お客様に渡す前に、必ずあなた自身の言葉で読み直してね</div>
       <button class="btn btn--primary" id="openStudioBtn" type="button">ご提案書スタジオを開く</button>
@@ -2002,6 +2040,44 @@ ${who}の
         saveState();
         render();
       });
+    });
+  }
+
+  /* ---------------------------------------------------------
+     6-3. 10の扉 完成演出画面（パンパカパーン）
+  --------------------------------------------------------- */
+  function renderCelebrate() {
+    return `
+    <div class="celebrate">
+      <div class="celebrate__confetti" aria-hidden="true">
+        ${["🎉", "✨", "🎊", "✨", "🎉", "✨", "🎊", "✨", "🎉", "✨", "🎊", "✨"].map((e, i) => `<span class="celebrate__confetti-piece" style="--i:${i}">${e}</span>`).join("")}
+      </div>
+      ${mascotImg("celebrate__mascot", MASCOT_IMG_SRC)}
+      <p class="celebrate__bang">パンパカパ〜〜〜ン！！！🎉✨</p>
+      <p class="celebrate__doors">10の扉<br>全部OPEN！！</p>
+      <p class="celebrate__pct">魂商品 完成度100％</p>
+      <div class="gold-line" style="margin:18px auto;"></div>
+      <p class="celebrate__body">あなたの物語が<br>いったん魂商品になりました</p>
+      <p class="celebrate__body celebrate__body--emph">ここまで来た自分に<br>まず拍手👏</p>
+      <p class="celebrate__next">ここからさらに<br>お客様との個別相談で使える<br>ご提案書の叩き台に<br>シンカさせます</p>
+
+      <div class="celebrate__ritual">
+        <p class="celebrate__ritual-label">まずはここまでできたら<br>これを声に出してみよう！</p>
+        <p class="celebrate__ritual-quote">『私の物語が<br>いったん魂商品になったーーー！<br>めっちゃうれしい〜！』</p>
+        <p class="celebrate__ritual-sub">まずひとりに<br>届けてみる💌</p>
+      </div>
+
+      <div class="nav-row" style="margin-top:26px;">
+        <button class="btn btn--primary" id="celebrateNextBtn" type="button">商品設計シートを見る</button>
+      </div>
+    </div>`;
+  }
+
+  function bindCelebrate() {
+    qs("#celebrateNextBtn").addEventListener("click", () => {
+      state.screen = "complete";
+      saveState();
+      render();
     });
   }
 
