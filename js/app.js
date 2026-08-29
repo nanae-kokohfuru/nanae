@@ -300,6 +300,9 @@
         <aside class="door-layout__preview">${renderProductPreview()}</aside>
       </div>`;
       bindDoor(state.doorIndex);
+    } else if (state.screen === "studio") {
+      app.className = "app-main app-main--studio";
+      app.innerHTML = renderStudio(); bindStudio();
     } else {
       app.className = "app-main app-main--wide";
       app.innerHTML = renderComplete(); bindComplete();
@@ -561,8 +564,8 @@
     });
     qs("#nextBtn").addEventListener("click", () => {
       if (!state.d1_who) { showWarn("warn1", "まず、誰を思い浮かべるか選んでみよう"); return; }
-      if (!requireText(state.d1_situation, "warn1", "その人の今の状況を書いてみよう。")) return;
-      if (!requireText(state.d1_moment, "warn1", "困っている一場面を書いてみよう。")) return;
+      if (!requireText(state.d1_situation, "warn1", "その人の今の状況を書いてみよう")) return;
+      if (!requireText(state.d1_moment, "warn1", "困っている一場面を書いてみよう")) return;
       showToast("お、見えてきた👀", 2200);
       goNextDoor(1);
     });
@@ -608,8 +611,8 @@
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
     });
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d2_pain, "warn2", "いちばんつらいことを書いてみよう。")) return;
-      if (!requireText(state.d2_wish, "warn2", "本当は何を変えたいか、書いてみよう。")) return;
+      if (!requireText(state.d2_pain, "warn2", "いちばんつらいことを書いてみよう")) return;
+      if (!requireText(state.d2_wish, "warn2", "本当は何を変えたいか、書いてみよう")) return;
       showToast("よし。救いたい場所が見えてきた", 2200);
       goNextDoor(2);
     });
@@ -661,8 +664,8 @@
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
     });
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d3_inner, "warn3", "内面の変化を書いてみよう。")) return;
-      if (!requireText(state.d3_action, "warn3", "できるようになることを書いてみよう。")) return;
+      if (!requireText(state.d3_inner, "warn3", "内面の変化を書いてみよう")) return;
+      if (!requireText(state.d3_action, "warn3", "できるようになることを書いてみよう")) return;
       showToast("行き先、くっきりしてきた", 2200);
       goNextDoor(3);
     });
@@ -744,9 +747,9 @@
     });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d4_before, "warn4", "あの頃のあなたについて書いてみよう。")) return;
+      if (!requireText(state.d4_before, "warn4", "あの頃のあなたについて書いてみよう")) return;
       if (!state.d4_turning.some((t) => t.trim())) { showWarn("warn4", "突破口を、ひとつだけでも書いてみよう"); return; }
-      if (!requireText(state.d4_why, "warn4", "だから届けたい、その理由を書いてみよう。")) return;
+      if (!requireText(state.d4_why, "warn4", "だから届けたい、その理由を書いてみよう")) return;
       goNextDoor(4);
     });
   }
@@ -1317,7 +1320,7 @@ ${who}の
   ];
   function renderDoor9() {
     return doorShell({
-      n: 9, badge: "扉9", title: "我が子に、最初の名前を。",
+      n: 9, badge: "扉9", title: "我が子に、最初の名前を",
       bodyHtml: `
         <p class="step-desc">ここまで一生懸命考えてきた商品。誰を助けたいか、どんな壁を越えるか、どんな未来へ連れていくか、なぜ私が届けるのか、何を使って、どう届けるのか。<br><br>少しずつ、ひとつの商品になってきました。<br>ここで一度、この我が子に名前をつけてみよう</p>
 
@@ -1423,7 +1426,7 @@ ${who}の
     qs("#d10_promise").addEventListener("input", (e) => { state.d10_promise = e.target.value; saveState(); });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d10_passion, "warn10", "それでも届けたい理由を書いてみよう。")) return;
+      if (!requireText(state.d10_passion, "warn10", "それでも届けたい理由を書いてみよう")) return;
       goNextDoor(10);
     });
   }
@@ -1782,15 +1785,6 @@ ${who}の
     };
   }
 
-  function scaleDeckPages() {
-    qsa(".a4-shell").forEach((shell) => {
-      const page = shell.querySelector(".a4-page");
-      if (!page) return;
-      const scale = shell.clientWidth / 1122;
-      page.style.transform = `scale(${scale})`;
-    });
-  }
-
   function renderDeckPhotoControls(pageKey) {
     const has = !!deckPhoto(pageKey);
     return `
@@ -1801,107 +1795,173 @@ ${who}の
       </div>`;
   }
 
-  function renderDeckEditPanel(pageKey) {
+  // 完成画面に置く「ご提案書」への導線カード（スタジオは別画面。ここには絶対に本体を並べない）
+  function renderDeckIntroCard() {
+    const { total } = buildDeckPages();
+    return `
+    <div class="card deck-intro">
+      <span class="eyebrow">実際の相談で使える｜ご提案書</span>
+      <h2 class="step-title" style="font-size:19px;">この商品の「ご提案書」をつくろう</h2>
+      <p class="step-desc">ここまでの回答をもとにした、全${total}ページの横A4ご提案書です。<br>これは回答をまとめた報告書ではなく、そのままお客様との相談で使える資料の下書きです。<br>文章はあとから直せます。写真は入れても入れなくても大丈夫。</p>
+      <div class="note-box">使い方のお約束：ここにある文章は、あなたの回答をもとにした下書きです。<br>盛った実績や、言っていない約束を足すことはしません。<br>お客様に渡す前に、必ずあなた自身の言葉で読み直してね</div>
+      <button class="btn btn--primary" id="openStudioBtn" type="button">ご提案書スタジオを開く</button>
+    </div>`;
+  }
+
+  // ---- ご提案書スタジオ（PC向け3ペイン編集画面。別スクリーンとして独立） ----
+  let studioActivePage = "";
+  let studioResizeBound = false;
+
+  function renderStudioEditPanel(pageKey) {
     const content = buildDeckContent(pageKey);
     const hasOverride = !!state.deck.overrides[pageKey];
+    const pageInfo = DECK_PAGES.find((p) => p.key === pageKey);
     return `
-      <div class="deck-edit-panel" data-deck-edit-panel="${pageKey}">
+      <div class="deck-edit-panel deck-edit-panel--studio" data-deck-edit-panel="${pageKey}">
+        <p class="studio__edit-title">${esc(pageInfo ? pageInfo.label : "")}</p>
         <div class="deck-edit-panel__row">
           <label class="deck-edit-panel__label">大きく見せる一文</label>
-          <textarea data-deck-edit-big="${pageKey}" style="min-height:60px;">${esc(content.big)}</textarea>
+          <textarea data-deck-edit-big="${pageKey}" style="min-height:70px;">${esc(content.big)}</textarea>
         </div>
         <div class="deck-edit-panel__row">
           <label class="deck-edit-panel__label">本文</label>
-          <textarea data-deck-edit-body="${pageKey}" style="min-height:90px;">${esc(content.body)}</textarea>
+          <textarea data-deck-edit-body="${pageKey}" style="min-height:120px;">${esc(content.body)}</textarea>
         </div>
         ${renderDeckPhotoControls(pageKey)}
         <div class="deck-edit-panel__actions">
           <button type="button" class="btn btn--primary btn--sm" data-deck-edit-save="${pageKey}">この内容で保存する</button>
           ${hasOverride ? `<button type="button" class="btn btn--ghost btn--sm" data-deck-edit-reset="${pageKey}">元の回答に戻す</button>` : ""}
-          <button type="button" class="btn btn--ghost btn--sm" data-deck-edit-close="${pageKey}">閉じる</button>
         </div>
+        <hr class="sheet__divider" style="margin:18px 0;">
+        <button type="button" class="btn btn--ghost btn--sm" data-studio-toggle-visible="${pageKey}">このページを非表示にする</button>
       </div>`;
   }
 
-  let deckExpanded = false;
-  let deckEditingPage = "";
+  function renderStudio() {
+    const tpl = state.sheetTemplate || "natural";
+    const { pages } = buildDeckPages();
+    const hiddenPages = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key));
+    if (!pages.find((p) => p.key === studioActivePage)) {
+      studioActivePage = pages[0] ? pages[0].key : "";
+    }
 
-  function renderDeckSection() {
-    const { total, pages } = buildDeckPages();
-    const hiddenCount = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key)).length;
     return `
-    <div class="card deck-intro">
-      <span class="eyebrow">詳細版｜横A4資料</span>
-      <h2 class="step-title" style="font-size:19px;">全${total}ページの詳細資料（デッキ）</h2>
-      <p class="step-desc">1枚シートとは別に、10の扉で考えたことを写真つきで振り返れる資料です。あとから文章や写真を直せます</p>
-      <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">${deckExpanded ? "詳細資料を閉じる" : "詳細資料を表示する"}</button>
-    </div>
-    <div id="deckSection" ${deckExpanded ? "" : "hidden"}>
-      <div class="deck-toolbar">
-        ${SHEET_TEMPLATES.map((t) => `<button type="button" class="template-switch__btn${state.sheetTemplate === t.id ? " is-active" : ""}" data-template-switch="${t.id}">${esc(t.name)}</button>`).join("")}
+    <div class="studio">
+      <div class="studio__topbar">
+        <button class="btn btn--ghost btn--sm" id="studioBackBtn" type="button">← 1枚シートに戻る</button>
+        <p class="studio__topbar-title">ご提案書スタジオ　全${pages.length}ページ</p>
+        <div class="studio__topbar-actions">
+          ${SHEET_TEMPLATES.map((t) => `<button type="button" class="template-switch__btn${tpl === t.id ? " is-active" : ""}" data-template-switch="${t.id}">${esc(t.name)}</button>`).join("")}
+          <button class="btn btn--primary btn--sm" id="printDeckBtn" type="button">印刷 / PDFで保存</button>
+        </div>
       </div>
-      <div id="deckPrintArea">
-        ${pages.map((p) => `
-          <div class="deck-page-card" data-deck-page-card="${p.key}">
-            <div class="a4-shell" data-deck-page="${p.key}">
-              <div class="a4-page sheet sheet--${esc(state.sheetTemplate || "natural")}" data-page-key="${p.key}">
-                ${renderDeckPageInner(p.key)}
-              </div>
-            </div>
-            <div class="deck-page-card__toolbar">
-              <span class="hint" style="margin:0;">${esc(p.label)}</span>
-              <div class="deck-page-card__toolbar-left">
-                <button type="button" class="deck-page-card__link" data-deck-edit-open="${p.key}">編集</button>
-                <button type="button" class="deck-page-card__link" data-deck-toggle-visible="${p.key}">このページを非表示にする</button>
-              </div>
-            </div>
-            ${deckEditingPage === p.key ? renderDeckEditPanel(p.key) : ""}
-          </div>`).join("")}
-      </div>
-      ${hiddenCount > 0 ? `
-        <div class="card" style="margin-top:12px;">
-          <p class="hint" style="margin:0 0 10px;">非表示にしたページ（${hiddenCount}）</p>
-          ${DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key)).map((p) => `
-            <label class="checklist-item"><input type="checkbox" data-deck-toggle-visible="${p.key}"><span>${esc(p.label)}</span></label>`).join("")}
-        </div>` : ""}
-      <div class="card result-actions">
-        <button class="btn btn--primary" id="printDeckBtn" type="button">詳細資料を印刷 / PDFで保存する（横A4・全${total}ページ）</button>
+      <div class="studio__body">
+        <aside class="studio__thumbs">
+          ${pages.map((p, i) => `
+            <div class="studio-thumb${p.key === studioActivePage ? " is-active" : ""}" data-studio-select="${p.key}" role="button" tabindex="0">
+              <div class="studio-thumb__frame"><div class="a4-shell"><div class="a4-page sheet sheet--${tpl}">${renderDeckPageInner(p.key)}</div></div></div>
+              <div class="studio-thumb__meta"><span class="studio-thumb__no">${i + 1}</span><span class="studio-thumb__label">${esc(p.label)}</span></div>
+            </div>`).join("")}
+          ${hiddenPages.length ? `
+            <div class="studio-thumbs__hidden">
+              <p class="hint" style="margin:12px 2px 6px;">非表示（${hiddenPages.length}）</p>
+              ${hiddenPages.map((p) => `<button type="button" class="studio-thumb-hidden" data-studio-unhide="${p.key}">${esc(p.label)}　表示に戻す</button>`).join("")}
+            </div>` : ""}
+        </aside>
+        <div class="studio__canvas">
+          ${studioActivePage ? `
+            <div class="a4-shell" id="studioCanvasShell">
+              <div class="a4-page sheet sheet--${tpl}">${renderDeckPageInner(studioActivePage)}</div>
+            </div>` : `<p class="hint">まだ表示できるページがありません。扉6・扉6以降の内容を入力すると、ここにページが増えていきます。</p>`}
+        </div>
+        <aside class="studio__edit">
+          ${studioActivePage ? renderStudioEditPanel(studioActivePage) : ""}
+        </aside>
       </div>
     </div>`;
   }
 
-  let deckResizeBound = false;
+  // 印刷／PDF保存専用：非表示ページを除いた全ページを、印刷用の隠しDOMとして組み立てる
+  function buildDeckPrintHtml() {
+    const tpl = state.sheetTemplate || "natural";
+    const { pages } = buildDeckPages();
+    return pages.map((p) => `
+      <div class="deck-page-card" data-deck-page-card="${p.key}">
+        <div class="a4-shell">
+          <div class="a4-page sheet sheet--${tpl}">${renderDeckPageInner(p.key)}</div>
+        </div>
+      </div>`).join("");
+  }
 
-  function bindDeckSection() {
-    qs("#toggleDeckBtn").addEventListener("click", () => {
-      deckExpanded = !deckExpanded;
+  function scaleStudioPages() {
+    qsa(".studio .a4-shell").forEach((shell) => {
+      const page = shell.querySelector(".a4-page");
+      if (!page) return;
+      const scale = shell.clientWidth / 1122;
+      page.style.transform = `scale(${scale})`;
+    });
+  }
+
+  function bindStudio() {
+    qs("#studioBackBtn").addEventListener("click", () => {
+      state.screen = "complete";
+      saveState();
       render();
     });
 
-    if (!deckExpanded) return;
-
-    if (!deckResizeBound) {
-      window.addEventListener("resize", scaleDeckPages);
+    if (!studioResizeBound) {
+      window.addEventListener("resize", scaleStudioPages);
       window.addEventListener("afterprint", () => {
         document.body.classList.remove("print-mode-deck");
         setPrintOrientation("portrait");
       });
-      deckResizeBound = true;
+      studioResizeBound = true;
     }
-    requestAnimationFrame(scaleDeckPages);
+    requestAnimationFrame(scaleStudioPages);
 
     qs("#printDeckBtn").addEventListener("click", () => {
+      let printArea = document.getElementById("deckPrintArea");
+      if (!printArea) {
+        printArea = document.createElement("div");
+        printArea.id = "deckPrintArea";
+        document.body.appendChild(printArea);
+      }
+      printArea.innerHTML = buildDeckPrintHtml();
       document.body.classList.add("print-mode-deck");
       setPrintOrientation("landscape");
       window.print();
     });
 
-    qsa("[data-deck-edit-open]").forEach((btn) => {
-      btn.addEventListener("click", () => { deckEditingPage = btn.dataset.deckEditOpen; render(); });
+    qsa("[data-template-switch]").forEach((btn) => {
+      btn.addEventListener("click", () => { state.sheetTemplate = btn.dataset.templateSwitch; saveState(); render(); });
     });
-    qsa("[data-deck-edit-close]").forEach((btn) => {
-      btn.addEventListener("click", () => { deckEditingPage = ""; render(); });
+
+    qsa("[data-studio-select]").forEach((el) => {
+      el.addEventListener("click", () => { studioActivePage = el.dataset.studioSelect; render(); });
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); studioActivePage = el.dataset.studioSelect; render(); }
+      });
     });
+    qsa("[data-studio-unhide]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.studioUnhide;
+        state.deck.hidden = state.deck.hidden.filter((k) => k !== key);
+        studioActivePage = key;
+        saveState();
+        render();
+      });
+    });
+    qsa("[data-studio-toggle-visible]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.studioToggleVisible;
+        if (!state.deck.hidden.includes(key)) state.deck.hidden.push(key);
+        studioActivePage = "";
+        saveState();
+        showToast("このページを非表示にしました");
+        render();
+      });
+    });
+
     qsa("[data-deck-edit-save]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.deckEditSave;
@@ -1909,8 +1969,7 @@ ${who}の
         const body = qs(`[data-deck-edit-body="${key}"]`).value;
         setDeckOverride(key, "big", big);
         setDeckOverride(key, "body", body);
-        deckEditingPage = "";
-        showToast("デッキに反映しました");
+        showToast("ご提案書に反映しました");
         render();
       });
     });
@@ -1918,16 +1977,6 @@ ${who}の
       btn.addEventListener("click", () => {
         clearDeckOverride(btn.dataset.deckEditReset);
         showToast("元の回答から作り直しました");
-        render();
-      });
-    });
-
-    qsa("[data-deck-toggle-visible]").forEach((el) => {
-      el.addEventListener("click", () => {
-        const key = el.dataset.deckToggleVisible;
-        const idx = state.deck.hidden.indexOf(key);
-        if (idx === -1) state.deck.hidden.push(key); else state.deck.hidden.splice(idx, 1);
-        saveState();
         render();
       });
     });
@@ -2065,7 +2114,7 @@ ${who}の
       <button class="btn btn--ghost" id="editBtn" type="button">← 入力内容を修正する</button>
     </div>
 
-    ${renderDeckSection()}
+    ${renderDeckIntroCard()}
 
     <div class="card chotty-card">
       <div class="chotty-card__intro">
@@ -2163,7 +2212,11 @@ ${who}の
       });
     });
 
-    bindDeckSection();
+    qs("#openStudioBtn").addEventListener("click", () => {
+      state.screen = "studio";
+      saveState();
+      render();
+    });
   }
 
   /* ---------------------------------------------------------
