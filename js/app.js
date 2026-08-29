@@ -95,6 +95,13 @@
     sheetTemplate: "natural",
     photo: "",
     finalChecklist: [false, false, false, false, false, false, false],
+
+    // 横A4詳細資料（デッキ）
+    deck: {
+      photos: {},     // { pageKey: dataUrl }
+      overrides: {},  // { pageKey: { big: "", body: "" } }（原文は上書きしない。表示用の別データ）
+      hidden: [],     // 非表示にしたページキー
+    },
   });
 
   let state = loadState();
@@ -113,6 +120,11 @@
       merged.finalChecklist = Array.isArray(parsed.finalChecklist) && parsed.finalChecklist.length === 7
         ? parsed.finalChecklist : [false, false, false, false, false, false, false];
       merged.d5_freeform = parsed.d5_freeform && typeof parsed.d5_freeform === "object" ? parsed.d5_freeform : {};
+      const deckDefault = { photos: {}, overrides: {}, hidden: [] };
+      merged.deck = Object.assign(deckDefault, parsed.deck && typeof parsed.deck === "object" ? parsed.deck : {});
+      merged.deck.photos = merged.deck.photos && typeof merged.deck.photos === "object" ? merged.deck.photos : {};
+      merged.deck.overrides = merged.deck.overrides && typeof merged.deck.overrides === "object" ? merged.deck.overrides : {};
+      merged.deck.hidden = Array.isArray(merged.deck.hidden) ? merged.deck.hidden : [];
       return merged;
     } catch (e) {
       return defaultState();
@@ -155,6 +167,16 @@
   }
 
   function scrollTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+  // 印刷方向の切り替え：@pageは「有効/無効の切り替え」の方がブラウザの
+  // 印刷パイプラインで確実に効くため、名前付きページではなくこの方式にしている
+  function setPrintOrientation(mode) {
+    const portrait = document.getElementById("printPagePortrait");
+    const landscape = document.getElementById("printPageLandscape");
+    if (!portrait || !landscape) return;
+    portrait.disabled = mode === "landscape";
+    landscape.disabled = mode !== "landscape";
+  }
 
   /* ---- マスコット（公式キャラクター実画像。改変せずそのまま使用） ---- */
   const MASCOT_IMG_SRC = "assets/mascot-trio.png";
@@ -824,13 +846,19 @@
     });
   }
 
-  function buildConceptFragmentHtml() {
-    const who = state.d1_situation || state.d1_moment || "この人";
-    const wall = state.d2_pain || state.d2_wish || "その壁";
-    const future = state.d3_action || state.d3_scene || "その未来";
-    const story = state.d4_turning_used || state.d4_why || "私の経験";
+  function buildConceptFragmentText() {
+    if (!state.d5_primary) return "";
+    // 長文が入力されても資料のレイアウトが壊れないよう、各断片は短く丸める
+    const cap = (s, max) => {
+      const t = (s || "").trim().replace(/\s+/g, " ");
+      return t.length > max ? t.slice(0, max - 1) + "…" : t;
+    };
+    const who = cap(state.d1_situation || state.d1_moment, 34) || "この人";
+    const wall = cap(state.d2_pain || state.d2_wish, 34) || "その壁";
+    const future = cap(state.d3_action || state.d3_scene, 34) || "その未来";
+    const story = cap(state.d4_turning_used || state.d4_why, 34) || "私の経験";
     const support = state.d5_supporting.length ? state.d5_supporting.join("と") : "";
-    const text = `私は
+    return `私は
 ${who}の
 「${wall}」という壁を
 「${state.d5_primary}」を主役に${support ? `\n「${support}」も使いながら` : ""}
@@ -838,6 +866,11 @@ ${who}の
 
 その背景には
 「${story}」という私の物語がある。`;
+  }
+
+  function buildConceptFragmentHtml() {
+    const text = buildConceptFragmentText();
+    if (!text) return "";
     return `
       <div class="concept-fragment">
         <p class="concept-fragment__label">⑤ コンセプトのかけら</p>
@@ -1314,6 +1347,469 @@ ${who}の
   };
 
   /* ---------------------------------------------------------
+     6-2. 横A4詳細資料（デッキ）
+     - 1枚完成シートとは別物。10の扉の内容を、写真＋短いコピー＋本文で
+       複数ページの簡易プレゼン資料に再構成する。
+     - 原文（state.dX_xxx）は絶対に書き換えない。表示用の文章は
+       state.deck.overrides に別データとして保持する（originalAnswer /
+       deckText の分離）。
+  --------------------------------------------------------- */
+
+  // ルールベースの文章整理（summarizeForDeck）。外部AI APIは使用しない。
+  // 将来、安全なサーバーサイドAIに差し替えるときは、この関数の中身だけを
+  // 差し替えれば良い構造にしている（意味を変える整理はしない）。
+  function cleanupText(str) {
+    return (str || "").trim().replace(/\n{3,}/g, "\n").replace(/[ \t]+/g, " ");
+  }
+  function truncateText(str, max) {
+    const s = cleanupText(str);
+    if (s.length <= max) return s;
+    return s.slice(0, max - 1).trim() + "…";
+  }
+  const summarizeForDeck = {
+    big(text, max) { return truncateText(text, max || 46); },
+    body(parts, max) {
+      const joined = parts.filter((p) => p && p.trim()).map(cleanupText).join("　");
+      return truncateText(joined, max || 170);
+    },
+  };
+
+  const DECK_PAGES = [
+    { key: "cover", label: "表紙", photo: true },
+    { key: "who", label: "この商品を届けたい人", photo: true },
+    { key: "wall", label: "越える壁", photo: true },
+    { key: "future", label: "連れていく未来", photo: true },
+    { key: "story1", label: "私が届ける理由（ビフォー）", photo: true },
+    { key: "story2", label: "私が届ける理由（アフター）", photo: true },
+    { key: "power", label: "この商品で使うチカラ", photo: false },
+    { key: "delivery", label: "届け方", photo: true },
+    { key: "journey", label: "行き先までの道のり", photo: false },
+    { key: "product", label: "商品", photo: false },
+    { key: "trust", label: "私から買う理由", photo: true },
+    { key: "closing", label: "まとめ", photo: false },
+  ];
+
+  const DECK_MASCOT_BY_PAGE = {
+    wall: "assets/mascot-devil.png",
+    future: "assets/mascot-angel.png",
+  };
+
+  function deckOverride(pageKey, field) {
+    const ov = state.deck.overrides[pageKey];
+    return ov && ov[field] ? ov[field] : "";
+  }
+  function setDeckOverride(pageKey, field, value) {
+    if (!state.deck.overrides[pageKey]) state.deck.overrides[pageKey] = {};
+    state.deck.overrides[pageKey][field] = value;
+    saveState();
+  }
+  function clearDeckOverride(pageKey) {
+    delete state.deck.overrides[pageKey];
+    saveState();
+  }
+  function deckPhoto(pageKey) { return state.deck.photos[pageKey] || ""; }
+
+  function buildDeckContent(pageKey) {
+    const productName = state.d9_name || "（仮）魂商品";
+    let big = "", body = "", cards = null;
+
+    switch (pageKey) {
+      case "cover":
+        big = productName;
+        body = summarizeForDeck.body([state.d3_action || state.d1_moment], 60);
+        break;
+      case "who":
+        big = summarizeForDeck.big(state.d1_words || state.d1_moment, 40);
+        body = summarizeForDeck.body([state.d1_situation, state.d1_moment]);
+        break;
+      case "wall":
+        big = summarizeForDeck.big(state.d2_pain, 42);
+        body = summarizeForDeck.body([state.d2_wish]);
+        break;
+      case "future":
+        cards = [
+          { label: "内面の変化", value: truncateText(state.d3_inner, 60) },
+          { label: "できるようになること", value: truncateText(state.d3_action, 60) },
+          { label: "現実・生活の変化", value: truncateText(state.d3_reality, 60) },
+          { label: "まわりの言葉", value: truncateText(state.d3_voice, 60) },
+        ].filter((c) => c.value);
+        big = summarizeForDeck.big(state.d3_scene || state.d3_action, 46);
+        break;
+      case "story1":
+        big = summarizeForDeck.big(state.d4_before, 42);
+        body = summarizeForDeck.body([state.d4_turning_used || state.d4_turning.filter(Boolean).join("、")]);
+        break;
+      case "story2":
+        big = summarizeForDeck.big(state.d4_why, 42);
+        body = summarizeForDeck.body([state.d4_journey, state.d4_after]);
+        break;
+      case "power":
+        cards = [
+          { label: "表に出す主役", value: state.d5_primary },
+          { label: "支えるチカラ", value: state.d5_supporting.join("・") },
+          { label: "裏側で使うもの", value: state.d5_categories.filter((c) => c !== state.d5_primary && !state.d5_supporting.includes(c)).join("・") },
+        ].filter((c) => c.value);
+        break;
+      case "delivery":
+        big = summarizeForDeck.big([state.d6_size, state.d6_place === "その他" ? state.d6_place_other : state.d6_place].filter(Boolean).join("・"), 40);
+        body = summarizeForDeck.body([
+          state.d6_during.length ? `一緒にいる時間：${state.d6_during.join("・")}` : "",
+          state.d6_between.length ? `会っていない時間：${state.d6_between.join("・")}` : "",
+        ], 170);
+        break;
+      case "journey":
+        cards = state.d7_steps.filter((s) => s.trim()).map((s, i) => ({ label: `STEP ${i + 1}`, value: truncateText(s, 50) }));
+        body = summarizeForDeck.body([state.d7_count ? `回数：${state.d7_count}` : "", state.d7_duration && state.d7_duration !== "まだ決めなくてOK" ? `1回：${state.d7_duration}` : ""], 60);
+        break;
+      case "product":
+        big = productName;
+        body = `¥${(Number(state.d8_price) || 0).toLocaleString()}`;
+        break;
+      case "trust":
+        cards = state.d10_facts_detail.filter((f) => f.trim()).map((f) => ({ label: "支える事実", value: truncateText(f, 50) }));
+        big = summarizeForDeck.big(state.d10_passion, 46);
+        body = summarizeForDeck.body([state.d10_promise]);
+        break;
+      case "closing":
+        big = `${productName}\n完成`;
+        body = summarizeForDeck.body([state.d4_why, state.d10_passion], 140);
+        break;
+    }
+
+    return {
+      big: deckOverride(pageKey, "big") || big,
+      body: deckOverride(pageKey, "body") || body,
+      cards,
+    };
+  }
+
+  function deckPageHasContent(key) {
+    switch (key) {
+      case "cover": return true;
+      case "who": return !!(state.d1_situation || state.d1_moment || state.d1_words);
+      case "wall": return !!(state.d2_pain || state.d2_wish);
+      case "future": return !!(state.d3_inner || state.d3_action || state.d3_reality || state.d3_voice);
+      case "story1": return !!(state.d4_before || state.d4_turning_used);
+      case "story2": return !!(state.d4_journey || state.d4_after || state.d4_why);
+      case "power": return state.d5_categories.length > 0;
+      case "delivery": return !!(state.d6_size || state.d6_place);
+      case "journey": return state.d7_steps.some((s) => s.trim()) || !!state.d7_count;
+      case "product": return true;
+      case "trust": return !!(state.d10_passion || state.d10_facts_detail.some((f) => f.trim()));
+      case "closing": return true;
+      default: return false;
+    }
+  }
+
+  const DECK_LABELS = { who: "WHO｜対象者", wall: "WALL｜越える壁", story1: "STORY｜ビフォー", story2: "STORY｜アフター", delivery: "DELIVERY｜届け方" };
+
+  function renderDeckPageInner(key) {
+    const content = buildDeckContent(key);
+    const def = DECK_PAGES.find((p) => p.key === key);
+    const photoUrl = def.photo ? deckPhoto(key) : "";
+    const mascotSrc = DECK_MASCOT_BY_PAGE[key];
+    const mascotHtml = mascotSrc ? `<img src="${mascotSrc}" alt="" class="deck-page__mascot-corner">` : "";
+
+    let inner = "";
+
+    if (key === "cover") {
+      const coverPhoto = photoUrl || state.photo;
+      inner = coverPhoto ? `
+        <div class="tpl-photo-text">
+          <div class="tpl-photo-text__photo tpl-photo-text__photo--wide"><img class="tpl-photo-text__img" src="${coverPhoto}" alt=""></div>
+          <div class="tpl-photo-text__text" style="text-align:center;">
+            <img src="assets/mascot-trio.png" alt="" style="width:84px;height:auto;margin:0 auto 16px;">
+            <p class="sheet__eyebrow">MY SOUL PRODUCT DECK</p>
+            <h1 class="sheet__name" style="font-size:32px;">${esc(content.big)}</h1>
+            <p class="sheet__value" style="text-align:center;">${esc(content.body)}</p>
+          </div>
+        </div>` : `
+        <div class="tpl-center">
+          <img src="assets/mascot-trio.png" alt="" style="width:110px;height:auto;margin:0 auto 22px;">
+          <p class="sheet__eyebrow">MY SOUL PRODUCT DECK</p>
+          <h1 class="tpl-center__big">${esc(content.big)}</h1>
+          <p class="tpl-center__caption">${esc(content.body)}</p>
+        </div>`;
+    } else if (key === "future") {
+      inner = photoUrl ? `
+        <div class="tpl-full-photo">
+          <img class="tpl-full-photo__img" src="${photoUrl}" alt="">
+          <div class="tpl-full-photo__overlay"><p class="tpl-full-photo__caption">${esc(content.big)}</p></div>
+        </div>` : `
+        <p class="sheet__eyebrow">FUTURE｜連れていく未来</p>
+        <h2 class="deck-page__heading">${esc(content.big) || "連れていく未来"}</h2>
+        <div class="tpl-cards">
+          ${(content.cards || []).map((c) => `<div class="tpl-cards__card"><p class="tpl-cards__label">${esc(c.label)}</p><p class="tpl-cards__value">${esc(c.value)}</p></div>`).join("") || `<p class="tpl-center__caption">まだ入力がありません</p>`}
+        </div>`;
+    } else if (key === "power") {
+      const conceptText = buildConceptFragmentText();
+      inner = `
+        <p class="sheet__eyebrow">WHAT I USE｜この商品で使うチカラ</p>
+        <h2 class="deck-page__heading">使うチカラ</h2>
+        <div class="tpl-cards tpl-cards--2">
+          ${(content.cards || []).map((c) => `<div class="tpl-cards__card"><p class="tpl-cards__label">${esc(c.label)}</p><p class="tpl-cards__value">${esc(c.value)}</p></div>`).join("")}
+        </div>
+        ${conceptText ? `<p class="tpl-center__caption" style="margin-top:20px;">${nl2br(conceptText)}</p>` : ""}`;
+    } else if (key === "journey") {
+      inner = `
+        <p class="sheet__eyebrow">JOURNEY｜行き先までの道のり</p>
+        <h2 class="deck-page__heading">行き先までの道のり</h2>
+        <div class="tpl-cards tpl-cards--2">
+          ${(content.cards || []).map((c) => `<div class="tpl-cards__card"><p class="tpl-cards__label">${esc(c.label)}</p><p class="tpl-cards__value">${esc(c.value)}</p></div>`).join("") || `<p class="tpl-center__caption">まだ入力がありません</p>`}
+        </div>
+        <p class="tpl-center__caption" style="margin-top:18px;">${esc(content.body)}</p>`;
+    } else if (key === "product") {
+      inner = `
+        <div class="tpl-center">
+          <p class="sheet__eyebrow">MY SOUL PRODUCT</p>
+          <h2 class="tpl-center__big">${esc(content.big)}</h2>
+          <div class="sheet__price" style="margin-top:22px; min-width:280px;">
+            <div class="sheet__price-label">PRICE</div>
+            <div class="sheet__price-value">${esc(content.body)}</div>
+          </div>
+        </div>`;
+    } else if (key === "trust") {
+      inner = photoUrl ? `
+        <div class="tpl-photo-text">
+          <div class="tpl-photo-text__photo"><img class="tpl-photo-text__img" src="${photoUrl}" alt=""></div>
+          <div class="tpl-photo-text__text">
+            <p class="sheet__eyebrow">TRUST｜私から買う理由</p>
+            <p class="deck-page__statement deck-page__statement--left" style="font-size:26px;">${esc(content.big)}</p>
+            ${content.body ? `<p class="sheet__value" style="margin-top:14px;">${esc(content.body)}</p>` : ""}
+          </div>
+        </div>` : `
+        <p class="sheet__eyebrow">TRUST｜私から買う理由</p>
+        <h2 class="deck-page__heading">${esc(content.big) || "私から買う理由"}</h2>
+        <div class="tpl-cards tpl-cards--2">
+          ${(content.cards || []).map((c) => `<div class="tpl-cards__card"><p class="tpl-cards__label">${esc(c.label)}</p><p class="tpl-cards__value">${esc(c.value)}</p></div>`).join("")}
+        </div>
+        ${content.body ? `<p class="tpl-center__caption" style="margin-top:18px;">${esc(content.body)}</p>` : ""}`;
+    } else if (key === "closing") {
+      inner = `
+        <div class="tpl-center">
+          <img src="assets/mascot-trio.png" alt="" style="width:100px;height:auto;margin:0 auto 20px;">
+          <p class="sheet__eyebrow">THANK YOU</p>
+          <h2 class="tpl-center__big">${nl2br(content.big)}</h2>
+          <p class="tpl-center__caption">${esc(content.body)}</p>
+        </div>`;
+    } else {
+      const label = DECK_LABELS[key] || "";
+      if (photoUrl) {
+        const reverse = ["wall", "story2"].includes(key);
+        inner = `
+          <p class="sheet__eyebrow">${esc(label)}</p>
+          <div class="tpl-photo-text${reverse ? " tpl-photo-text--reverse" : ""}">
+            <div class="tpl-photo-text__photo"><img class="tpl-photo-text__img" src="${photoUrl}" alt=""></div>
+            <div class="tpl-photo-text__text">
+              <p class="deck-page__statement deck-page__statement--left" style="font-size:28px;">${esc(content.big)}</p>
+              ${content.body ? `<p class="sheet__value" style="margin-top:14px;">${esc(content.body)}</p>` : ""}
+            </div>
+          </div>`;
+      } else {
+        inner = `
+          <p class="sheet__eyebrow">${esc(label)}</p>
+          <div class="tpl-center">
+            <h2 class="tpl-center__big">${esc(content.big)}</h2>
+            ${content.body ? `<p class="tpl-center__caption">${esc(content.body)}</p>` : ""}
+          </div>`;
+      }
+    }
+
+    return inner + mascotHtml;
+  }
+
+  function buildDeckPages() {
+    const tpl = state.sheetTemplate || "natural";
+    const visiblePages = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && !state.deck.hidden.includes(p.key));
+    const total = visiblePages.length;
+    return {
+      total,
+      pages: visiblePages,
+      html: visiblePages.map((p, i) => `
+        <div class="a4-shell" data-deck-page="${p.key}">
+          <div class="a4-page sheet sheet--${tpl}" data-page="${i + 1}">
+            ${renderDeckPageInner(p.key)}
+            <p class="a4-page__pageno">${i + 1} / ${total}</p>
+          </div>
+        </div>`).join(""),
+    };
+  }
+
+  function scaleDeckPages() {
+    qsa(".a4-shell").forEach((shell) => {
+      const page = shell.querySelector(".a4-page");
+      if (!page) return;
+      const scale = shell.clientWidth / 1122;
+      page.style.transform = `scale(${scale})`;
+    });
+  }
+
+  function renderDeckPhotoControls(pageKey) {
+    const has = !!deckPhoto(pageKey);
+    return `
+      <div class="deck-photo-row__actions">
+        <label class="btn btn--outline-gold btn--sm" for="deckPhoto_${pageKey}" style="display:inline-block;cursor:pointer;">${has ? "写真を変更" : "写真を追加"}</label>
+        <input type="file" id="deckPhoto_${pageKey}" data-deck-photo-key="${pageKey}" accept="image/*" style="display:none;">
+        ${has ? `<button type="button" class="btn btn--ghost btn--sm" data-deck-photo-remove="${pageKey}">削除</button>` : ""}
+      </div>`;
+  }
+
+  function renderDeckEditPanel(pageKey) {
+    const content = buildDeckContent(pageKey);
+    const hasOverride = !!state.deck.overrides[pageKey];
+    return `
+      <div class="deck-edit-panel" data-deck-edit-panel="${pageKey}">
+        <div class="deck-edit-panel__row">
+          <label class="deck-edit-panel__label">大きく見せる一文</label>
+          <textarea data-deck-edit-big="${pageKey}" style="min-height:60px;">${esc(content.big)}</textarea>
+        </div>
+        <div class="deck-edit-panel__row">
+          <label class="deck-edit-panel__label">本文</label>
+          <textarea data-deck-edit-body="${pageKey}" style="min-height:90px;">${esc(content.body)}</textarea>
+        </div>
+        ${renderDeckPhotoControls(pageKey)}
+        <div class="deck-edit-panel__actions">
+          <button type="button" class="btn btn--primary btn--sm" data-deck-edit-save="${pageKey}">この内容で保存する</button>
+          ${hasOverride ? `<button type="button" class="btn btn--ghost btn--sm" data-deck-edit-reset="${pageKey}">元の回答に戻す</button>` : ""}
+          <button type="button" class="btn btn--ghost btn--sm" data-deck-edit-close="${pageKey}">閉じる</button>
+        </div>
+      </div>`;
+  }
+
+  let deckExpanded = false;
+  let deckEditingPage = "";
+
+  function renderDeckSection() {
+    const { total, pages } = buildDeckPages();
+    const hiddenCount = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key)).length;
+    return `
+    <div class="card deck-intro">
+      <span class="eyebrow">詳細版｜横A4資料</span>
+      <h2 class="step-title" style="font-size:19px;">全${total}ページの詳細資料（デッキ）</h2>
+      <p class="step-desc">1枚シートとは別に、10の扉で考えたことを写真つきで振り返れる資料です。あとから文章や写真を直せます。</p>
+      <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">${deckExpanded ? "詳細資料を閉じる" : "詳細資料を表示する"}</button>
+    </div>
+    <div id="deckSection" ${deckExpanded ? "" : "hidden"}>
+      <div class="deck-toolbar">
+        ${SHEET_TEMPLATES.map((t) => `<button type="button" class="template-switch__btn${state.sheetTemplate === t.id ? " is-active" : ""}" data-template-switch="${t.id}">${esc(t.name)}</button>`).join("")}
+      </div>
+      <div id="deckPrintArea">
+        ${pages.map((p) => `
+          <div class="deck-page-card" data-deck-page-card="${p.key}">
+            <div class="a4-shell" data-deck-page="${p.key}">
+              <div class="a4-page sheet sheet--${esc(state.sheetTemplate || "natural")}" data-page-key="${p.key}">
+                ${renderDeckPageInner(p.key)}
+              </div>
+            </div>
+            <div class="deck-page-card__toolbar">
+              <span class="hint" style="margin:0;">${esc(p.label)}</span>
+              <div class="deck-page-card__toolbar-left">
+                <button type="button" class="deck-page-card__link" data-deck-edit-open="${p.key}">編集</button>
+                <button type="button" class="deck-page-card__link" data-deck-toggle-visible="${p.key}">このページを非表示にする</button>
+              </div>
+            </div>
+            ${deckEditingPage === p.key ? renderDeckEditPanel(p.key) : ""}
+          </div>`).join("")}
+      </div>
+      ${hiddenCount > 0 ? `
+        <div class="card" style="margin-top:12px;">
+          <p class="hint" style="margin:0 0 10px;">非表示にしたページ（${hiddenCount}）</p>
+          ${DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key)).map((p) => `
+            <label class="checklist-item"><input type="checkbox" data-deck-toggle-visible="${p.key}"><span>${esc(p.label)}</span></label>`).join("")}
+        </div>` : ""}
+      <div class="card result-actions">
+        <button class="btn btn--primary" id="printDeckBtn" type="button">詳細資料を印刷 / PDFで保存する（横A4・全${total}ページ）</button>
+      </div>
+    </div>`;
+  }
+
+  let deckResizeBound = false;
+
+  function bindDeckSection() {
+    qs("#toggleDeckBtn").addEventListener("click", () => {
+      deckExpanded = !deckExpanded;
+      render();
+    });
+
+    if (!deckExpanded) return;
+
+    if (!deckResizeBound) {
+      window.addEventListener("resize", scaleDeckPages);
+      window.addEventListener("afterprint", () => {
+        document.body.classList.remove("print-mode-deck");
+        setPrintOrientation("portrait");
+      });
+      deckResizeBound = true;
+    }
+    requestAnimationFrame(scaleDeckPages);
+
+    qs("#printDeckBtn").addEventListener("click", () => {
+      document.body.classList.add("print-mode-deck");
+      setPrintOrientation("landscape");
+      window.print();
+    });
+
+    qsa("[data-deck-edit-open]").forEach((btn) => {
+      btn.addEventListener("click", () => { deckEditingPage = btn.dataset.deckEditOpen; render(); });
+    });
+    qsa("[data-deck-edit-close]").forEach((btn) => {
+      btn.addEventListener("click", () => { deckEditingPage = ""; render(); });
+    });
+    qsa("[data-deck-edit-save]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.deckEditSave;
+        const big = qs(`[data-deck-edit-big="${key}"]`).value;
+        const body = qs(`[data-deck-edit-body="${key}"]`).value;
+        setDeckOverride(key, "big", big);
+        setDeckOverride(key, "body", body);
+        deckEditingPage = "";
+        showToast("デッキに反映しました");
+        render();
+      });
+    });
+    qsa("[data-deck-edit-reset]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        clearDeckOverride(btn.dataset.deckEditReset);
+        showToast("元の回答から作り直しました");
+        render();
+      });
+    });
+
+    qsa("[data-deck-toggle-visible]").forEach((el) => {
+      el.addEventListener("click", () => {
+        const key = el.dataset.deckToggleVisible;
+        const idx = state.deck.hidden.indexOf(key);
+        if (idx === -1) state.deck.hidden.push(key); else state.deck.hidden.splice(idx, 1);
+        saveState();
+        render();
+      });
+    });
+
+    qsa("[data-deck-photo-key]").forEach((input) => {
+      input.addEventListener("change", () => {
+        const file = input.files[0];
+        if (!file) return;
+        if (file.size > 4 * 1024 * 1024) { showToast("写真サイズが大きすぎます。4MB以下の画像を選んでね"); return; }
+        const key = input.dataset.deckPhotoKey;
+        const reader = new FileReader();
+        reader.onload = () => {
+          state.deck.photos[key] = reader.result;
+          saveState();
+          render();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    qsa("[data-deck-photo-remove]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        delete state.deck.photos[btn.dataset.deckPhotoRemove];
+        saveState();
+        render();
+      });
+    });
+  }
+
+  /* ---------------------------------------------------------
      7. 完成画面・商品設計シート「MY SOUL PRODUCT」
   --------------------------------------------------------- */
   const SHEET_TEMPLATES = [
@@ -1424,6 +1920,8 @@ ${who}の
       <button class="btn btn--ghost" id="editBtn" type="button">← 入力内容を修正する</button>
     </div>
 
+    ${renderDeckSection()}
+
     <div class="card chotty-card">
       <div class="chotty-card__intro">
         ${mascotImg("chotty-card__intro-img")}
@@ -1485,7 +1983,7 @@ ${who}の
       btn.addEventListener("click", () => { state.sheetTemplate = btn.dataset.templateSwitch; saveState(); render(); });
     });
 
-    qs("#printBtn").addEventListener("click", () => window.print());
+    qs("#printBtn").addEventListener("click", () => { setPrintOrientation("portrait"); window.print(); });
 
     qs("#downloadImgBtn").addEventListener("click", async () => {
       if (typeof window.html2canvas !== "function") { showToast("画像保存機能を読み込み中、または利用できません。印刷/PDF保存をお試しください"); return; }
@@ -1518,6 +2016,8 @@ ${who}の
         saveState();
       });
     });
+
+    bindDeckSection();
   }
 
   /* ---------------------------------------------------------

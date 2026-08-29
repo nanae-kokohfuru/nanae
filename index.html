@@ -9,6 +9,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<!-- 印刷時のページ向き切り替え：@pageは名前付きページよりも「有効/無効の切り替え」の方が
+     ブラウザの印刷パイプラインで確実に効くため、この方式にしている -->
+<style id="printPagePortrait">@page{ size: A4; margin: 14mm; }</style>
+<style id="printPageLandscape" disabled>@page{ size: A4 landscape; margin: 0; }</style>
 </head>
 <body>
 
