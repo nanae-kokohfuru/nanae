@@ -598,7 +598,7 @@
 
         <div class="field" style="margin-top:22px;">
           <label class="field__label">その人は今どんな状況で、どんな毎日を送っていますか？</label>
-          <textarea id="d1_situation" placeholder="例）30代。子育てをしながら起業を始めたばかり。やりたいことはあるけれど、何から発信すればいいかわからない。">${esc(state.d1_situation)}</textarea>
+          <textarea id="d1_situation" placeholder="例）30代。子育てをしながら起業を始めたばかり。やりたいことはあるけれど、何から発信すればいいかわからない">${esc(state.d1_situation)}</textarea>
           <p class="hint">年齢・家族構成・年収・趣味などを大量に埋めなくてOK。今が見える一文で大丈夫</p>
         </div>
 
@@ -659,7 +659,7 @@
 
         <div class="field">
           <label class="field__label">本当は、何を変えたいと思っている？</label>
-          <textarea id="d2_wish" placeholder="ここでは、次の未来提示を完成させなくてよい。問題の根っこを一言でつかむ。">${esc(state.d2_wish)}</textarea>
+          <textarea id="d2_wish" placeholder="ここでは、次の未来提示を完成させなくてよい。問題の根っこを一言でつかむ">${esc(state.d2_wish)}</textarea>
         </div>
       `,
       warnId: "warn2",
@@ -743,7 +743,7 @@
 
         <div class="field">
           <label class="field__label">ビフォー｜あの頃の私は？</label>
-          <textarea id="d4_before" placeholder="どんなことで悩み、何に困っていましたか？一場面が見えるように。">${esc(state.d4_before)}</textarea>
+          <textarea id="d4_before" placeholder="どんなことで悩み、何に困っていましたか？一場面が見えるように">${esc(state.d4_before)}</textarea>
         </div>
 
         <p class="step-question">ターニングポイント｜私を変えた突破口は？（最大3つ）</p>
@@ -759,7 +759,7 @@
 
         <div class="field">
           <label class="field__label">ジャーニー｜そこから何をした？</label>
-          <textarea id="d4_journey" placeholder="何を試した？何を学んだ？どんな失敗があった？何を続けた？成功談だけでなくてもいい。">${esc(state.d4_journey)}</textarea>
+          <textarea id="d4_journey" placeholder="何を試した？何を学んだ？どんな失敗があった？何を続けた？成功談だけでなくてもいい">${esc(state.d4_journey)}</textarea>
         </div>
 
         <div class="field">
@@ -1185,7 +1185,7 @@ ${who}の
         </div>
       </div>`;
     }).join("") : `
-      <p class="hint">扉6で「一緒にいる時間・会っていない時間」に何をするかを選ぶと、ここに回数の入力欄が出てきます。</p>`;
+      <p class="hint">扉6で「一緒にいる時間・会っていない時間」に何をするかを選ぶと、ここに回数の入力欄が出てきます</p>`;
 
     return doorShell({
       n: 7, title: "行き先までの道のりをつくる",
@@ -1507,7 +1507,7 @@ ${who}の
 
       const core = `今回の回答を見ると、軸になっているのは「${primary}」。\n${who ? `そして届けたい相手は、${who}。` : ""}\nここがブレていないから、他がまだ粗くても十分伝わる。`;
 
-      const frontValue = `一番前に出すなら「${primary}」。\n${supporting ? `「${supporting}」は、名前で説明するより「一緒にやってみたらこうなった」で見せる方が伝わりやすそう。` : "支えるチカラが決まると、説明がもっと短くなる。"}`;
+      const frontValue = `一番前に出すなら「${primary}」。\n${supporting ? `「${supporting}」は、名前で説明するより「一緒にやってみたらこうなった」で見せる方が伝わりやすそう。` : "支えるチカラが決まると、説明がもっと短くなる"}`;
 
       const conceptCore = wall && future
         ? `「${wall}」という壁を、「${primary}」で越えて、「${future}」まで連れていく。\nこの組み合わせが、今回のコンセプトの核になりそう。`
@@ -1932,7 +1932,7 @@ ${who}の
           ${studioActivePage ? `
             <div class="a4-shell" id="studioCanvasShell">
               <div class="a4-page sheet sheet--${tpl}">${renderDeckPageInner(studioActivePage)}</div>
-            </div>` : `<p class="hint">まだ表示できるページがありません。扉6・扉6以降の内容を入力すると、ここにページが増えていきます。</p>`}
+            </div>` : `<p class="hint">まだ表示できるページがありません。扉6・扉6以降の内容を入力すると、ここにページが増えていきます</p>`}
         </div>
         <aside class="studio__edit">
           ${studioActivePage ? renderStudioEditPanel(studioActivePage) : ""}
