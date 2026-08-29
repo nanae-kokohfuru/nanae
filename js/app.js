@@ -116,9 +116,31 @@
       merged.d4_turning = Array.isArray(parsed.d4_turning) ? parsed.d4_turning : ["", "", ""];
       merged.d7_steps = Array.isArray(parsed.d7_steps) ? parsed.d7_steps : ["", "", "", ""];
       merged.d7_item_counts = parsed.d7_item_counts && typeof parsed.d7_item_counts === "object" ? parsed.d7_item_counts : {};
-      // 旧データ（回数・時間が扉全体でひとつだけだった頃）からの移行：内容が空でも情報を失わないよう「これまでの内容」として保持
+      // 旧データ（回数・時間が扉全体でひとつだけだった頃）からの移行：
+      // 新しい画面は扉6で選んだ内容ごとにしか回数を表示しないため、その各内容に同じ回数・時間を割り当てて
+      // 実際に見える場所（扉7の入力欄・完成シートの「回数」欄）に反映されるようにする
       if ((parsed.d7_count || parsed.d7_duration) && Object.keys(merged.d7_item_counts).length === 0) {
-        merged.d7_item_counts["これまでの内容"] = { count: parsed.d7_count || "", duration: parsed.d7_duration || "" };
+        // 旧選択肢は "1回"〜"5回以上" のように「回」を含んだ文字列だったが、新しい表示は count に自動で「回」を付け足すため、
+        // 二重に「回回」とならないよう先に取り除く
+        const legacyValue = { count: (parsed.d7_count || "").replace(/回/g, ""), duration: (parsed.d7_duration && parsed.d7_duration !== "まだ決めなくてOK") ? parsed.d7_duration : "" };
+        const legacyDuring = Array.isArray(parsed.d6_during) ? parsed.d6_during : [];
+        const legacyBetween = Array.isArray(parsed.d6_between) ? parsed.d6_between : [];
+        const legacyItems = [];
+        legacyDuring.forEach((v) => {
+          if (v === "その他") { if ((parsed.d6_during_other || "").trim()) legacyItems.push(parsed.d6_during_other.trim()); }
+          else legacyItems.push(v);
+        });
+        legacyBetween.forEach((v) => {
+          if (v === "特になし") return;
+          if (v === "その他") { if ((parsed.d6_between_other || "").trim()) legacyItems.push(parsed.d6_between_other.trim()); }
+          else legacyItems.push(v);
+        });
+        if (legacyItems.length) {
+          legacyItems.forEach((item) => { merged.d7_item_counts[item] = Object.assign({}, legacyValue); });
+        } else {
+          // 扉6の内容が空のときだけ、情報を失わないよう汎用キーで保持
+          merged.d7_item_counts["これまでの内容"] = legacyValue;
+        }
       }
       merged.d8_weekly_hours = typeof parsed.d8_weekly_hours === "string" ? parsed.d8_weekly_hours : "";
       merged.d8_period_weeks = typeof parsed.d8_period_weeks === "string" ? parsed.d8_period_weeks : "";
