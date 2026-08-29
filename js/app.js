@@ -233,9 +233,13 @@
   --------------------------------------------------------- */
   const MILESTONE_TEXT = {
     10: "10％\nまずひとり見えた",
+    20: "20％\n悩みの正体がくっきりしてきた",
     30: "30％\n商品の骨が見えてきた",
+    40: "40％\n連れていく未来が見えてきた",
     50: "50％\nおお、商品になってきた😍",
+    60: "60％\n使う力が定まってきた",
     70: "70％\nかなりつながってきた",
+    80: "80％\n値段と名前が見えてきた",
     90: "90％\n我が子まもなく誕生🤣",
     100: "100％\n魂商品 爆誕🎉",
   };
@@ -272,11 +276,56 @@
   --------------------------------------------------------- */
   function render() {
     updateHeader();
-    if (state.screen === "start") { app.innerHTML = renderStart(); bindStart(); }
-    else if (state.screen === "self1") { app.innerHTML = renderSelf1(); bindSelf1(); }
-    else if (state.screen === "door") { app.innerHTML = renderDoor(state.doorIndex); bindDoor(state.doorIndex); }
-    else { app.innerHTML = renderComplete(); bindComplete(); }
+    if (state.screen === "start") {
+      app.className = "app-main";
+      app.innerHTML = renderStart(); bindStart();
+    } else if (state.screen === "self1") {
+      app.className = "app-main app-main--wide";
+      app.innerHTML = renderSelf1(); bindSelf1();
+    } else if (state.screen === "door") {
+      app.className = "app-main app-main--wide";
+      app.innerHTML = `<div class="door-layout">
+        <div class="door-layout__main">${renderDoor(state.doorIndex)}</div>
+        <aside class="door-layout__preview">${renderProductPreview()}</aside>
+      </div>`;
+      bindDoor(state.doorIndex);
+    } else {
+      app.className = "app-main app-main--wide";
+      app.innerHTML = renderComplete(); bindComplete();
+    }
     scrollTop();
+  }
+
+  /* ---- 育っていく商品プレビュー（PC横並びサイドバー） ---- */
+  function previewRow(label, value, filled) {
+    return `<div class="product-preview__row ${filled ? "is-filled" : "is-empty"}">
+      <p class="product-preview__label">${esc(label)}</p>
+      <p class="product-preview__value">${filled ? esc(value) : "まだ空欄"}</p>
+    </div>`;
+  }
+  function renderProductPreview() {
+    const s = state;
+    const rows = [
+      ["届けたいひとり", s.d1_situation || s.d1_who],
+      ["越える壁", s.d2_pain],
+      ["連れていく未来", s.d3_action],
+      ["私が届ける理由", s.d4_why],
+      ["主役のチカラ", s.d5_primary],
+      ["届け方", s.d6_place],
+      ["道のり", (s.d7_steps || []).filter((x) => x && x.trim()).join("・")],
+      ["価格", s.d8_price ? `${formatYen(s.d8_price)}円` : ""],
+      ["商品名", s.d9_name],
+      ["信用の材料", s.d10_passion],
+    ];
+    const doneCount = rows.filter(([, v]) => v && String(v).trim()).length;
+    return `
+      <div class="product-preview">
+        <p class="product-preview__title">育っていく、あなたの商品</p>
+        <p class="product-preview__count">${doneCount} / ${rows.length} コまで見えてきた</p>
+        <div class="product-preview__list">
+          ${rows.map(([label, value]) => previewRow(label, value, value && String(value).trim())).join("")}
+        </div>
+      </div>`;
   }
 
   /* ---------------------------------------------------------
@@ -299,7 +348,7 @@
 もっとくっきり。
 
 10個の問いに答えながら
-あなたの商品に一本の芯を通していこう。</div>
+あなたの商品に一本の芯を通していこう</div>
 
       <div class="nav-row" style="margin-top:22px;">
         <button class="btn btn--primary" id="startBtn" type="button">はじめる</button>
@@ -344,9 +393,9 @@
     return `
     <div class="card self1-card">
       ${doorMascot()}
-      <span class="self1-eyebrow">SELF 1</span>
+      <span class="seko-badge">せるこ1</span>
       <h2 class="step-title">まず　今の商品はどこにいる？</h2>
-      <p class="step-desc">正解も優劣もありません。<br>今いる場所がわかれば、ここからやることが見えてきます。</p>
+      <p class="step-desc">正解も優劣もありません。<br>今いる場所がわかれば、ここからやることが見えてきます</p>
       <div class="choice-grid">
         ${SELF1_OPTIONS.map((o) => choiceCard({
           type: "radio", name: "self1", value: o.id, id: "self1_" + o.id, shape: "round",
@@ -354,7 +403,7 @@
         })).join("")}
       </div>
       <div id="self1Note">${chosen ? `<div class="persona-note">${nl2br(chosen.msg)}</div>` : ""}</div>
-      <p class="warn-msg" id="warnSelf1">まずは、今のあなたに近いものを選んでね。</p>
+      <p class="warn-msg" id="warnSelf1">まずは、今のあなたに近いものを選んでね</p>
       <div class="nav-row" style="margin-top:22px;">
         <button class="btn btn--primary" id="self1NextBtn" type="button">${chosen ? esc(chosen.btn) : "扉をひらく"}</button>
       </div>
@@ -371,7 +420,7 @@
       });
     });
     qs("#self1NextBtn").addEventListener("click", () => {
-      if (!state.self1_choice) { showWarn("warnSelf1", "まずは、今のあなたに近いものを選んでね。"); return; }
+      if (!state.self1_choice) { showWarn("warnSelf1", "まずは、今のあなたに近いものを選んでね"); return; }
       state.screen = "door";
       state.doorIndex = 1;
       saveState();
@@ -383,12 +432,12 @@
   /* ---------------------------------------------------------
      5. 扉 共通シェル
   --------------------------------------------------------- */
-  function doorShell({ n, badge, title, bodyHtml, warnId }) {
+  function doorShell({ n, title, bodyHtml, warnId }) {
     return `
     <div class="card">
       ${doorMascot()}
       <p class="door-progress-mini">扉 ${n} / ${TOTAL_DOORS}</p>
-      <span class="eyebrow">${esc(badge)}</span>
+      <span class="seko-badge">せるこ${n + 1}</span>
       <h2 class="step-title">${title}</h2>
       ${bodyHtml}
       ${warnId ? `<p class="warn-msg" id="${warnId}"></p>` : ""}
@@ -426,9 +475,13 @@
     const before = n - 1;
     const after = n;
     saveState();
-    // 節目メッセージ
+    // 扉が開くたびの軽い演出＋10％ごとの節目メッセージ
+    const doorOpenLine = `扉${n} OPEN✨`;
     if (MILESTONE_TEXT[after * 10] && after * 10 > before * 10) {
-      showToast(MILESTONE_TEXT[after * 10].split("\n").slice(1).join(" "), 3200);
+      const milestoneLine = MILESTONE_TEXT[after * 10].split("\n").slice(1).join(" ");
+      showToast(`${doorOpenLine}\n${milestoneLine}`, 3400);
+    } else {
+      showToast(doorOpenLine, 1800);
     }
     if (n === TOTAL_DOORS) {
       state.screen = "complete";
@@ -464,7 +517,7 @@
     return doorShell({
       n: 1, badge: "せるこ・2", title: "推したい！助けたい！ひとりを見つける",
       bodyHtml: `
-        <p class="step-desc">商品は、みんなのためにつくろうとするとぼやけます。<br>まずは、たったひとり。<br><br>細かいペルソナ設定はまだいりません。<br>今は、その人の顔や毎日が少し浮かべばOK。</p>
+        <p class="step-desc">商品は、みんなのためにつくろうとするとぼやけます。<br>まずは、たったひとり。<br><br>細かいペルソナ設定はまだいりません。<br>今は、その人の顔や毎日が少し浮かべばOK</p>
 
         <p class="step-question">まず　誰を思い浮かべる？</p>
         <div class="choice-grid">${whoCards}</div>
@@ -472,7 +525,7 @@
         <div class="field" style="margin-top:22px;">
           <label class="field__label">その人は今どんな状況で、どんな毎日を送っていますか？</label>
           <textarea id="d1_situation" placeholder="例）30代。子育てをしながら起業を始めたばかり。やりたいことはあるけれど、何から発信すればいいかわからない。">${esc(state.d1_situation)}</textarea>
-          <p class="hint">年齢・家族構成・年収・趣味などを大量に埋めなくてOK。今が見える一文で大丈夫。</p>
+          <p class="hint">年齢・家族構成・年収・趣味などを大量に埋めなくてOK。今が見える一文で大丈夫</p>
         </div>
 
         <div class="field">
@@ -496,7 +549,7 @@
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
     });
     qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d1_who) { showWarn("warn1", "まず、誰を思い浮かべるか選んでみよう。"); return; }
+      if (!state.d1_who) { showWarn("warn1", "まず、誰を思い浮かべるか選んでみよう"); return; }
       if (!requireText(state.d1_situation, "warn1", "その人の今の状況を書いてみよう。")) return;
       if (!requireText(state.d1_moment, "warn1", "困っている一場面を書いてみよう。")) return;
       showToast("お、見えてきた👀", 2200);
@@ -518,7 +571,7 @@
       bodyHtml: `
         <p class="step-desc">問題定義の根っこを見つけます</p>
         ${recap}
-        <p class="step-desc">表面に見えている悩みだけで商品を作ると、少し浅くなります。<br>その奥にある怖さ・痛み・恥・思い込み。全部掘らなくて大丈夫。<br><br>今回は、この商品で越える一番大きな壁を、ひとつ見つけます。</p>
+        <p class="step-desc">表面に見えている悩みだけで商品を作ると、少し浅くなります。<br>その奥にある怖さ・痛み・恥・思い込み。全部掘らなくて大丈夫。<br><br>今回は、この商品で越える一番大きな壁を、ひとつ見つけます</p>
 
         <div class="field">
           <label class="field__label">この状態が続いたら、その人がいちばんつらいのは何？</label>
@@ -546,7 +599,7 @@
     qs("#nextBtn").addEventListener("click", () => {
       if (!requireText(state.d2_pain, "warn2", "いちばんつらいことを書いてみよう。")) return;
       if (!requireText(state.d2_wish, "warn2", "本当は何を変えたいか、書いてみよう。")) return;
-      showToast("よし。救いたい場所が見えてきた。", 2200);
+      showToast("よし。救いたい場所が見えてきた", 2200);
       goNextDoor(2);
     });
   }
@@ -564,7 +617,7 @@
       bodyHtml: `
         <p class="step-desc">未来提示をくっきりさせます</p>
         ${recap}
-        <p class="step-desc">この商品を受けたあと、その人の人生に何が起きていたら最高か。<br>「幸せになる」「自信がつく」「自分らしくなる」で止めない。<br><br>未来を4段階で、少しずつくっきりさせます。</p>
+        <p class="step-desc">この商品を受けたあと、その人の人生に何が起きていたら最高か。<br>「幸せになる」「自信がつく」「自分らしくなる」で止めない。<br><br>未来を4段階で、少しずつくっきりさせます</p>
 
         <div class="field">
           <label class="field__label">① 内面はどう変わる？</label>
@@ -586,7 +639,7 @@
           <label class="field__label">行き先を写真1枚にすると？</label>
           <textarea id="d3_scene" placeholder="いつ・どこで・誰が・何をしていて・どんな言葉が聞こえる？を一文で">${esc(state.d3_scene)}</textarea>
         </div>
-        <div class="note-box">未来は、物語にするともっと届く。<br>情報だけではなく、物語で伝える。<br>次の扉で、あなた自身の物語を整理します。</div>
+        <div class="note-box">未来は、物語にするともっと届く。<br>情報だけではなく、物語で伝える。<br>次の扉で、あなた自身の物語を整理します</div>
       `,
       warnId: "warn3",
     });
@@ -599,7 +652,7 @@
     qs("#nextBtn").addEventListener("click", () => {
       if (!requireText(state.d3_inner, "warn3", "内面の変化を書いてみよう。")) return;
       if (!requireText(state.d3_action, "warn3", "できるようになることを書いてみよう。")) return;
-      showToast("行き先、くっきりしてきた。", 2200);
+      showToast("行き先、くっきりしてきた", 2200);
       goNextDoor(3);
     });
   }
@@ -612,7 +665,7 @@
       n: 4, badge: "せるこ・5", title: "私が届ける理由",
       bodyHtml: `
         <p class="step-desc">なぜ？物語を整理</p>
-        <p class="step-desc">なぜ、あなたがこの商品を届けるの？<br>資格や肩書きより先に、あなたが歩いてきた道を振り返ります。<br><br>あなたの経験は、4つに分けるとひとつの物語になります。</p>
+        <p class="step-desc">なぜ、あなたがこの商品を届けるの？<br>資格や肩書きより先に、あなたが歩いてきた道を振り返ります。<br><br>あなたの経験は、4つに分けるとひとつの物語になります</p>
 
         <div class="field">
           <label class="field__label">ビフォー｜あの頃の私は？</label>
@@ -620,7 +673,7 @@
         </div>
 
         <p class="step-question">ターニングポイント｜私を変えた突破口は？（最大3つ）</p>
-        <p class="hint" style="margin-top:0;margin-bottom:12px;">方法・スキルとの出会い（コーチング・アロマ・ヨガ・数秘・発信など）／考え方・学びとの出会い（心理学・自分を責めない考え方など）／人・出来事・経験（メンター・家族・離婚・病気・転職・お客様の一言など）。転機はひとつでなくてOK。</p>
+        <p class="hint" style="margin-top:0;margin-bottom:12px;">方法・スキルとの出会い（コーチング・アロマ・ヨガ・数秘・発信など）／考え方・学びとの出会い（心理学・自分を責めない考え方など）／人・出来事・経験（メンター・家族・離婚・病気・転職・お客様の一言など）。転機はひとつでなくてOK</p>
         <div class="field"><input type="text" id="d4_turning_0" placeholder="① 突破口" value="${esc(state.d4_turning[0])}"></div>
         <div class="field"><input type="text" id="d4_turning_1" placeholder="② 突破口" value="${esc(state.d4_turning[1])}"></div>
         <div class="field"><input type="text" id="d4_turning_2" placeholder="③ 突破口" value="${esc(state.d4_turning[2])}"></div>
@@ -645,7 +698,7 @@
           <textarea id="d4_why" placeholder="自由記入">${esc(state.d4_why)}</textarea>
         </div>
 
-        <p class="big-quote">あなたの過去は、ただの昔話じゃない。<br>あなたが歩いてきた道は、誰かの地図になる。</p>
+        <p class="big-quote">あなたの過去は、ただの昔話じゃない。<br>あなたが歩いてきた道は、誰かの地図になる</p>
       `,
       warnId: "warn4",
     });
@@ -681,7 +734,7 @@
 
     qs("#nextBtn").addEventListener("click", () => {
       if (!requireText(state.d4_before, "warn4", "あの頃のあなたについて書いてみよう。")) return;
-      if (!state.d4_turning.some((t) => t.trim())) { showWarn("warn4", "突破口を、ひとつだけでも書いてみよう。"); return; }
+      if (!state.d4_turning.some((t) => t.trim())) { showWarn("warn4", "突破口を、ひとつだけでも書いてみよう"); return; }
       if (!requireText(state.d4_why, "warn4", "だから届けたい、その理由を書いてみよう。")) return;
       goNextDoor(4);
     });
@@ -718,7 +771,7 @@
     return doorShell({
       n: 5, badge: "せるこ・6", title: "何を使って連れていく？",
       bodyHtml: `
-        <p class="step-desc">あなたができることは、全部捨てなくて大丈夫。必要なら全部使っていい。<br><br>でも、お客様から見える場所に全部並べると「結局、何の人？」になります🤣<br><br>今回決めるのは、何を捨てるかではなく、何を前に出すか。</p>
+        <p class="step-desc">あなたができることは、全部捨てなくて大丈夫。必要なら全部使っていい。<br><br>でも、お客様から見える場所に全部並べると「結局、何の人？」になります🤣<br><br>今回決めるのは、何を捨てるかではなく、何を前に出すか</p>
 
         <p class="step-question">① まず、持っているものを全部出す</p>
         <div class="choice-grid">${cards}</div>
@@ -790,9 +843,9 @@
       const rest = state.d5_categories.filter((c) => c !== state.d5_primary && !state.d5_supporting.includes(c));
       restArea.innerHTML = rest.length ? `
         <div class="note-box">
-          <p style="margin-bottom:8px;">選ばなかったものも、全部あなたの財産。<br>必要なときに、裏側で使えばいい。</p>
+          <p style="margin-bottom:8px;">選ばなかったものも、全部あなたの財産。<br>必要なときに、裏側で使えばいい</p>
           <div class="sheet__tags">${rest.map((r) => `<span class="sheet__tag">${esc(r)}</span>`).join("")}</div>
-          <p class="big-quote" style="margin-top:16px; font-size:16px;">裏で総力戦。<br>表はシンプル。</p>
+          <p class="big-quote" style="margin-top:16px; font-size:16px;">裏で総力戦。<br>表はシンプル</p>
         </div>` : "";
 
       conceptArea.innerHTML = state.d5_primary ? buildConceptFragmentHtml() : "";
@@ -842,8 +895,8 @@
     bindPrimarySupport();
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (state.d5_categories.length === 0) { showWarn("warn5", "使うものを、最低ひとつ選んでみよう。"); return; }
-      if (!state.d5_primary) { showWarn("warn5", "表に出す主役を、ひとつ選んでみよう。"); return; }
+      if (state.d5_categories.length === 0) { showWarn("warn5", "使うものを、最低ひとつ選んでみよう"); return; }
+      if (!state.d5_primary) { showWarn("warn5", "表に出す主役を、ひとつ選んでみよう"); return; }
       goNextDoor(5);
     });
   }
@@ -932,11 +985,11 @@ ${who}の
       n: 6, badge: "せるこ・7", title: "どうやって届ける？",
       bodyHtml: `
         <p class="step-desc">商品を受け取る場面をつくろう</p>
-        <p class="step-desc">ここまでで、誰に・どんな悩みを・どんな未来へ・何を使って届けるかが見えてきました。<br>次は、お客様が実際にどんな形でこの商品を受けるのかを決めます。</p>
+        <p class="step-desc">ここまでで、誰に・どんな悩みを・どんな未来へ・何を使って届けるかが見えてきました。<br>次は、お客様が実際にどんな形でこの商品を受けるのかを決めます</p>
 
         <p class="step-question">① 何人くらいに届ける？</p>
         <div class="choice-grid">${sizeCards}</div>
-        <div class="note-box">講座・セッション・レッスンという名前は、まだ決めなくてOK。<br>1人でも講座はできます。10人でもグループセッションはできます。<br><br>大切なのは呼び方ではなく、誰に・どんな関わり方で・行き先まで届けるか。<br><br>はじめて商品を届ける人は、最初から大人数にしなくても大丈夫。1対1や少人数だと、お客様がどこで困るのか・何を喜ぶのかがよく見えます。まず近くで届ける→磨く→人数を増やす。商品を育ててから大きくしても遅くありません。</div>
+        <div class="note-box">講座・セッション・レッスンという名前は、まだ決めなくてOK。<br>1人でも講座はできます。10人でもグループセッションはできます。<br><br>大切なのは呼び方ではなく、誰に・どんな関わり方で・行き先まで届けるか。<br><br>はじめて商品を届ける人は、最初から大人数にしなくても大丈夫。1対1や少人数だと、お客様がどこで困るのか・何を喜ぶのかがよく見えます。まず近くで届ける→磨く→人数を増やす。商品を育ててから大きくしても遅くありません</div>
 
         <p class="step-question" style="margin-top:26px;">② どこで届ける？</p>
         <div class="choice-grid">${placeCards}</div>
@@ -945,20 +998,20 @@ ${who}の
         </div>
 
         <p class="step-question" style="margin-top:26px;">③ 一緒にいる時間に何をする？</p>
-        <p class="step-desc">お客様が未来へ進むために、あなたと一緒にやることを選びます。必要なものだけでOK。</p>
+        <p class="step-desc">お客様が未来へ進むために、あなたと一緒にやることを選びます。必要なものだけでOK</p>
         <div class="choice-grid">${duringCards}</div>
         <div class="inline-input" id="d6DuringOtherWrap" ${state.d6_during.includes("その他") ? "" : "hidden"}>
           <input type="text" id="d6_during_other" placeholder="その他の内容を入力" value="${esc(state.d6_during_other)}">
         </div>
 
         <p class="step-question" style="margin-top:26px;">④ 会っていない時間に何を支える？</p>
-        <p class="step-desc">セッションやレッスンの間にも実践してほしい場合は、必要なものだけ追加します。</p>
+        <p class="step-desc">セッションやレッスンの間にも実践してほしい場合は、必要なものだけ追加します</p>
         <div class="choice-grid">${betweenCards}</div>
         <div class="inline-input" id="d6BetweenOtherWrap" ${state.d6_between.includes("その他") ? "" : "hidden"}>
           <input type="text" id="d6_between_other" placeholder="その他の内容を入力" value="${esc(state.d6_between_other)}">
         </div>
 
-        <div class="note-box">盛りすぎ注意。<br>資料も動画もLINEも宿題も、全部つけなくて大丈夫。<br><br>豪華に見えるかではなく、お客様が行き先にたどり着くために本当に必要か？　それだけで選ぼう。</div>
+        <div class="note-box">盛りすぎ注意。<br>資料も動画もLINEも宿題も、全部つけなくて大丈夫。<br><br>豪華に見えるかではなく、お客様が行き先にたどり着くために本当に必要か？　それだけで選ぼう</div>
       `,
       warnId: "warn6",
     });
@@ -993,8 +1046,8 @@ ${who}の
     qs("#d6_between_other").addEventListener("input", (e) => { state.d6_between_other = e.target.value; saveState(); });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d6_size) { showWarn("warn6", "何人くらいに届けるか選んでみよう。"); return; }
-      if (!state.d6_place) { showWarn("warn6", "どこで届けるか選んでみよう。"); return; }
+      if (!state.d6_size) { showWarn("warn6", "何人くらいに届けるか選んでみよう"); return; }
+      if (!state.d6_place) { showWarn("warn6", "どこで届けるか選んでみよう"); return; }
       goNextDoor(6);
     });
   }
@@ -1025,14 +1078,14 @@ ${who}の
       n: 7, badge: "扉7", title: "行き先までの道のりをつくる",
       bodyHtml: `
         ${recap}
-        <p class="step-desc">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？<br>必要な順番を、小さく分けてみます。</p>
+        <p class="step-desc">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？<br>必要な順番を、小さく分けてみます</p>
 
         <p class="step-question">行き先までに必要なことを、最大4つ</p>
         <div class="field"><input type="text" id="d7_step_0" placeholder="① まず" value="${esc(state.d7_steps[0])}"></div>
         <div class="field"><input type="text" id="d7_step_1" placeholder="② 次に" value="${esc(state.d7_steps[1])}"></div>
         <div class="field"><input type="text" id="d7_step_2" placeholder="③ その次に" value="${esc(state.d7_steps[2])}"></div>
         <div class="field"><input type="text" id="d7_step_3" placeholder="④ 必要なら" value="${esc(state.d7_steps[3])}"></div>
-        <p class="hint">全部埋めなくてOK。</p>
+        <p class="hint">全部埋めなくてOK</p>
 
         <p class="step-question" style="margin-top:26px;">では、何回くらい必要そう？</p>
         <div class="choice-grid">${countCards}</div>
@@ -1052,8 +1105,8 @@ ${who}の
     qsa('input[name="d7_duration"]').forEach((r) => { r.addEventListener("change", () => { state.d7_duration = r.value; saveState(); }); });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d7_steps.some((s) => s.trim())) { showWarn("warn7", "行き先までの道のりを、ひとつだけでも書いてみよう。"); return; }
-      if (!state.d7_count) { showWarn("warn7", "何回くらい必要そうか、選んでみよう。"); return; }
+      if (!state.d7_steps.some((s) => s.trim())) { showWarn("warn7", "行き先までの道のりを、ひとつだけでも書いてみよう"); return; }
+      if (!state.d7_count) { showWarn("warn7", "何回くらい必要そうか、選んでみよう"); return; }
       goNextDoor(7);
     });
   }
@@ -1086,10 +1139,10 @@ ${who}の
     return doorShell({
       n: 8, badge: "扉8", title: "この商品、いくらで届ける？",
       bodyHtml: `
-        <p class="step-desc">いきなり金額を決めなくて大丈夫。<br>価格を考えるときは、まず3つの価値から見てみよう。</p>
+        <p class="step-desc">いきなり金額を決めなくて大丈夫。<br>価格を考えるときは、まず3つの価値から見てみよう</p>
 
         <p class="step-question">① あなたが使う時間と労力</p>
-        <p class="step-desc">お客様と直接話す時間だけが仕事ではありません。</p>
+        <p class="step-desc">お客様と直接話す時間だけが仕事ではありません</p>
         <div class="choice-grid">${timeCards}</div>
         <div class="field" style="margin-top:16px;">
           <label class="field__label">全部合わせると、ひとりのお客様にどのくらい時間を使いそう？</label>
@@ -1101,13 +1154,13 @@ ${who}の
         </div>
 
         <p class="step-question" style="margin-top:26px;">② あなたが渡している知識・経験・技術</p>
-        <div class="note-box">あなたがそこまで来るために、学んできたこと・資格・専門技術・お金をかけて身につけたこと・何年も積み重ねた経験・失敗してわかったこと・お客様を支えてきた実績があります。<br><br>あなたが何年もかけて得たものを、お客様はショートカットして受け取れる。その価値も、忘れないでね。</div>
+        <div class="note-box">あなたがそこまで来るために、学んできたこと・資格・専門技術・お金をかけて身につけたこと・何年も積み重ねた経験・失敗してわかったこと・お客様を支えてきた実績があります。<br><br>あなたが何年もかけて得たものを、お客様はショートカットして受け取れる。その価値も、忘れないでね</div>
 
         <p class="step-question" style="margin-top:26px;">③ お客様が手にする未来の価値</p>
         <div class="choice-grid">${futureCards}</div>
 
         <p class="step-question" style="margin-top:26px;">今回の価格を決めよう</p>
-        <p class="step-desc">安いから売れる、ではありません。高ければ価値がある、でもありません。<br>今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を、まず決めよう。</p>
+        <p class="step-desc">安いから売れる、ではありません。高ければ価値がある、でもありません。<br>今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を、まず決めよう</p>
         <div class="price-preset-grid" id="pricePresetGrid">
           ${PRICE_PRESETS.map((p) => `<button type="button" class="price-preset-btn${priceNum === p ? " is-active" : ""}" data-price="${p}">${p.toLocaleString()}円</button>`).join("")}
         </div>
@@ -1119,7 +1172,7 @@ ${who}の
           <div class="sheet__price-label">今回の価格</div>
           <div class="sheet__price-value" id="pricePreview">¥${priceNum.toLocaleString()}</div>
         </div>
-        <div class="note-box">これは最終価格じゃなくていい。<br>まず届ける。お客様の反応を見る。商品を磨く。実績が増える。<br>そのたびに、価格を見直していい。</div>
+        <div class="note-box">これは最終価格じゃなくていい。<br>まず届ける。お客様の反応を見る。商品を磨く。実績が増える。<br>そのたびに、価格を見直していい</div>
       `,
       warnId: "warn8",
     });
@@ -1157,7 +1210,7 @@ ${who}の
     });
 
     qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d8_price || Number(state.d8_price) <= 0) { showWarn("warn8", "価格を決めてみよう（プリセットか自由入力で）。"); return; }
+      if (!state.d8_price || Number(state.d8_price) <= 0) { showWarn("warn8", "価格を決めてみよう（プリセットか自由入力で）"); return; }
       goNextDoor(8);
     });
   }
@@ -1174,9 +1227,9 @@ ${who}の
     return doorShell({
       n: 9, badge: "扉9", title: "我が子に、最初の名前を。",
       bodyHtml: `
-        <p class="step-desc">ここまで一生懸命考えてきた商品。誰を助けたいか、どんな壁を越えるか、どんな未来へ連れていくか、なぜ私が届けるのか、何を使って、どう届けるのか。<br><br>少しずつ、ひとつの商品になってきました。<br>ここで一度、この我が子に名前をつけてみよう。</p>
+        <p class="step-desc">ここまで一生懸命考えてきた商品。誰を助けたいか、どんな壁を越えるか、どんな未来へ連れていくか、なぜ私が届けるのか、何を使って、どう届けるのか。<br><br>少しずつ、ひとつの商品になってきました。<br>ここで一度、この我が子に名前をつけてみよう</p>
 
-        <div class="note-box">名前は、かっこよさより伝わりやすさ。<br><br>ありがちなのが、謎の英語・聞いたことのない造語・自分だけ気分が上がる自己満ポエムタイトル🤣<br><br>でも、お客様が見た瞬間に「何のサービス？」「私に関係ある？」「どうなれるの？」がわからなければもったいない。<br><br>誰のための商品か・何が変わるのか・どんな行き先へ行けるのか。このどれかが伝わる名前を考えてみよう。</div>
+        <div class="note-box">名前は、かっこよさより伝わりやすさ。<br><br>ありがちなのが、謎の英語・聞いたことのない造語・自分だけ気分が上がる自己満ポエムタイトル🤣<br><br>でも、お客様が見た瞬間に「何のサービス？」「私に関係ある？」「どうなれるの？」がわからなければもったいない。<br><br>誰のための商品か・何が変わるのか・どんな行き先へ行けるのか。このどれかが伝わる名前を考えてみよう</div>
 
         <p class="step-question">名前をつける前の3チェック</p>
         <div class="choice-grid">
@@ -1188,8 +1241,8 @@ ${who}の
           <label class="field__label">今、この商品につけるなら、どんな名前？</label>
           <input type="text" id="d9_name" placeholder="例）朝のイライラが手放せる、親子の言葉がけレッスン" value="${esc(state.d9_name)}">
         </div>
-        <p class="hint">仮タイトルでOK。届けているうちに、もっといい名前が降りてきたら変えていい。今は、まず呼べる名前をつけよう。</p>
-        <p class="big-quote" style="font-size:17px;">あなたが好きな名前　×　お客様に伝わる名前<br>その真ん中を探そう。</p>
+        <p class="hint">仮タイトルでOK。届けているうちに、もっといい名前が降りてきたら変えていい。今は、まず呼べる名前をつけよう</p>
+        <p class="big-quote" style="font-size:17px;">あなたが好きな名前　×　お客様に伝わる名前<br>その真ん中を探そう</p>
       `,
       warnId: "warn9",
     });
@@ -1201,7 +1254,7 @@ ${who}の
     const input = qs("#d9_name");
     input.addEventListener("input", () => { state.d9_name = input.value; saveState(); });
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d9_name, "warn9", "仮の名前でいいので、つけてみよう。")) return;
+      if (!requireText(state.d9_name, "warn9", "仮の名前でいいので、つけてみよう")) return;
       goNextDoor(9);
     });
   }
@@ -1231,7 +1284,7 @@ ${who}の
       n: 10, badge: "扉10", title: "あなたから買う理由を見つける",
       bodyHtml: `
         <p class="step-desc">この商品を支えている、あなたの宝物</p>
-        <p class="step-desc">ここまでで、あなたの魂商品がカタチになりました。最後にもうひとつ。<br><br>同じような商品やサービスがあったとしても、あなたから受けたい理由はどこにある？<br><br>ここでは、商品を支えている事実・経験・情熱を集めます。資格の数を競うページではありません。お客様が安心して「あなたにお願いしたい」と思える材料を見つけます。</p>
+        <p class="step-desc">ここまでで、あなたの魂商品がカタチになりました。最後にもうひとつ。<br><br>同じような商品やサービスがあったとしても、あなたから受けたい理由はどこにある？<br><br>ここでは、商品を支えている事実・経験・情熱を集めます。資格の数を競うページではありません。お客様が安心して「あなたにお願いしたい」と思える材料を見つけます</p>
 
         <p class="step-question">① 支える事実（最大3つ）</p>
         <div class="choice-grid">${factCards}</div>
@@ -1254,7 +1307,7 @@ ${who}の
           <textarea id="d10_promise" placeholder="自由記入">${esc(state.d10_promise)}</textarea>
         </div>
 
-        <p class="big-quote">あなたの商品を選ぶ理由は、資格ひとつ、実績ひとつではありません。<br>歩いてきた道。身につけた力。積み重ねた事実。そして届けたいという情熱。<br>その全部が、あなたの信用になる。</p>
+        <p class="big-quote">あなたの商品を選ぶ理由は、資格ひとつ、実績ひとつではありません。<br>歩いてきた道。身につけた力。積み重ねた事実。そして届けたいという情熱。<br>その全部が、あなたの信用になる</p>
       `,
       warnId: "warn10",
     });
@@ -1688,7 +1741,7 @@ ${who}の
     <div class="card deck-intro">
       <span class="eyebrow">詳細版｜横A4資料</span>
       <h2 class="step-title" style="font-size:19px;">全${total}ページの詳細資料（デッキ）</h2>
-      <p class="step-desc">1枚シートとは別に、10の扉で考えたことを写真つきで振り返れる資料です。あとから文章や写真を直せます。</p>
+      <p class="step-desc">1枚シートとは別に、10の扉で考えたことを写真つきで振り返れる資料です。あとから文章や写真を直せます</p>
       <button class="btn btn--outline-gold" id="toggleDeckBtn" type="button">${deckExpanded ? "詳細資料を閉じる" : "詳細資料を表示する"}</button>
     </div>
     <div id="deckSection" ${deckExpanded ? "" : "hidden"}>
@@ -1847,8 +1900,8 @@ ${who}の
 
 ここから人に届けて、話して、喜ばれて、失敗して、直して、また届ける。
 
-そうやって、あなたの商品は育っていきます。</div>
-      <p class="result-banner__final">まず、ひとりに届けよう。</p>
+そうやって、あなたの商品は育っていきます</div>
+      <p class="result-banner__final">まず、ひとりに届けよう</p>
     </div>
 
     <div class="card photo-upload">
@@ -1938,7 +1991,7 @@ ${who}の
           <p class="chotty-item__label">${esc(a.label)}</p>
           <p class="chotty-item__body">${nl2br(a.body)}</p>
         </div>`).join("")}
-      <p class="hint">※ 市場調査は行っていません。今回の回答から見える仮説として読んでね。</p>
+      <p class="hint">※ 市場調査は行っていません。今回の回答から見える仮説として読んでね</p>
     </div>
 
     ${existingChecklist}
@@ -1967,7 +2020,7 @@ ${who}の
               <span>${esc(label)}</span>
             </label>`).join("")}
         </div>
-        <p class="hint" style="margin-top:14px;">チェックできなかった場所が、次に磨く場所。<br>商品を増やす前に、まずここを磨こう。</p>
+        <p class="hint" style="margin-top:14px;">チェックできなかった場所が、次に磨く場所。<br>商品を増やす前に、まずここを磨こう</p>
       </div>`;
   }
 

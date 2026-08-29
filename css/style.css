@@ -1,37 +1,57 @@
 /* ============================================================
-   ここらぼ 魂商品作成キット — スタイルシート
-   トーン：秋の暖色くすみカラー / 上品 / 余白多め / スマホ最優先
+   ここらぼ 魂商品作成ミラクルキット — スタイルシート
+   トーン：秋色の深みローズ×ボルドー×マスタード × 小さなゴールドの輝き
+   PCファースト（長文入力・ご提案書編集はPCでの作業を前提）、
+   50〜60代でも読める高コントラスト設計
    ============================================================ */
 
 :root{
-  /* ---- カラーパレット：秋のくすみ暖色 ---- */
-  --bg: #FBF6F0;
-  --bg-soft: #F4E9DD;
+  /* ---- ベース：アイボリー／ベージュ ---- */
+  --bg: #FBF3E8;
+  --bg-soft: #F2E1CB;
   --card: #FFFFFF;
-  --card-soft: #FBF3EA;
+  --card-soft: #FAF0E1;
 
-  --ink: #3B2E27;
-  --ink-soft: #7A6559;
-  --ink-faint: #A8968A;
+  /* ---- 文字色：しっかり濃く、コントラストを確保 ---- */
+  --ink: #37211A;
+  --ink-soft: #5E3D2E;
+  --ink-faint: #7E6151;
 
-  --gold: #C8996B;
-  --gold-deep: #A97A4C;
-  --gold-pale: #EAD4B8;
+  /* ---- ゴールド ---- */
+  --gold: #C79654;
+  --gold-deep: #9C6D2E;
+  --gold-pale: #EAD3A0;
+  --gold-shine: #F6D98A;
+
+  /* ---- 深いローズ／ボルドー（せるこ番号・アクセント） ---- */
+  --rose: #C4506A;
+  --rose-deep: #9E2F4C;
+  --bordeaux: #5C1420;
+  --rose-pale: #F4D9DF;
 
   --mauve: #C99B96;
   --mauve-deep: #B67C7C;
 
+  /* ---- ピンクゴールド（キラキラ用。ジュエリー的な小さな輝きにのみ使用） ---- */
+  --pinkgold: #E8A97A;
+  --pinkgold-shine: #F3C89A;
+
+  /* ---- キャメル／マスタード ---- */
+  --camel: #B4813F;
+  --mustard: #B07E22;
+  --mustard-deep: #8A611A;
+
   --taupe: #B9A99A;
 
-  --accent-red: #A73B3B;
+  --accent-red: #9E2F4C;
   --accent-red-soft: #E9C9C4;
 
-  --line: #E7D9C8;
-  --line-soft: #F0E4D6;
+  --line: #E2CBAC;
+  --line-soft: #EEDFC6;
 
-  --shadow-sm: 0 2px 10px rgba(90, 62, 40, 0.06);
-  --shadow-md: 0 10px 30px rgba(90, 62, 40, 0.10);
-  --shadow-lg: 0 20px 50px rgba(90, 62, 40, 0.16);
+  --shadow-sm: 0 2px 10px rgba(70, 40, 30, 0.08);
+  --shadow-md: 0 10px 30px rgba(70, 40, 30, 0.13);
+  --shadow-lg: 0 20px 50px rgba(70, 40, 30, 0.20);
 
   --radius-sm: 10px;
   --radius-md: 18px;
@@ -40,25 +60,29 @@
   --font-serif: "Shippori Mincho", serif;
   --font-sans: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
 
-  --maxw: 640px;
+  --maxw: 780px;
+  --maxw-wide: 1180px;
+  --maxw-studio: 1440px;
 }
 
 *, *::before, *::after{ box-sizing: border-box; }
 
-html{ -webkit-text-size-adjust: 100%; }
+html{ -webkit-text-size-adjust: 100%; font-size: 16.5px; }
 
 body{
   margin:0;
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at 12% 8%, rgba(200,153,107,0.10), transparent 42%),
-    radial-gradient(circle at 90% 85%, rgba(201,155,150,0.14), transparent 45%),
+    radial-gradient(circle at 10% 6%, rgba(199,150,84,0.12), transparent 40%),
+    radial-gradient(circle at 92% 10%, rgba(196,80,106,0.10), transparent 42%),
+    radial-gradient(circle at 90% 90%, rgba(180,129,63,0.10), transparent 45%),
     var(--bg);
   color: var(--ink);
   line-height: 1.85;
   letter-spacing: 0.02em;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
 }
 
 h1,h2,h3{ font-family: var(--font-serif); font-weight: 700; margin: 0; color: var(--ink); }
@@ -69,10 +93,113 @@ button{ font-family: inherit; }
 
 img{ max-width: 100%; display:block; }
 
+/* ゴールド／ピンクゴールドの小さな輝き（ジュエリー的アクセント） */
+.sparkle{ position:relative; display:inline-block; }
+.sparkle::after{
+  content:"✦"; position:absolute; top:-.55em; right:-.7em;
+  font-size:.55em;
+  background: linear-gradient(135deg, var(--gold-shine), var(--pinkgold-shine), var(--rose));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter: drop-shadow(0 0 5px rgba(232,169,122,0.7));
+}
+.gold-line{
+  width:56px; height:3px; margin:0 auto; border-radius:999px;
+  background: linear-gradient(90deg, transparent, var(--gold-shine), var(--rose), transparent);
+}
+
 .app-main{
   max-width: var(--maxw);
   margin: 0 auto;
   padding: 24px 18px 80px;
+}
+
+.app-main--wide{ max-width: var(--maxw-wide); }
+.app-main--studio{ max-width: var(--maxw-studio); padding: 0; }
+
+/* ================= 扉画面：質問カード＋育っていく商品プレビュー ================= */
+
+.door-layout{
+  display: block;
+}
+
+.door-layout__preview{ margin-top: 22px; }
+
+@media (min-width: 1040px){
+  .door-layout{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    align-items: start;
+    gap: 28px;
+  }
+  .door-layout__preview{
+    margin-top: 0;
+    position: sticky;
+    top: 108px;
+  }
+}
+
+.product-preview{
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-preview__title{
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--bordeaux);
+  margin-bottom: 4px;
+}
+
+.product-preview__count{
+  font-size: 12.5px;
+  color: var(--gold-deep);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.product-preview__list{ display:flex; flex-direction:column; gap: 10px; }
+
+.product-preview__row{
+  border-radius: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--line-soft);
+  transition: background .2s, border-color .2s;
+}
+
+.product-preview__row.is-filled{
+  background: var(--card-soft);
+  border-color: var(--gold-pale);
+}
+
+.product-preview__row.is-empty{ opacity: 0.55; }
+
+.product-preview__label{
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--ink-faint);
+  margin-bottom: 3px;
+}
+
+.product-preview__value{
+  font-size: 13.5px;
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-preview__row.is-empty .product-preview__value{ font-weight: 500; color: var(--ink-faint); }
+
+@media (min-width: 860px){
+  .app-main{ padding: 40px 24px 100px; }
+  html{ font-size: 17px; }
 }
 
 /* ================= ヘッダー / 進捗バー ================= */
@@ -87,61 +214,82 @@ img{ max-width: 100%; display:block; }
 }
 
 .app-header__inner{
-  max-width: var(--maxw);
+  max-width: var(--maxw-wide);
   margin: 0 auto;
-  padding: 12px 18px 14px;
+  padding: 14px 18px 16px;
 }
 
 .app-header__brand{
-  font-size: 12px;
+  font-size: 12.5px;
   letter-spacing: 0.12em;
   color: var(--gold-deep);
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 }
 
 .progress__track{
-  height: 6px;
+  height: 9px;
   border-radius: 999px;
   background: var(--line-soft);
   overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(70,40,30,0.12);
 }
 
 .progress__fill{
   height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--mauve-deep));
+  background: linear-gradient(90deg, var(--gold), var(--rose-deep) 70%, var(--bordeaux));
   border-radius: 999px;
-  transition: width 0.45s cubic-bezier(.4,0,.2,1);
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 0 10px rgba(196,80,106,0.5);
 }
 
 .progress__row{
   display:flex;
   justify-content:space-between;
   align-items:baseline;
-  margin-top: 6px;
+  margin-top: 8px;
   gap: 10px;
 }
 
 .progress__label{
-  font-size: 12.5px;
-  color: var(--gold-deep);
-  font-weight: 700;
+  font-size: 14.5px;
+  color: var(--rose-deep);
+  font-weight: 800;
 }
 
 .progress__door{
-  font-size: 11.5px;
-  color: var(--ink-faint);
-  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 700;
   white-space: nowrap;
+}
+
+/* ================= せるこ番号バッジ（章タイトル） ================= */
+
+.seko-badge{
+  display:inline-flex; align-items:center; gap:9px;
+  font-family: var(--font-serif); font-size: 21px; font-weight:700;
+  color:#fff; background: linear-gradient(135deg, var(--rose-deep) 0%, var(--bordeaux) 100%);
+  padding: 11px 24px; border-radius: 999px; margin-bottom: 20px;
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.18);
+  letter-spacing:0.03em;
+  animation: doorPop .45s cubic-bezier(.34,1.56,.64,1) both;
+}
+.seko-badge::after{
+  content:"✦"; color:var(--gold-shine); font-size:.68em;
+  text-shadow:0 0 8px rgba(246,217,138,.9);
+}
+@media (min-width:860px){ .seko-badge{ font-size:25px; padding:13px 30px; } }
+
+@keyframes doorPop{
+  0%{ opacity:0; transform: scale(0.82) translateY(6px); }
+  60%{ opacity:1; transform: scale(1.05) translateY(0); }
+  100%{ transform: scale(1); }
 }
 
 /* ================= SELF 1（現在地確認） ================= */
 
 .self1-card{ text-align:left; }
-.self1-eyebrow{
-  display:inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
-  color: var(--mauve-deep); background: #FBEDEC; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px;
-}
 
 /* ================= 節目メッセージ ================= */
 
@@ -149,9 +297,9 @@ img{ max-width: 100%; display:block; }
   margin-top: 16px;
   padding: 14px 18px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #F6D9DE, #FBEDEC);
-  border: 1px dashed var(--mauve-deep);
-  color: #8A4A54;
+  background: linear-gradient(135deg, var(--rose-pale), #FBEDEC);
+  border: 1px dashed var(--rose-deep);
+  color: var(--bordeaux);
   font-weight: 700;
   font-size: 14.5px;
   text-align:center;
@@ -272,13 +420,14 @@ img{ max-width: 100%; display:block; }
 }
 
 .step-title{
-  font-size: 24px;
-  line-height: 1.5;
-  margin-bottom: 14px;
+  font-size: 27px;
+  line-height: 1.45;
+  margin-bottom: 16px;
+  font-weight:800;
 }
 
 .step-desc{
-  font-size: 15px;
+  font-size: 16.5px;
   color: var(--ink-soft);
   margin-bottom: 22px;
   white-space: pre-line;
@@ -287,8 +436,8 @@ img{ max-width: 100%; display:block; }
 .step-desc strong{ color: var(--ink); }
 
 .step-question{
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   margin-bottom: 12px;
   color: var(--ink);
 }
@@ -298,7 +447,7 @@ img{ max-width: 100%; display:block; }
 textarea, input[type="text"], input[type="number"]{
   width: 100%;
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 17px;
   color: var(--ink);
   background: var(--card-soft);
   border: 1.5px solid var(--line);
@@ -325,14 +474,14 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 .field__label{
   display:block;
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 14.5px;
+  font-weight: 800;
   color: var(--gold-deep);
   margin-bottom: 8px;
 }
 
 .hint{
-  font-size: 13px;
+  font-size: 13.5px;
   color: var(--ink-faint);
   margin-top: 8px;
 }
@@ -385,8 +534,8 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .choice-card{
   display:flex;
   align-items:center;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 14px;
+  padding: 17px 19px;
   border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
   background: var(--card-soft);
@@ -400,7 +549,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .choice-card input{ display:none; }
 
 .choice-card__mark{
-  width: 22px; height: 22px;
+  width: 25px; height: 25px;
   border-radius: 7px;
   border: 1.6px solid var(--taupe);
   background: #fff;
@@ -431,8 +580,8 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   box-shadow: var(--shadow-sm);
 }
 
-.choice-card__text{ display:block; font-size: 15px; color: var(--ink); font-weight: 500; }
-.choice-card__sub{ display:block; font-size: 12.5px; color: var(--ink-faint); margin-top:3px; }
+.choice-card__text{ display:block; font-size: 16.5px; color: var(--ink); font-weight: 600; }
+.choice-card__sub{ display:block; font-size: 13.5px; color: var(--ink-soft); margin-top:3px; }
 
 .inline-input{
   margin-top: 8px;
@@ -464,9 +613,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   appearance:none;
   border:none;
   cursor:pointer;
-  font-weight: 700;
-  font-size: 15.5px;
-  padding: 15px 22px;
+  font-weight: 800;
+  font-size: 17px;
+  padding: 17px 24px;
   border-radius: 999px;
   transition: transform .12s, box-shadow .2s, opacity .2s;
   letter-spacing: 0.03em;
@@ -475,9 +624,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .btn:active{ transform: scale(0.97); }
 
 .btn--primary{
-  background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
   color: #fff;
-  box-shadow: 0 8px 20px rgba(169,122,76,0.35);
+  box-shadow: 0 8px 22px rgba(94,20,32,0.35);
   width: 100%;
 }
 
@@ -1120,13 +1269,17 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   position: fixed;
   left: 50%;
   bottom: 26px;
-  transform: translate(-50%, 20px);
-  background: var(--ink);
+  transform: translate(-50%, 20px) scale(0.96);
+  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
   color: #fff;
-  padding: 12px 20px;
-  border-radius: 999px;
-  font-size: 13.5px;
-  box-shadow: var(--shadow-md);
+  padding: 14px 24px;
+  border-radius: 22px;
+  font-size: 14.5px;
+  font-weight: 700;
+  text-align: center;
+  white-space: pre-line;
+  line-height: 1.6;
+  box-shadow: var(--shadow-lg);
   opacity:0;
   pointer-events:none;
   transition: all .3s ease;
@@ -1137,7 +1290,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 .toast.show{
   opacity:1;
-  transform: translate(-50%, 0);
+  transform: translate(-50%, 0) scale(1);
 }
 
 /* ================= フッター ================= */
@@ -1159,12 +1312,16 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .step-mascot{
   display:flex;
   justify-content:center;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .step-mascot svg{ width: 46px; height:46px; }
-.step-mascot__img{ width: 90px; height:auto; object-fit: contain; }
-.chotty-card__intro-img{ width:52px; height:52px; object-fit:contain; flex:none; }
+.step-mascot__img{ width: 170px; height:auto; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(94,20,32,0.18)); }
+.chotty-card__intro-img{ width:88px; height:88px; object-fit:contain; flex:none; }
+
+@media (min-width: 860px){
+  .step-mascot__img{ width: 200px; }
+}
 
 /* ================= 印刷対応 ================= */
 
