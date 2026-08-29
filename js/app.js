@@ -71,12 +71,12 @@
 
     // 扉7：行き先までの道のり
     d7_steps: ["", "", "", ""],
-    d7_count: "",
-    d7_duration: "",
+    d7_item_counts: {}, // { 支援内容ラベル: { count: "", duration: "" } }（扉6で選んだ内容ごとに回数・時間を持つ）
 
     // 扉8：価格を決める
     d8_time_checks: [],
-    d8_time_hours: "",
+    d8_weekly_hours: "",
+    d8_period_weeks: "",
     d8_min_price: "",
     d8_future_value: "",
     d8_price: "",
@@ -115,6 +115,17 @@
       // ネストしたデフォルト値を保護（古いデータからの復元時に壊れないように）
       merged.d4_turning = Array.isArray(parsed.d4_turning) ? parsed.d4_turning : ["", "", ""];
       merged.d7_steps = Array.isArray(parsed.d7_steps) ? parsed.d7_steps : ["", "", "", ""];
+      merged.d7_item_counts = parsed.d7_item_counts && typeof parsed.d7_item_counts === "object" ? parsed.d7_item_counts : {};
+      // 旧データ（回数・時間が扉全体でひとつだけだった頃）からの移行：内容が空でも情報を失わないよう「これまでの内容」として保持
+      if ((parsed.d7_count || parsed.d7_duration) && Object.keys(merged.d7_item_counts).length === 0) {
+        merged.d7_item_counts["これまでの内容"] = { count: parsed.d7_count || "", duration: parsed.d7_duration || "" };
+      }
+      merged.d8_weekly_hours = typeof parsed.d8_weekly_hours === "string" ? parsed.d8_weekly_hours : "";
+      merged.d8_period_weeks = typeof parsed.d8_period_weeks === "string" ? parsed.d8_period_weeks : "";
+      // 旧データ（合計時間を自由入力していた頃）からの移行：週あたりの目安として引き継ぐ
+      if (parsed.d8_time_hours && !merged.d8_weekly_hours) {
+        merged.d8_weekly_hours = parsed.d8_time_hours;
+      }
       merged.d9_check = Array.isArray(parsed.d9_check) ? parsed.d9_check : [false, false, false];
       merged.d10_facts_detail = Array.isArray(parsed.d10_facts_detail) ? parsed.d10_facts_detail : ["", "", ""];
       merged.finalChecklist = Array.isArray(parsed.finalChecklist) && parsed.finalChecklist.length === 7
@@ -1055,8 +1066,36 @@ ${who}の
   /* ---------------------------------------------------------
      扉7｜行き先までの道のりをつくる
   --------------------------------------------------------- */
-  const D7_COUNT_OPTIONS = ["1回", "2回", "3回", "4回", "5回以上", "まだわからない"];
-  const D7_DURATION_OPTIONS = ["30分", "45分", "60分", "90分", "120分", "その他", "まだ決めなくてOK"];
+  const D7_DURATION_OPTIONS = ["", "30分", "45分", "60分", "90分", "120分", "まだ決めなくてOK"];
+
+  // 扉6で選んだ「一緒にいる時間／会っていない時間」の内容ごとに、回数・時間を入力する対象を作る
+  function d7SupportItems() {
+    const items = [];
+    (state.d6_during || []).forEach((v) => {
+      if (v === "その他") { if (state.d6_during_other.trim()) items.push(state.d6_during_other.trim()); }
+      else items.push(v);
+    });
+    (state.d6_between || []).forEach((v) => {
+      if (v === "特になし") return;
+      if (v === "その他") { if (state.d6_between_other.trim()) items.push(state.d6_between_other.trim()); }
+      else items.push(v);
+    });
+    return items;
+  }
+  function d7ItemValue(item) {
+    return state.d7_item_counts[item] || { count: "", duration: "" };
+  }
+  function d7ItemSummaryLine() {
+    return d7SupportItems()
+      .map((item) => {
+        const v = d7ItemValue(item);
+        if (!v.count) return "";
+        const dur = v.duration && v.duration !== "まだ決めなくてOK" ? `・${v.duration}` : "";
+        return `${item}［${v.count}回${dur}］`;
+      })
+      .filter(Boolean)
+      .join("　");
+  }
 
   function renderDoor7() {
     const recap = recapCard("ここまでの道しるべ", [
@@ -1065,17 +1104,28 @@ ${who}の
       { label: "行き先", value: state.d3_action },
       { label: "届け方", value: [state.d6_size, state.d6_place].filter(Boolean).join(" / ") },
     ]);
-    const countCards = D7_COUNT_OPTIONS.map((v, i) => choiceCard({
-      type: "radio", name: "d7_count", value: v, id: "d7_count_" + i, shape: "round",
-      checked: state.d7_count === v, label: v,
-    })).join("");
-    const durationCards = D7_DURATION_OPTIONS.map((v, i) => choiceCard({
-      type: "radio", name: "d7_duration", value: v, id: "d7_dur_" + i, shape: "round",
-      checked: state.d7_duration === v, label: v,
-    })).join("");
+    const items = d7SupportItems();
+    const itemRows = items.length ? items.map((item, i) => {
+      const v = d7ItemValue(item);
+      return `
+      <div class="d7-item-row">
+        <p class="d7-item-row__label">${esc(item)}</p>
+        <div class="d7-item-row__controls">
+          <label class="d7-item-row__field">回数
+            <input type="text" inputmode="numeric" class="d7-item-count" data-item="${esc(item)}" placeholder="例）6" value="${esc(v.count)}">回
+          </label>
+          <label class="d7-item-row__field">1回の時間
+            <select class="d7-item-duration" data-item="${esc(item)}">
+              ${D7_DURATION_OPTIONS.map((d) => `<option value="${esc(d)}" ${v.duration === d ? "selected" : ""}>${d ? esc(d) : "（選ぶ）"}</option>`).join("")}
+            </select>
+          </label>
+        </div>
+      </div>`;
+    }).join("") : `
+      <p class="hint">扉6で「一緒にいる時間・会っていない時間」に何をするかを選ぶと、ここに回数の入力欄が出てきます。</p>`;
 
     return doorShell({
-      n: 7, badge: "扉7", title: "行き先までの道のりをつくる",
+      n: 7, title: "行き先までの道のりをつくる",
       bodyHtml: `
         ${recap}
         <p class="step-desc">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？<br>必要な順番を、小さく分けてみます</p>
@@ -1087,12 +1137,9 @@ ${who}の
         <div class="field"><input type="text" id="d7_step_3" placeholder="④ 必要なら" value="${esc(state.d7_steps[3])}"></div>
         <p class="hint">全部埋めなくてOK</p>
 
-        <p class="step-question" style="margin-top:26px;">では、何回くらい必要そう？</p>
-        <div class="choice-grid">${countCards}</div>
+        <p class="step-question" style="margin-top:26px;">扉6で選んだ内容ごとに、何回くらい必要そう？</p>
+        <div class="d7-item-list">${itemRows}</div>
         <div class="note-box">書いた数＝回数ではありません。1回でいくつか進んでもOK。<br>実践する時間が必要なら、次回まで間を空けてもOK。<br><br>行き先まで、本当に必要な回数だけ。豪華に見せるために増やさない🤣</div>
-
-        <p class="step-question" style="margin-top:26px;">1回あたりの時間は？（任意）</p>
-        <div class="choice-grid">${durationCards}</div>
       `,
       warnId: "warn7",
     });
@@ -1101,12 +1148,28 @@ ${who}の
     [0, 1, 2, 3].forEach((i) => {
       qs(`#d7_step_${i}`).addEventListener("input", (e) => { state.d7_steps[i] = e.target.value; saveState(); });
     });
-    qsa('input[name="d7_count"]').forEach((r) => { r.addEventListener("change", () => { state.d7_count = r.value; saveState(); }); });
-    qsa('input[name="d7_duration"]').forEach((r) => { r.addEventListener("change", () => { state.d7_duration = r.value; saveState(); }); });
+    qsa(".d7-item-count").forEach((el) => {
+      el.addEventListener("input", () => {
+        const item = el.dataset.item;
+        state.d7_item_counts[item] = Object.assign({ count: "", duration: "" }, state.d7_item_counts[item], { count: el.value });
+        saveState();
+      });
+    });
+    qsa(".d7-item-duration").forEach((el) => {
+      el.addEventListener("change", () => {
+        const item = el.dataset.item;
+        state.d7_item_counts[item] = Object.assign({ count: "", duration: "" }, state.d7_item_counts[item], { duration: el.value });
+        saveState();
+      });
+    });
 
     qs("#nextBtn").addEventListener("click", () => {
       if (!state.d7_steps.some((s) => s.trim())) { showWarn("warn7", "行き先までの道のりを、ひとつだけでも書いてみよう"); return; }
-      if (!state.d7_count) { showWarn("warn7", "何回くらい必要そうか、選んでみよう"); return; }
+      const items = d7SupportItems();
+      if (items.length && !items.some((item) => d7ItemValue(item).count)) {
+        showWarn("warn7", "何回くらい必要そうか、ひとつだけでも入力してみよう");
+        return;
+      }
       goNextDoor(7);
     });
   }
@@ -1124,6 +1187,16 @@ ${who}の
     { v: "big", label: "長年の悩みを大きく変える商品" },
   ];
   const PRICE_PRESETS = [3000, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 150000, 200000, 300000, 500000];
+
+  function d8TimeTotal() {
+    const weekly = Number(state.d8_weekly_hours) || 0;
+    const weeks = Number(state.d8_period_weeks) || 0;
+    return weekly * weeks;
+  }
+  function d8TimeTotalLabel() {
+    const total = d8TimeTotal();
+    return total > 0 ? `約${total}時間` : "-";
+  }
 
   function renderDoor8() {
     const timeCards = D8_TIME_OPTIONS.map((v, i) => choiceCard({
@@ -1144,9 +1217,19 @@ ${who}の
         <p class="step-question">① あなたが使う時間と労力</p>
         <p class="step-desc">お客様と直接話す時間だけが仕事ではありません</p>
         <div class="choice-grid">${timeCards}</div>
-        <div class="field" style="margin-top:16px;">
-          <label class="field__label">全部合わせると、ひとりのお客様にどのくらい時間を使いそう？</label>
-          <input type="text" id="d8_time_hours" placeholder="約　時間" value="${esc(state.d8_time_hours)}">
+        <div class="d8-time-calc">
+          <div class="d8-time-calc__row">
+            <label class="field__label">1週間あたり、ひとりのお客様にどのくらい時間を使いそう？</label>
+            <div class="d8-time-calc__input"><input type="text" inputmode="numeric" id="d8_weekly_hours" placeholder="例）2" value="${esc(state.d8_weekly_hours)}"><span>時間 / 週</span></div>
+          </div>
+          <div class="d8-time-calc__row">
+            <label class="field__label">それが何週間くらい続きそう？</label>
+            <div class="d8-time-calc__input"><input type="text" inputmode="numeric" id="d8_period_weeks" placeholder="例）8" value="${esc(state.d8_period_weeks)}"><span>週間</span></div>
+          </div>
+          <div class="d8-time-calc__total">
+            <span>合計のめやす</span>
+            <strong id="d8TimeTotal">${esc(d8TimeTotalLabel())}</strong>
+          </div>
         </div>
         <div class="field">
           <label class="field__label">その時間と労力に対して、正直これくらいはいただきたい金額</label>
@@ -1181,7 +1264,16 @@ ${who}の
     qsa('input[name="d8_time"]').forEach((cb) => {
       cb.addEventListener("change", () => { state.d8_time_checks = qsa('input[name="d8_time"]').filter((b) => b.checked).map((b) => b.value); saveState(); });
     });
-    qs("#d8_time_hours").addEventListener("input", (e) => { state.d8_time_hours = e.target.value; saveState(); });
+    qs("#d8_weekly_hours").addEventListener("input", (e) => {
+      state.d8_weekly_hours = e.target.value;
+      qs("#d8TimeTotal").textContent = d8TimeTotalLabel();
+      saveState();
+    });
+    qs("#d8_period_weeks").addEventListener("input", (e) => {
+      state.d8_period_weeks = e.target.value;
+      qs("#d8TimeTotal").textContent = d8TimeTotalLabel();
+      saveState();
+    });
     qs("#d8_min_price").addEventListener("input", (e) => { state.d8_min_price = e.target.value; saveState(); });
     qsa('input[name="d8_future"]').forEach((r) => { r.addEventListener("change", () => { state.d8_future_value = r.value; saveState(); }); });
 
@@ -1514,7 +1606,7 @@ ${who}の
         break;
       case "journey":
         cards = state.d7_steps.filter((s) => s.trim()).map((s, i) => ({ label: `STEP ${i + 1}`, value: truncateText(s, 50) }));
-        body = summarizeForDeck.body([state.d7_count ? `回数：${state.d7_count}` : "", state.d7_duration && state.d7_duration !== "まだ決めなくてOK" ? `1回：${state.d7_duration}` : ""], 60);
+        body = summarizeForDeck.body([d7ItemSummaryLine()], 60);
         break;
       case "product":
         big = productName;
@@ -1548,7 +1640,7 @@ ${who}の
       case "story2": return !!(state.d4_journey || state.d4_after || state.d4_why);
       case "power": return state.d5_categories.length > 0;
       case "delivery": return !!(state.d6_size || state.d6_place);
-      case "journey": return state.d7_steps.some((s) => s.trim()) || !!state.d7_count;
+      case "journey": return state.d7_steps.some((s) => s.trim()) || !!d7ItemSummaryLine();
       case "product": return true;
       case "trust": return !!(state.d10_passion || state.d10_facts_detail.some((f) => f.trim()));
       case "closing": return true;
@@ -1883,8 +1975,7 @@ ${who}の
   function renderComplete() {
     const productName = state.d9_name || "（仮）魂商品";
     const deliverStyle = [state.d6_size, state.d6_place === "その他" ? state.d6_place_other : state.d6_place].filter(Boolean).join(" / ");
-    const countLabel = state.d7_count || "-";
-    const durationLabel = state.d7_duration && state.d7_duration !== "まだ決めなくてOK" ? state.d7_duration : "";
+    const countLabel = d7ItemSummaryLine() || "-";
     const priceNum = Number(state.d8_price) || 0;
     const journeySteps = state.d7_steps.filter((s) => s.trim());
     const existingChecklist = state.self1_choice && state.self1_choice !== "new" ? renderExistingChecklist() : "";
@@ -1949,8 +2040,7 @@ ${who}の
 
           <div class="sheet__grid">
             <div class="sheet__stat"><div class="sheet__stat-label">届け方</div><div class="sheet__stat-value" style="font-size:14px;">${esc(deliverStyle) || "-"}</div></div>
-            <div class="sheet__stat"><div class="sheet__stat-label">回数</div><div class="sheet__stat-value">${esc(countLabel)}</div></div>
-            ${durationLabel ? `<div class="sheet__stat"><div class="sheet__stat-label">1回の時間</div><div class="sheet__stat-value">${esc(durationLabel)}</div></div>` : ""}
+            <div class="sheet__stat"><div class="sheet__stat-label">回数</div><div class="sheet__stat-value" style="font-size:13px;">${esc(countLabel)}</div></div>
           </div>
           ${journeySteps.length ? `<div class="sheet__block"><p class="sheet__label">🗺 行き先までの道のり</p><p class="sheet__value">${journeySteps.map((s, i) => `${i + 1}. ${esc(s)}`).join("\n")}</p></div>` : ""}
 

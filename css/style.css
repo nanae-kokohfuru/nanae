@@ -524,6 +524,70 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   margin: 8px 0 22px;
 }
 
+/* ---- 扉8：週あたり時間 × 期間 の自動計算 ---- */
+
+.d8-time-calc{
+  background: var(--card-soft);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin: 16px 0;
+  display:flex; flex-direction:column; gap: 14px;
+}
+
+.d8-time-calc__row .field__label{ margin-bottom: 8px; }
+
+.d8-time-calc__input{ display:flex; align-items:center; gap: 10px; }
+.d8-time-calc__input input{ width: 90px; text-align:center; }
+.d8-time-calc__input span{ font-size: 14px; color: var(--ink-soft); font-weight: 700; }
+
+.d8-time-calc__total{
+  display:flex; align-items:baseline; justify-content:space-between;
+  border-top: 1px dashed var(--gold);
+  padding-top: 12px;
+  font-size: 14px; color: var(--ink-soft); font-weight: 700;
+}
+.d8-time-calc__total strong{ font-size: 20px; color: var(--bordeaux); font-family: var(--font-serif); }
+
+@media (min-width: 640px){
+  .d8-time-calc{ flex-direction:row; align-items:flex-end; flex-wrap:wrap; }
+  .d8-time-calc__row{ flex:1; min-width: 180px; }
+  .d8-time-calc__total{ border-top:none; border-left:1px dashed var(--gold); padding:0 0 0 16px; flex-direction:column; align-items:flex-start; gap:2px; }
+}
+
+/* ---- 扉7：内容ごとの回数・時間入力 ---- */
+
+.d7-item-list{ display:flex; flex-direction:column; gap: 12px; margin: 14px 0; }
+
+.d7-item-row{
+  background: var(--card-soft);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.d7-item-row__label{ font-weight: 700; font-size: 14.5px; color: var(--ink); margin-bottom: 10px; }
+
+.d7-item-row__controls{ display:flex; flex-wrap:wrap; gap: 16px; }
+
+.d7-item-row__field{
+  display:flex; align-items:center; gap: 8px;
+  font-size: 13px; color: var(--ink-soft); font-weight: 700;
+}
+
+.d7-item-row__field input[type="text"]{
+  width: 64px; padding: 8px 10px; font-size: 15px; text-align:center;
+}
+
+.d7-item-row__field select{
+  font-family: var(--font-sans); font-size: 14px; color: var(--ink);
+  background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px;
+}
+
+@media (min-width: 860px){
+  .d7-item-list{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+}
+
 /* ---- チェックボックス / ラジオ カード ---- */
 
 .choice-grid{
