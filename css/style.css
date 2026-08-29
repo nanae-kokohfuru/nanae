@@ -114,12 +114,122 @@ img{ max-width: 100%; display:block; }
   transition: width 0.45s cubic-bezier(.4,0,.2,1);
 }
 
-.progress__label{
+.progress__row{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
   margin-top: 6px;
-  font-size: 12px;
-  color: var(--ink-soft);
-  font-weight: 500;
+  gap: 10px;
 }
+
+.progress__label{
+  font-size: 12.5px;
+  color: var(--gold-deep);
+  font-weight: 700;
+}
+
+.progress__door{
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ================= SELF 1（現在地確認） ================= */
+
+.self1-card{ text-align:left; }
+.self1-eyebrow{
+  display:inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--mauve-deep); background: #FBEDEC; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px;
+}
+
+/* ================= 節目メッセージ ================= */
+
+.milestone-toast{
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #F6D9DE, #FBEDEC);
+  border: 1px dashed var(--mauve-deep);
+  color: #8A4A54;
+  font-weight: 700;
+  font-size: 14.5px;
+  text-align:center;
+  animation: fadeUp .4s ease both;
+}
+
+/* ================= 回答の振り返りカード ================= */
+
+.recap-card{
+  background: var(--bg-soft);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+.recap-card__title{ font-size: 11.5px; font-weight:700; color: var(--gold-deep); letter-spacing:0.08em; margin-bottom:8px; }
+.recap-card__row{ margin: 4px 0; line-height:1.7; }
+.recap-card__row b{ color: var(--ink); font-weight:700; }
+
+/* ================= 大分類＋自由記入（扉5） ================= */
+
+.category-freeform{
+  margin-top: 16px;
+}
+.primary-support-grid{ display:grid; gap:10px; }
+.primary-support-card{
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  border:1.5px solid var(--line); border-radius: var(--radius-md); background: var(--card-soft);
+  cursor:pointer; transition: border-color .18s, background .18s;
+}
+.primary-support-card:has(input:checked){ border-color: var(--gold); background:#FFF9F1; box-shadow: var(--shadow-sm); }
+.primary-support-card input{ display:none; }
+.primary-support-card__mark{
+  width:20px;height:20px;border-radius:6px;border:1.6px solid var(--taupe);background:#fff;flex:none;
+  display:flex;align-items:center;justify-content:center;
+}
+.primary-support-card__mark::after{ content:""; width:10px;height:10px;border-radius:3px;background:var(--gold); transform:scale(0); transition:transform .15s; }
+.primary-support-card input:checked ~ .primary-support-card__mark::after{ transform:scale(1); }
+.primary-support-card input:checked ~ .primary-support-card__mark{ border-color: var(--gold); }
+
+/* ================= コンセプトのかけら ================= */
+
+.concept-fragment{
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--gold-pale), var(--card-soft));
+  border: 1px dashed var(--gold);
+}
+.concept-fragment__label{ font-size:11.5px; font-weight:700; color: var(--gold-deep); letter-spacing:0.08em; margin-bottom:10px; }
+.concept-fragment__text{ font-family: var(--font-serif); font-size: 16.5px; line-height:1.9; color: var(--ink); white-space: pre-line; }
+
+/* ================= 価格プリセット ================= */
+
+.price-preset-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin: 14px 0; }
+.price-preset-btn{
+  appearance:none; border:1.5px solid var(--line); background: var(--card-soft); color: var(--ink);
+  font-weight:700; font-size:13.5px; padding:12px 6px; border-radius: 12px; cursor:pointer; transition: all .15s;
+  font-variant-numeric: tabular-nums;
+}
+.price-preset-btn.is-active{ border-color: var(--gold); background: var(--gold); color:#fff; box-shadow: var(--shadow-sm); }
+.price-custom-row{ display:flex; align-items:center; gap:10px; margin-top: 10px; }
+.price-custom-row input{ flex:1; }
+
+/* ================= チョッピー総評 ================= */
+
+.chotty-card{ margin-top: 22px; }
+.chotty-card__intro{ display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+.chotty-card__intro img{ width:52px; height:52px; object-fit:contain; flex:none; }
+.chotty-item{ margin-bottom:18px; }
+.chotty-item:last-child{ margin-bottom:0; }
+.chotty-item__label{ font-size:12px; font-weight:700; color: var(--mauve-deep); margin-bottom:6px; }
+.chotty-item__body{ font-size:14.5px; color: var(--ink); line-height:1.85; white-space:pre-line; }
+
+/* ================= 扉ヘッダー ================= */
+
+.door-progress-mini{ font-size:11.5px; color: var(--ink-faint); font-weight:700; letter-spacing:0.05em; margin-bottom: 8px; }
 
 /* ================= カード共通 ================= */
 
@@ -969,6 +1079,8 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 }
 
 .step-mascot svg{ width: 46px; height:46px; }
+.step-mascot__img{ width: 90px; height:auto; object-fit: contain; }
+.chotty-card__intro-img{ width:52px; height:52px; object-fit:contain; flex:none; }
 
 /* ================= 印刷対応 ================= */
 
