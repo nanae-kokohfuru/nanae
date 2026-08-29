@@ -178,14 +178,15 @@
     landscape.disabled = mode !== "landscape";
   }
 
-  /* ---- マスコット（公式キャラクター実画像。改変せずそのまま使用） ---- */
-  const MASCOT_IMG_SRC = "assets/mascot-trio.png";
-  function mascotImg(className) {
-    return `<img src="${MASCOT_IMG_SRC}" alt="ここらぼ公式キャラクター" class="${className}">`;
+  /* ---- マスコット（公式キャラクター実画像。改変・描き直しは一切せずそのまま使用） ---- */
+  const MASCOT_IMG_SRC = "assets/mascot-trio.png";           // 表紙・完成など「お手紙」ポーズ
+  const MASCOT_STUDY_IMG_SRC = "assets/mascot-trio-study.png"; // 扉で一緒に考える「勉強中」ポーズ
+  function mascotImg(className, src) {
+    return `<img src="${src || MASCOT_IMG_SRC}" alt="ここらぼ公式キャラクター" class="${className}">`;
   }
   // 各扉の小さな装飾には、公式キャラクター実画像を使い回す（新規キャラクターは描かない）
   function doorMascot() {
-    return `<div class="step-mascot">${mascotImg("step-mascot__img")}</div>`;
+    return `<div class="step-mascot">${mascotImg("step-mascot__img", MASCOT_STUDY_IMG_SRC)}</div>`;
   }
 
   /* ---- 選択カード生成ヘルパー ---- */
@@ -288,6 +289,7 @@
       <p class="hero__brand">ここらぼ直伝！</p>
       <h1 class="hero__title">魂商品作成<br>ミラクルキット</h1>
       <span class="hero__subtitle">商品をカタチにする10の扉</span>
+      <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
       <p class="hero__catch">チョッピー（nanaeAI）が<br>あなたのモヤモヤを<br>一緒に整理します</p>
 
       <div class="hero__desc">商品がまだない人は
@@ -1926,6 +1928,7 @@ ${who}の
       <div class="chotty-card__intro">
         ${mascotImg("chotty-card__intro-img")}
         <div>
+          <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="chotty-card__logo">
           <span class="eyebrow" style="margin-bottom:4px;">チョッピー（nanaeAI）総評</span>
           <p class="step-desc" style="margin-bottom:0;">チョッピー（nanaeAI）が、あなたの商品を読み解きます</p>
         </div>

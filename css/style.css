@@ -537,6 +537,23 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   margin: 0 auto 8px;
 }
 
+.hero__chotty-logo{
+  display:block;
+  width: 60%;
+  max-width: 220px;
+  height: auto;
+  margin: 0 auto 14px;
+  border-radius: 10px;
+}
+
+.chotty-card__logo{
+  display:block;
+  width: 140px;
+  height: auto;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
 .hero__brand{
   font-size: 13px;
   color: var(--gold-deep);
