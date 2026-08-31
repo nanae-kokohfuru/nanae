@@ -4,25 +4,25 @@
    ============================================================ */
 
 :root{
-  --stage: #0e0f16;
-  --stage-deep: #05060a;
-  --spot: rgba(210, 180, 120, 0.16);
+  --stage: #080a14;
+  --stage-deep: #020308;
+  --spot: rgba(120, 25, 38, 0.28);
 
-  --paper: #f6f0e2;
-  --paper-soft: #efe6d2;
+  --paper: #f2ead9;
+  --paper-soft: #e6dabd;
 
-  --ink: #23201a;
-  --ink-soft: #514a3d;
-  --ink-faint: #7a7261;
+  --ink: #201b16;
+  --ink-soft: #4a4033;
+  --ink-faint: #756b58;
 
-  --red: #7c1d24;
-  --red-bright: #a5262f;
-  --gold: #a3803f;
-  --gold-deep: #7c5f2a;
+  --red: #4a0f17;
+  --red-bright: #6e1620;
+  --gold: #8f6f36;
+  --gold-deep: #6b5124;
 
-  --line: #d9cba9;
+  --line: #cdbb8f;
 
-  --shadow-card: 0 30px 70px rgba(0,0,0,0.55), 0 8px 20px rgba(0,0,0,0.35);
+  --shadow-card: 0 30px 80px rgba(0,0,0,0.65), 0 8px 24px rgba(0,0,0,0.45);
   --radius: 18px;
 
   font-size: 16px;
@@ -53,7 +53,7 @@ body{
   padding: 40px 16px 80px;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 45% at 50% -10%, rgba(60,50,40,0.55), transparent 60%),
+    radial-gradient(ellipse 70% 45% at 50% -10%, rgba(30,20,45,0.7), transparent 60%),
     linear-gradient(180deg, var(--stage) 0%, var(--stage-deep) 100%);
 }
 
