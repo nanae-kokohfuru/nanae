@@ -61,7 +61,7 @@
   --font-sans: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
 
   --maxw: 780px;
-  --maxw-wide: 1180px;
+  --maxw-wide: 1280px;
   --maxw-studio: 1440px;
 }
 
@@ -317,23 +317,68 @@ img{ max-width: 100%; display:block; }
   overflow: hidden;
 }
 
-.celebrate__confetti{
+.celebrate__fireworks{
   position: absolute; inset: 0; pointer-events: none; overflow: hidden;
 }
 
-.celebrate__confetti-piece{
+.firework{
   position: absolute;
-  top: -40px;
-  left: calc(8% + (var(--i) * 8%));
-  font-size: 26px;
-  opacity: 0.9;
-  animation: confettiFall 3.2s ease-in calc(var(--i) * 0.18s) infinite;
+  bottom: 0;
+  width: 2px;
+  height: 100%;
 }
 
-@keyframes confettiFall{
-  0%{ transform: translateY(-40px) rotate(0deg); opacity: 0; }
-  10%{ opacity: 1; }
-  100%{ transform: translateY(560px) rotate(340deg); opacity: 0; }
+.firework__trail{
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 3px;
+  height: 46%;
+  transform: translateX(-50%) scaleY(0);
+  transform-origin: bottom;
+  background: linear-gradient(to top, transparent, var(--gold-shine), var(--pinkgold-shine));
+  border-radius: 3px;
+  opacity: 0;
+  animation: fireworkTrail 0.62s ease-out both;
+}
+
+.firework__burst{
+  position: absolute;
+  left: 50%;
+  bottom: 46%;
+  width: 0; height: 0;
+}
+
+.firework__particle{
+  position: absolute;
+  left: 0; top: 0;
+  width: 6px; height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-shine), var(--rose) 70%, transparent);
+  box-shadow: 0 0 6px rgba(246,217,138,0.8);
+  opacity: 0;
+  animation: fireworkParticle 1.3s ease-out both;
+}
+
+@keyframes fireworkTrail{
+  0%{ opacity: 0; transform: translateX(-50%) scaleY(0); }
+  15%{ opacity: 1; }
+  95%{ opacity: .8; }
+  100%{ opacity: 0; transform: translateX(-50%) scaleY(1); }
+}
+
+@keyframes fireworkParticle{
+  0%{ transform: translate(0, 0) scale(0.4); opacity: 1; }
+  55%{ opacity: 1; }
+  100%{ transform: translate(var(--dx), var(--dy)) scale(1); opacity: 0; }
+}
+
+/* 動きを抑えたい環境では、光は出すが動かさない静的な演出にする */
+@media (prefers-reduced-motion: reduce){
+  .firework__trail, .firework__particle{ animation: none !important; opacity: .85; }
+  .firework__trail{ transform: translateX(-50%) scaleY(1); }
+  .firework__particle{ transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1); }
 }
 
 .celebrate__mascot{ width: 150px; height:auto; margin: 0 auto 14px; position: relative; z-index: 1; }
@@ -939,6 +984,64 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   font-family: var(--font-serif); font-weight: 800; font-size: 22px;
   color: var(--bordeaux); text-align:center; margin-top: 30px; line-height: 1.6;
 }
+
+/* ================= このキットのゴール／注意書き ================= */
+
+.goal-box{
+  margin: 26px 0 0;
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--rose-pale), var(--card-soft));
+  border: 1px dashed var(--rose-deep);
+  text-align: left;
+}
+.goal-box__title{
+  font-family: var(--font-serif); font-weight: 800; font-size: 17px;
+  color: var(--bordeaux); margin-bottom: 10px; text-align:center;
+}
+.goal-box__body{ font-size: 14.5px; color: var(--ink-soft); line-height: 1.9; }
+
+.ai-disclaimer{
+  margin-top: 26px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  line-height: 1.9;
+  text-align: left;
+}
+
+/* ================= 最後の扉は、画面の外です ================= */
+
+.last-door-card{ text-align:left; }
+
+.mission-box{
+  margin: 18px 0;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--gold-pale), var(--card-soft));
+  border: 1px solid var(--gold);
+}
+.mission-box__title{
+  font-family: var(--font-serif); font-weight: 800; font-size: 15.5px;
+  color: var(--gold-deep); margin-bottom: 10px;
+}
+.mission-box__body{ font-size: 14px; color: var(--ink); line-height: 1.85; }
+
+.market-test{
+  margin-top: 20px;
+  padding: 18px 20px;
+  border-radius: var(--radius-lg);
+  background: var(--card-soft);
+  border: 1px solid var(--line);
+}
+.market-test__title{
+  font-family: var(--font-serif); font-weight: 800; font-size: 15.5px;
+  color: var(--bordeaux); margin-bottom: 4px;
+}
+.market-test__row{ margin-top: 14px; }
+.market-test__row textarea{ margin-top: 8px; }
 
 .persona-title{
   font-size: 15px;
@@ -1610,7 +1713,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 @media print{
   body *{ visibility: hidden; }
-  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay, .template-switch, .deck-intro, .deck-toolbar, .deck-photo-panel, .deck-edit-panel, .deck-page-card__toolbar{ display:none !important; }
+  .app-header, .app-footer, .result-banner, .result-actions, .photo-upload, .checklist-card, .toast, .modal-overlay, .template-switch, .deck-intro, .deck-toolbar, .deck-photo-panel, .deck-edit-panel, .deck-page-card__toolbar, .celebrate, .last-door-card{ display:none !important; }
   #printArea, #printArea *{ visibility: visible; }
   #printArea{
     position: absolute; left:0; top:0; width:100%;
