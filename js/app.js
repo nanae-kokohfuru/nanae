@@ -420,7 +420,7 @@
         <p class="cover-intro__sub">ゴイゴイスーなものを<br>開発してしまいましたよ〜</p>
       </div>
 
-      <p class="hero__catch">チョッピー（nanaeAI）が<br>あなたのモヤモヤを<br>一緒に整理します</p>
+      <p class="hero__catch">チョッピー（nanaeAI）が<br>あなたのモヤモヤを一緒に整理します</p>
 
       <div class="cover-message">
         <p class="cover-pullquote cover-pullquote--md">目の前のひとりを<br>幸せにする</p>
@@ -430,7 +430,7 @@
         <p class="cover-body">いきなり完璧な講座を作らなくていいんです<br>そもそも、魂商品に完成も完璧もないんです</p>
         <p class="cover-body">1人に届ける▶︎反応を見る▶︎ブラッシュアップする▶︎そして、また届ける<br><br>ずっとこの繰り返し</p>
         <p class="cover-body">だからこそ</p>
-        <p class="cover-pullquote cover-pullquote--md">魂商品は「つくるもの」ではなく<br>いったんささっと作って<br>お客様と一緒に<br>「育てていくもの」</p>
+        <p class="cover-pullquote cover-pullquote--md">魂商品は完璧な状態まで<br>作り込むものではなく<br>７割くらいできたら、いったん出して<br>お客様と一緒に<br>「育てていくもの」</p>
         <p class="cover-body">何ヶ月かかって商品作りをする時代は終焉しました</p>
         <p class="cover-body">ここまで1000人以上の受講生と<br>私自身の実績から<br>全ての叡智をぶっこんで、</p>
         <p class="cover-pullquote cover-pullquote--md">「はじめの一品」キット</p>

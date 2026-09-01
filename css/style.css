@@ -14,12 +14,12 @@
 
   /* ---- 文字色：しっかり濃く、コントラストを確保 ---- */
   --ink: #37211A;
-  --ink-soft: #5E3D2E;
-  --ink-faint: #7E6151;
+  --ink-soft: #4A2E22;
+  --ink-faint: #6B4A3A;
 
   /* ---- ゴールド ---- */
   --gold: #C79654;
-  --gold-deep: #9C6D2E;
+  --gold-deep: #6B4519;
   --gold-pale: #EAD3A0;
   --gold-shine: #F6D98A;
 
@@ -30,7 +30,7 @@
   --rose-pale: #F4D9DF;
 
   --mauve: #C99B96;
-  --mauve-deep: #B67C7C;
+  --mauve-deep: #8A4A4A;
 
   /* ---- ピンクゴールド（キラキラ用。ジュエリー的な小さな輝きにのみ使用） ---- */
   --pinkgold: #E8A97A;
@@ -82,7 +82,7 @@ body{
   letter-spacing: 0.02em;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-  font-size: 16px;
+  font-size: 17px;
 }
 
 h1,h2,h3{ font-family: var(--font-serif); font-weight: 700; margin: 0; color: var(--ink); }
@@ -178,8 +178,8 @@ img{ max-width: 100%; display:block; }
 .product-preview__row.is-empty{ opacity: 0.55; }
 
 .product-preview__label{
-  font-size: 11.5px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   color: var(--ink-faint);
   margin-bottom: 3px;
 }
@@ -439,10 +439,10 @@ img{ max-width: 100%; display:block; }
   border-radius: var(--radius-md);
   padding: 16px 18px;
   margin-bottom: 20px;
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-soft);
 }
-.recap-card__title{ font-size: 11.5px; font-weight:700; color: var(--gold-deep); letter-spacing:0.08em; margin-bottom:8px; }
+.recap-card__title{ font-size: 13px; font-weight:800; color: var(--gold-deep); letter-spacing:0.06em; margin-bottom:8px; }
 .recap-card__row{ margin: 4px 0; line-height:1.7; }
 .recap-card__row b{ color: var(--ink); font-weight:700; }
 
@@ -476,7 +476,7 @@ img{ max-width: 100%; display:block; }
   background: linear-gradient(135deg, var(--gold-pale), var(--card-soft));
   border: 1px dashed var(--gold);
 }
-.concept-fragment__label{ font-size:11.5px; font-weight:700; color: var(--gold-deep); letter-spacing:0.08em; margin-bottom:10px; }
+.concept-fragment__label{ font-size:13px; font-weight:800; color: var(--gold-deep); letter-spacing:0.06em; margin-bottom:10px; }
 .concept-fragment__text{ font-family: var(--font-serif); font-size: 16.5px; line-height:1.9; color: var(--ink); white-space: pre-line; }
 
 /* ================= 価格プリセット ================= */
@@ -498,12 +498,12 @@ img{ max-width: 100%; display:block; }
 .chotty-card__intro img{ width:52px; height:52px; object-fit:contain; flex:none; }
 .chotty-item{ margin-bottom:18px; }
 .chotty-item:last-child{ margin-bottom:0; }
-.chotty-item__label{ font-size:12px; font-weight:700; color: var(--mauve-deep); margin-bottom:6px; }
-.chotty-item__body{ font-size:14.5px; color: var(--ink); line-height:1.85; white-space:pre-line; }
+.chotty-item__label{ font-size:15px; font-weight:800; color: var(--mauve-deep); margin-bottom:7px; }
+.chotty-item__body{ font-size:15.5px; color: var(--ink); line-height:1.85; white-space:pre-line; }
 
 /* ================= 扉ヘッダー ================= */
 
-.door-progress-mini{ font-size:11.5px; color: var(--ink-faint); font-weight:700; letter-spacing:0.05em; margin-bottom: 8px; }
+.door-progress-mini{ font-size:13px; color: var(--ink-faint); font-weight:800; letter-spacing:0.05em; margin-bottom: 8px; }
 
 /* ================= カード共通 ================= */
 
@@ -607,8 +607,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 }
 
 .hint{
-  font-size: 13.5px;
+  font-size: 14.5px;
   color: var(--ink-faint);
+  font-weight: 500;
   margin-top: 8px;
 }
 
@@ -972,12 +973,11 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   margin: 26px 0;
 }
 
-.cover-message{ text-align:left; margin: 22px 0; }
-.cover-message .cover-pullquote{ text-align:center; }
+.cover-message{ text-align:center; margin: 22px 0; }
 
 .cover-body{
-  font-size: 14.5px; line-height: 1.9; color: var(--ink-soft);
-  margin: 14px 0; white-space: pre-line;
+  font-size: 16px; line-height: 1.9; color: var(--ink);
+  margin: 14px 0; white-space: pre-line; font-weight: 500;
 }
 
 .cover-closing{
@@ -1281,7 +1281,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .template-card__body{ flex:1; }
 .template-card__name{ font-size: 15px; font-weight: 700; color: var(--ink); display:flex; align-items:center; gap:8px; }
 .template-card__badge{ font-size: 10.5px; font-weight: 700; color: var(--gold-deep); background: var(--gold-pale); padding: 2px 9px; border-radius: 999px; }
-.template-card__desc{ font-size: 12.5px; color: var(--ink-faint); margin-top: 3px; }
+.template-card__desc{ font-size: 13.5px; color: var(--ink-faint); margin-top: 3px; }
 
 /* ---- 資料テイスト：シンプル ---- */
 .sheet--simple{ background: #FAFAF8; border: 1px solid #E2DDD3; }
@@ -1553,7 +1553,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   animation: fadeUp .3s ease both;
 }
 
-.modal__eyebrow{ font-size:12px; font-weight:700; color:var(--accent-red); margin-bottom:8px; }
+.modal__eyebrow{ font-size:13px; font-weight:800; color:var(--accent-red); margin-bottom:8px; }
 .modal__body{ font-size: 14px; color: var(--ink-soft); margin: 12px 0 20px; }
 .modal__actions{ display:flex; gap: 10px; }
 .modal__actions .btn{ flex:1; }
