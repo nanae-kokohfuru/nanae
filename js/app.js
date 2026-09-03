@@ -125,7 +125,8 @@
       photos: {},     // { pageKey: dataUrl }
       overrides: {},  // { pageKey: { big: "", body: "" } }（原文は上書きしない。表示用の別データ）
       hidden: [],     // 非表示にしたページキー
-      optionalPages: [], // 追加したオプションページのkey一覧
+      optionalPages: [], // 追加したオプションページ（STUDIO-06）：[{ key, label, big, body }]
+      presentMode: "front", // SALES-01｜"front"＝前半のみ（価格なし） / "full"＝全ページ（YES②後・価格あり）
     },
   });
 
@@ -199,6 +200,15 @@
       merged.deck.overrides = merged.deck.overrides && typeof merged.deck.overrides === "object" ? merged.deck.overrides : {};
       merged.deck.hidden = Array.isArray(merged.deck.hidden) ? merged.deck.hidden : [];
       merged.deck.optionalPages = Array.isArray(merged.deck.optionalPages) ? merged.deck.optionalPages : [];
+      merged.deck.presentMode = merged.deck.presentMode === "full" ? "full" : "front";
+      // 旧デッキ構成の "product"（商品名＋価格が1枚だった旧ページ）が非表示指定に残っていた場合、
+      // 新しい2枚（product_preview／product_price）へ同じ非表示状態を引き継ぐ
+      if (merged.deck.hidden.includes("product")) {
+        merged.deck.hidden = merged.deck.hidden.filter((k) => k !== "product").concat(["product_preview", "product_price"]);
+      }
+      if (parsed.deck && parsed.deck.overrides && parsed.deck.overrides.product && !merged.deck.overrides.product_price) {
+        merged.deck.overrides.product_price = Object.assign({}, parsed.deck.overrides.product);
+      }
       return merged;
     } catch (e) {
       return defaultState();
@@ -1359,7 +1369,7 @@ ${who}の
   /* ---------------------------------------------------------
      扉7（せるこ・8）｜サポート内容（フェーズ設計）
   --------------------------------------------------------- */
-  const D_PHASE_ITEM_TYPES = ["セッション", "学び", "ワーク", "フォロー", "その他"];
+  const D_PHASE_ITEM_TYPES = ["セッション", "学び・動画", "ワーク・実践", "フォロー", "その他"];
   const PRICE_PRESETS = [3000, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 150000, 200000, 300000, 500000];
 
   function renderDoor7() {
@@ -1702,19 +1712,27 @@ ${who}の
     },
   };
 
+  // SALES-01｜ご提案書は前半／YES／後半：価格は必ず後半（YES②取得後）にのみ表示する
+  // phase: "front"（前半・価格を含まない） / "back"（後半・YES②取得後にのみ見せる）
   const DECK_PAGES = [
-    { key: "cover", label: "表紙", photo: true },
-    { key: "who", label: "この商品を届けたい人", photo: true },
-    { key: "wall", label: "越える壁", photo: true },
-    { key: "future", label: "連れていく未来", photo: true },
-    { key: "story1", label: "私が届ける理由（ビフォー）", photo: true },
-    { key: "story2", label: "私が届ける理由（アフター）", photo: true },
-    { key: "power", label: "この商品で使うチカラ", photo: false },
-    { key: "delivery", label: "届け方", photo: true },
-    { key: "journey", label: "行き先までの道のり", photo: false },
-    { key: "product", label: "商品", photo: false },
-    { key: "trust", label: "私から買う理由", photo: true },
-    { key: "closing", label: "まとめ", photo: false },
+    { key: "cover", label: "表紙", photo: true, phase: "front" },
+    { key: "who", label: "この商品を届けたい人", photo: true, phase: "front" },
+    { key: "wall", label: "越える壁", photo: true, phase: "front" },
+    { key: "future", label: "連れていく未来", photo: true, phase: "front" },
+    { key: "story1", label: "私が届ける理由（ビフォー）", photo: true, phase: "front" },
+    { key: "story2", label: "私が届ける理由（アフター）", photo: true, phase: "front" },
+    { key: "power", label: "この商品で使うチカラ", photo: false, phase: "front" },
+    { key: "journey", label: "行き先までの道のり", photo: false, phase: "front" },
+    { key: "product_preview", label: "商品予告", photo: false, phase: "front" },
+    { key: "delivery", label: "届け方", photo: true, phase: "back" },
+    { key: "product_price", label: "商品名・価格", photo: false, phase: "back" },
+    { key: "trust", label: "私から買う理由", photo: true, phase: "back" },
+    { key: "closing", label: "まとめ", photo: false, phase: "back" },
+  ];
+  // SALES-03｜YES固定文言。意味・順番・温度を勝手に変更しない
+  const DECK_YES_PAGES = [
+    { key: "yes1", label: "YES①", eyebrow: "YES①", big: "この未来\n叶えていきたいですか？", body: "まず、未来への意思を確認します" },
+    { key: "yes2", label: "YES②", eyebrow: "YES②", big: "もし私がお役に立てそうなら\nここからは有料のご案内になります\n具体的なご提案を聞かれますか？", body: "" },
   ];
 
   const DECK_MASCOT_BY_PAGE = {
@@ -1789,7 +1807,12 @@ ${who}の
         cards = state.d7_steps.filter((s) => s.trim()).map((s, i) => ({ label: `STEP ${i + 1}`, value: truncateText(s, 50) }));
         body = summarizeForDeck.body([d7ItemSummaryLine()], 60);
         break;
-      case "product":
+      case "product_preview":
+        // SALES-02｜前半では具体的な価格を出さない。名前と一言のサービス予告のみ
+        big = productName;
+        body = summarizeForDeck.body([state.d3_action], 80);
+        break;
+      case "product_price":
         big = productName;
         body = `¥${(Number(state.dPrice_price) || 0).toLocaleString()}`;
         break;
@@ -1822,16 +1845,44 @@ ${who}の
       case "power": return state.d5_categories.length > 0;
       case "delivery": return !!(state.d6_size || state.d6_place);
       case "journey": return state.d7_steps.some((s) => s.trim()) || !!d7ItemSummaryLine();
-      case "product": return true;
+      case "product_preview": return true;
+      case "product_price": return true;
       case "trust": return !!(state.d10_passion || state.d10_facts_detail.some((f) => f.trim()));
       case "closing": return true;
-      default: return false;
+      default: return (state.deck.optionalPages || []).some((p) => p.key === key);
     }
   }
 
   const DECK_LABELS = { who: "WHO｜対象者", wall: "WALL｜越える壁", story1: "STORY｜ビフォー", story2: "STORY｜アフター", delivery: "DELIVERY｜届け方" };
 
   function renderDeckPageInner(key) {
+    const yesDef = DECK_YES_PAGES.find((p) => p.key === key);
+    if (yesDef) {
+      return `
+        <div class="tpl-center deck-page--yes">
+          <p class="sheet__eyebrow">${esc(yesDef.eyebrow)}</p>
+          <h2 class="tpl-center__big">${nl2br(yesDef.big)}</h2>
+          ${yesDef.body ? `<p class="tpl-center__caption">${esc(yesDef.body)}</p>` : ""}
+        </div>`;
+    }
+    const optDef = (state.deck.optionalPages || []).find((p) => p.key === key);
+    if (optDef) {
+      const photoUrl = deckPhoto(key);
+      return (photoUrl ? `
+        <div class="tpl-photo-text">
+          <div class="tpl-photo-text__photo"><img class="tpl-photo-text__img" src="${photoUrl}" alt=""></div>
+          <div class="tpl-photo-text__text">
+            <p class="sheet__eyebrow">${esc(optDef.label)}</p>
+            <p class="deck-page__statement deck-page__statement--left" style="font-size:26px;">${esc(deckOverride(key, "big") || optDef.big)}</p>
+            ${(deckOverride(key, "body") || optDef.body) ? `<p class="sheet__value" style="margin-top:14px;">${esc(deckOverride(key, "body") || optDef.body)}</p>` : ""}
+          </div>
+        </div>` : `
+        <p class="sheet__eyebrow">${esc(optDef.label)}</p>
+        <div class="tpl-center">
+          <h2 class="tpl-center__big">${esc(deckOverride(key, "big") || optDef.big)}</h2>
+          ${(deckOverride(key, "body") || optDef.body) ? `<p class="tpl-center__caption">${esc(deckOverride(key, "body") || optDef.body)}</p>` : ""}
+        </div>`);
+    }
     const content = buildDeckContent(key);
     const def = DECK_PAGES.find((p) => p.key === key);
     const photoUrl = def.photo ? deckPhoto(key) : "";
@@ -1886,7 +1937,14 @@ ${who}の
           ${(content.cards || []).map((c) => `<div class="tpl-cards__card"><p class="tpl-cards__label">${esc(c.label)}</p><p class="tpl-cards__value">${esc(c.value)}</p></div>`).join("") || `<p class="tpl-center__caption">まだ入力がありません</p>`}
         </div>
         <p class="tpl-center__caption" style="margin-top:18px;">${esc(content.body)}</p>`;
-    } else if (key === "product") {
+    } else if (key === "product_preview") {
+      inner = `
+        <div class="tpl-center">
+          <p class="sheet__eyebrow">SERVICE PREVIEW｜商品予告</p>
+          <h2 class="tpl-center__big">${esc(content.big)}</h2>
+          ${content.body ? `<p class="tpl-center__caption">${esc(content.body)}</p>` : ""}
+        </div>`;
+    } else if (key === "product_price") {
       inner = `
         <div class="tpl-center">
           <p class="sheet__eyebrow">MY SOUL PRODUCT</p>
@@ -1946,13 +2004,33 @@ ${who}の
     return inner + mascotHtml;
   }
 
-  function buildDeckPages() {
+  // STUDIO-06｜基本ページ＋オプションページを、フェーズ（本編／オプション）に振り分けて末尾に足す。
+  // オプションページはすべて「後半」扱い（実績・特典・価格関連の内容が多いため、価格ページと同じ後半に置く）
+  function optionalPageEntries() {
+    return (state.deck.optionalPages || []).map((op) => ({ key: op.key, label: op.label, photo: true, phase: "back", isOptional: true }));
+  }
+
+  // SALES-01｜前半／YES／後半の並びでページ構成を作る。
+  // mode省略時は state.deck.presentMode（既定は"front"＝価格が出る前半のみ）に従う
+  function buildDeckPages(mode) {
     const tpl = state.sheetTemplate || "natural";
-    const visiblePages = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && !state.deck.hidden.includes(p.key));
+    const presentMode = mode || state.deck.presentMode || "front";
+    const allDefs = DECK_PAGES.concat(optionalPageEntries());
+    const frontPages = allDefs.filter((p) => p.phase === "front" && deckPageHasContent(p.key) && !state.deck.hidden.includes(p.key));
+    const backPages = allDefs.filter((p) => p.phase === "back" && deckPageHasContent(p.key) && !state.deck.hidden.includes(p.key));
+
+    let visiblePages;
+    if (presentMode === "full" && backPages.length) {
+      visiblePages = frontPages.concat(DECK_YES_PAGES).concat(backPages);
+    } else {
+      visiblePages = frontPages;
+    }
     const total = visiblePages.length;
     return {
       total,
       pages: visiblePages,
+      frontCount: frontPages.length,
+      backCount: backPages.length,
       html: visiblePages.map((p, i) => `
         <div class="a4-shell" data-deck-page="${p.key}">
           <div class="a4-page sheet sheet--${tpl}" data-page="${i + 1}">
@@ -1975,11 +2053,17 @@ ${who}の
 
   // 完成画面に置く「ご提案書」への導線カード（スタジオは別画面。ここには絶対に本体を並べない）
   function renderDeckIntroCard() {
-    const { total } = buildDeckPages();
+    const { total } = buildDeckPages("full");
     return `
     <div class="card deck-intro">
       <span class="eyebrow">実際の相談で使える｜ご提案書</span>
       <h2 class="step-title" style="font-size:19px;">いよいよ、ご提案書の叩き台ができちゃいますよ〜ワクワク</h2>
+
+      <img class="door-inline-img" src="assets/img10.webp" alt="商品って、どうやって売るの？" loading="lazy">
+      <img class="door-inline-img" src="assets/img11.webp" alt="マーケティングファネル" loading="lazy">
+      <img class="door-inline-img" src="assets/img12.webp" alt="個別相談・セールスって、どうやるの？" loading="lazy">
+      <img class="door-inline-img" src="assets/img13.webp" alt="魂商品・全体MAP" loading="lazy">
+
       <p class="step-desc">ここまでの回答をもとにした、全${total}ページの横A4ご提案書です<br>これは回答をまとめた報告書ではなく、そのままお客様との相談で使える資料の下書きです<br>文章はあとから直せます写真は入れても入れなくても大丈夫</p>
       <div class="note-box">使い方のお約束：ここにある文章は、あなたの回答をもとにした下書きです<br>盛った実績や、言っていない約束を足すことはしません<br>お客様に渡す前に、必ずあなた自身の言葉で読み直してね</div>
       <button class="btn btn--primary" id="openStudioBtn" type="button">ご提案書スタジオを開く</button>
@@ -1990,20 +2074,35 @@ ${who}の
   let studioActivePage = "";
   let studioResizeBound = false;
 
+  // STUDIO-06｜オプションページの候補（必要な人だけ追加。勝手に全員へ大量追加しない）
+  const OPTIONAL_PAGE_CANDIDATES = [
+    "実績・プロフィール", "お客様の声", "Before / After事例", "特典", "複数コース比較",
+    "詳細カリキュラム", "スケジュール", "自己投資物語", "価格・価値説明", "支払方法", "申込方法", "申込期限", "FAQ",
+  ];
+
   function renderStudioEditPanel(pageKey) {
+    const yesDef = DECK_YES_PAGES.find((p) => p.key === pageKey);
+    if (yesDef) {
+      return `
+        <div class="deck-edit-panel deck-edit-panel--studio">
+          <p class="studio__edit-title">${esc(yesDef.label)}</p>
+          <p class="hint">この文言は、お客様の意思確認のための固定文です<br>意味・順番・温度が変わってしまうため、編集はできません</p>
+        </div>`;
+    }
+    const optDef = (state.deck.optionalPages || []).find((p) => p.key === pageKey);
     const content = buildDeckContent(pageKey);
     const hasOverride = !!state.deck.overrides[pageKey];
-    const pageInfo = DECK_PAGES.find((p) => p.key === pageKey);
+    const pageInfo = optDef || DECK_PAGES.find((p) => p.key === pageKey);
     return `
       <div class="deck-edit-panel deck-edit-panel--studio" data-deck-edit-panel="${pageKey}">
         <p class="studio__edit-title">${esc(pageInfo ? pageInfo.label : "")}</p>
         <div class="deck-edit-panel__row">
           <label class="deck-edit-panel__label">大きく見せる一文</label>
-          <textarea data-deck-edit-big="${pageKey}" style="min-height:70px;">${esc(content.big)}</textarea>
+          <textarea data-deck-edit-big="${pageKey}" style="min-height:70px;">${esc(optDef ? (deckOverride(pageKey, "big") || optDef.big) : content.big)}</textarea>
         </div>
         <div class="deck-edit-panel__row">
           <label class="deck-edit-panel__label">本文</label>
-          <textarea data-deck-edit-body="${pageKey}" style="min-height:120px;">${esc(content.body)}</textarea>
+          <textarea data-deck-edit-body="${pageKey}" style="min-height:120px;">${esc(optDef ? (deckOverride(pageKey, "body") || optDef.body) : content.body)}</textarea>
         </div>
         ${renderDeckPhotoControls(pageKey)}
         <div class="deck-edit-panel__actions">
@@ -2012,25 +2111,38 @@ ${who}の
         </div>
         <hr class="sheet__divider" style="margin:18px 0;">
         <button type="button" class="btn btn--ghost btn--sm" data-studio-toggle-visible="${pageKey}">このページを非表示にする</button>
+        ${optDef ? `<button type="button" class="btn btn--ghost btn--sm" data-studio-remove-optional="${pageKey}" style="margin-top:8px;">このオプションページを削除する</button>` : ""}
       </div>`;
   }
 
   function renderStudio() {
     const tpl = state.sheetTemplate || "natural";
-    const { pages } = buildDeckPages();
-    const hiddenPages = DECK_PAGES.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key));
+    const presentMode = state.deck.presentMode || "front";
+    const { pages, frontCount, backCount } = buildDeckPages();
+    const allDefs = DECK_PAGES.concat(optionalPageEntries());
+    const hiddenPages = allDefs.filter((p) => deckPageHasContent(p.key) && state.deck.hidden.includes(p.key));
     if (!pages.find((p) => p.key === studioActivePage)) {
       studioActivePage = pages[0] ? pages[0].key : "";
     }
+    const modeLabel = presentMode === "full"
+      ? `全${pages.length}ページ（前半${frontCount}＋YES＋後半${backCount}）`
+      : `前半${pages.length}ページ（YES②前・価格は含みません）`;
 
     return `
     <div class="studio">
       <div class="studio__topbar">
         <button class="btn btn--ghost btn--sm" id="studioBackBtn" type="button">← 1枚シートに戻る</button>
-        <p class="studio__topbar-title">ご提案書スタジオ　全${pages.length}ページ</p>
+        <p class="studio__topbar-title">ご提案書スタジオ　${esc(modeLabel)}</p>
         <div class="studio__topbar-actions">
           ${SHEET_TEMPLATES.map((t) => `<button type="button" class="template-switch__btn${tpl === t.id ? " is-active" : ""}" data-template-switch="${t.id}">${esc(t.name)}</button>`).join("")}
           <button class="btn btn--primary btn--sm" id="printDeckBtn" type="button">印刷 / PDFで保存</button>
+        </div>
+      </div>
+      <div class="studio__present-toggle">
+        <p class="hint" style="margin:0 0 8px;">SALES-01｜価格は、お客様のYES②（有料のご案内を聞く意思確認）をいただいてから、はじめてお見せします</p>
+        <div class="studio-mode-switch">
+          <button type="button" class="studio-mode-switch__btn${presentMode === "front" ? " is-active" : ""}" data-present-mode="front">前半のみ表示（YES前）</button>
+          <button type="button" class="studio-mode-switch__btn${presentMode === "full" ? " is-active" : ""}" data-present-mode="full">全ページ表示（YES②後）</button>
         </div>
       </div>
       <div class="studio__body">
@@ -2045,6 +2157,13 @@ ${who}の
               <p class="hint" style="margin:12px 2px 6px;">非表示（${hiddenPages.length}）</p>
               ${hiddenPages.map((p) => `<button type="button" class="studio-thumb-hidden" data-studio-unhide="${p.key}">${esc(p.label)}　表示に戻す</button>`).join("")}
             </div>` : ""}
+          <div class="studio-add-optional">
+            <label class="field__label" style="font-size:12px;">＋ オプションページを追加</label>
+            <select id="studioOptionalSelect">
+              <option value="">選んでください</option>
+              ${OPTIONAL_PAGE_CANDIDATES.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
+            </select>
+          </div>
         </aside>
         <div class="studio__canvas">
           ${studioActivePage ? `
@@ -2112,6 +2231,41 @@ ${who}の
 
     qsa("[data-template-switch]").forEach((btn) => {
       btn.addEventListener("click", () => { state.sheetTemplate = btn.dataset.templateSwitch; saveState(); render(); });
+    });
+
+    qsa("[data-present-mode]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.deck.presentMode = btn.dataset.presentMode === "full" ? "full" : "front";
+        studioActivePage = "";
+        saveState();
+        render();
+      });
+    });
+
+    const optionalSelect = qs("#studioOptionalSelect");
+    if (optionalSelect) {
+      optionalSelect.addEventListener("change", () => {
+        const label = optionalSelect.value;
+        if (!label) return;
+        const key = "opt_" + label.replace(/[^\p{L}\p{N}]/gu, "").slice(0, 24) + "_" + Date.now();
+        state.deck.optionalPages.push({ key, label, big: label, body: "" });
+        studioActivePage = key;
+        saveState();
+        showToast(`「${label}」ページを追加しました`);
+        render();
+      });
+    }
+    qsa("[data-studio-remove-optional]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const key = btn.dataset.studioRemoveOptional;
+        state.deck.optionalPages = state.deck.optionalPages.filter((p) => p.key !== key);
+        delete state.deck.overrides[key];
+        delete state.deck.photos[key];
+        studioActivePage = "";
+        saveState();
+        showToast("オプションページを削除しました");
+        render();
+      });
     });
 
     qsa("[data-studio-select]").forEach((el) => {
