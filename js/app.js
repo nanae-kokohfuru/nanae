@@ -40,7 +40,11 @@
 
     // 最後の扉は画面の外です｜3人ミニ市場テスト
     market_test_checks: [false, false, false],
-    market_test_notes: ["", "", ""],
+    market_test_notes: [
+      { who: "", what: "", reaction: "", loved: "", unclear: "", next: "" },
+      { who: "", what: "", reaction: "", loved: "", unclear: "", next: "" },
+      { who: "", what: "", reaction: "", loved: "", unclear: "", next: "" },
+    ],
 
     // 扉1｜推したい／助けたい、ひとりを見つける（+悩みの奥・必須）
     d1_who: "",       // 昔の私 / 実際のお客様・過去のお客様 / 身近にいてなぜか放っておけない人
@@ -138,8 +142,15 @@
       merged.start_q = Array.isArray(parsed.start_q) && parsed.start_q.length === 5 ? parsed.start_q : ["", "", "", "", ""];
       merged.market_test_checks = Array.isArray(parsed.market_test_checks) && parsed.market_test_checks.length === 3
         ? parsed.market_test_checks : [false, false, false];
+      // MISSION-02：3人ミニ市場テストの各人の記録を6項目に拡張。旧データ（1つの自由記入メモだけ）は
+      // 「どんな反応だった」欄に引き継ぐ
+      const emptyMarketTestNote = () => ({ who: "", what: "", reaction: "", loved: "", unclear: "", next: "" });
       merged.market_test_notes = Array.isArray(parsed.market_test_notes) && parsed.market_test_notes.length === 3
-        ? parsed.market_test_notes : ["", "", ""];
+        ? parsed.market_test_notes.map((n) => {
+          if (typeof n === "string") return Object.assign(emptyMarketTestNote(), { reaction: n });
+          return Object.assign(emptyMarketTestNote(), n && typeof n === "object" ? n : {});
+        })
+        : [emptyMarketTestNote(), emptyMarketTestNote(), emptyMarketTestNote()];
       merged.d4_turning = Array.isArray(parsed.d4_turning) ? parsed.d4_turning : ["", "", ""];
       merged.d5_categories = Array.isArray(parsed.d5_categories) ? parsed.d5_categories : [];
       merged.d5_supporting = Array.isArray(parsed.d5_supporting) ? parsed.d5_supporting : [];
@@ -420,55 +431,39 @@
       <span class="hero__subtitle">商品をカタチにする10の扉</span>
       <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
 
-      <div class="cover-intro">
-        <p class="cover-intro__eyebrow">chotoNANAP・チョッピーから<br>親愛なるここらーの皆へ</p>
-        <p class="cover-intro__gift">スペシャルプレゼント🎁</p>
-        <p class="cover-pullquote">質問に答えていくだけで<br>なんと、最後に<br>魂商品＝ご提案書の叩き台が<br>できちゃう・・・・！！</p>
-        <p class="cover-intro__sub">ゴイゴイスーなものを<br>開発してしまいましたよ〜</p>
+      <p class="hero__catch">「やってみたい」を<br>「誰かに届けられるカタチ」へ💌</p>
+
+      <div class="hero__desc">このキットは、質問に答えていくだけで<br>あなたの「やってみたい」を、まず一人に届けられる<br>「はじめの一品」の叩き台にしていくキットです<br><br>チョッピー（nanaeAI）が、あなたのモヤモヤを一緒に整理します</div>
+
+      <div class="hero__type-grid">
+        <div class="hero__type-card">
+          <p class="hero__type-card__title">商品がまだない人は</p>
+          <p class="hero__type-card__body">ここからカタチに</p>
+        </div>
+        <div class="hero__type-card">
+          <p class="hero__type-card__title">すでにある商品は</p>
+          <p class="hero__type-card__body">もっとくっきり磨く</p>
+        </div>
+        <div class="hero__type-card">
+          <p class="hero__type-card__title">育ってきた商品は</p>
+          <p class="hero__type-card__body">次の一歩へ育てる</p>
+        </div>
       </div>
-
-      <p class="hero__catch">チョッピー（nanaeAI）が<br>あなたのモヤモヤを一緒に整理します</p>
-
-      <div class="cover-message">
-        <p class="cover-pullquote cover-pullquote--md">目の前のひとりを<br>幸せにする</p>
-        <p class="cover-body">まずは、自分の物語でお金をいただく体験をする</p>
-        <p class="cover-pullquote cover-pullquote--md">「はじめの一品」を<br>つくってください</p>
-        <p class="cover-body">いくら、頭の中で考えても<br>届けてみないと何も始まらない</p>
-        <p class="cover-body">いきなり完璧な講座を作らなくていいんです<br>そもそも、魂商品に完成も完璧もないんです</p>
-        <p class="cover-body">1人に届ける▶︎反応を見る▶︎ブラッシュアップする▶︎そして、また届ける<br><br>ずっとこの繰り返し</p>
-        <p class="cover-body">だからこそ</p>
-        <p class="cover-pullquote cover-pullquote--md">魂商品は完璧な状態まで<br>作り込むものではなく<br>７割くらいできたら、いったん出して<br>お客様と一緒に<br>「育てていくもの」</p>
-        <p class="cover-body">何ヶ月かかって商品作りをする時代は終焉しました</p>
-        <p class="cover-body">ここまで1000人以上の受講生と<br>私自身の実績から<br>全ての叡智をぶっこんで、</p>
-        <p class="cover-pullquote cover-pullquote--md">「はじめの一品」キット</p>
-        <p class="cover-body">チョッピーAIから贈ります🎁</p>
-        <p class="cover-body">今回ここらぼのファイナルシーズン期間限定で<br>無料で使っていただけます！</p>
-        <p class="cover-body">時間がない、それでも夢を叶えたい<br><br>そんな国宝&amp;仏の皆が最速で<br>次元上昇できる方法を考えることが<br>ここらぼのミッションです</p>
-        <p class="cover-pullquote cover-pullquote--md">だって、ここらー<br>全員可能性の塊だから</p>
-        <p class="cover-pullquote cover-pullquote--lg">ほっとけないんだもーーーーん💌</p>
-        <p class="cover-closing">では、早速<br>ワックワクでいってみよう！</p>
-      </div>
-
-      <div class="hero__desc">商品がまだない人は
-ここからカタチに
-
-すでにある人は
-もっとくっきり
-
-10個の問いに答えながら
-あなたの商品に一本の芯を通していこう</div>
 
       <div class="goal-box">
-        <p class="goal-box__title">このキットのゴール💌</p>
-        <p class="goal-box__body">このキットのゴールは<br>完璧な商品を完成させることではありません<br><br>あなたの中にある<br>「やってみたい」を拾って<br><br>それを誰かの喜びにつなげて<br><br>まず人に見せられる<br>「はじめの一品」の叩き台をつくること<br><br>そこから<br>届ける▶︎反応を見る▶︎磨く<br><br>あなたの商品を<br>お客様と一緒に育てていきます</p>
+        <p class="goal-box__title">このキットのGOAL💌</p>
+        <p class="goal-box__body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
       </div>
 
       <div class="nav-row" style="margin-top:22px;">
-        <button class="btn btn--primary" id="startBtn" type="button">はじめる</button>
+        <button class="btn btn--primary" id="startBtn" type="button">早速、創ってみる！</button>
       </div>
       ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
 
-      <p class="ai-disclaimer">このキットは、AIが売れる商品を勝手に作るツールではありません<br>あなたの経験・想い・やってみたいことを、チョッピーと一緒に整理して、まず人に見せられるカタチにするためのキットです<br><br>チョッピーの提案は正解ではありません<br>違和感があれば、あなたの言葉を優先してどんどん書き換えてください<br><br>このキットの利用によって、売上・集客・成果等を保証するものではありません<br>実際のお客様の反応を見ながら、ご自身の判断で商品を育ててください<br><br>法律・医療・健康・金融等に関わる表現や、効果効能・成果保証等を含む商品については、必要に応じて専門家・関係機関にご確認ください</p>
+      <div class="ai-disclaimer">
+        <p class="ai-disclaimer__title">【注意事項】</p>
+        <p>このキットは、AIが売れる商品を勝手に作るツールではありません<br>あなたの経験・想い・やってみたいことを、チョッピーと一緒に整理して、まず人に見せられるカタチにするためのキットです<br><br>チョッピーの提案は正解ではありません<br>違和感があれば、あなたの言葉を優先してどんどん書き換えてください<br><br>このキットの利用によって、売上・集客・成果等を保証するものではありません<br>実際のお客様の反応を見ながら、ご自身の判断で商品を育ててください<br><br>法律・医療・健康・金融等に関わる表現や、効果効能・成果保証等を含む商品については、必要に応じて専門家・関係機関にご確認ください</p>
+      </div>
     </div>`;
   }
 
@@ -509,7 +504,7 @@
     return `
     <div class="card">
       ${doorMascot()}
-      <span class="eyebrow">START</span>
+      <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">まず「やりたい」のタネを集めよう</h2>
       <p class="step-desc">ここでは<br>「売れるかな？」<br>「私にできるかな？」<br>はいったん横にポイッ🤣<br><br>正解も<br>需要も<br>肩書きも<br>一旦考えなくてOK<br><br>あなたの中にある<br>「ちょっとやってみたい」<br>のタネを集めてみよう</p>
       ${rows}
@@ -549,7 +544,7 @@
     return `
     <div class="card">
       ${doorMascot()}
-      <span class="eyebrow">START</span>
+      <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">チョッピーが見つけた<br>あなたの「やりたいのタネ」💌</h2>
       <p class="step-desc">5つの回答から、特にくっきり書けていたものを<br>そのままの言葉で並べてみたよ<br><br>もしかするとあなたは<br>これらのどれかに<br>ワクワクする人なのかもしれません<br>（あくまで仮説だから、しっくりこなければ気にしないで）</p>
       <div class="choice-grid">
@@ -612,7 +607,7 @@
     return `
     <div class="card self1-card">
       ${doorMascot()}
-      <span class="seko-badge">せるこ1</span>
+      <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">まず　今の商品はどこにいる？</h2>
       <p class="step-desc">正解も優劣もありません<br>今いる場所がわかれば、ここからやることが見えてきます</p>
       <div class="choice-grid">
@@ -656,7 +651,7 @@
     <div class="card">
       ${doorMascot()}
       <p class="door-progress-mini">扉 ${n} / ${TOTAL_DOORS}</p>
-      <span class="seko-badge">せるこ${n + 1}</span>
+      <span class="seko-badge">せるこ・${n + 1}</span>
       <h2 class="step-title">${title}</h2>
       ${bodyHtml}
       ${warnId ? `<p class="warn-msg" id="${warnId}"></p>` : ""}
@@ -2281,6 +2276,7 @@ ${who}の
 
 そうやって、あなたの商品は育っていきます</div>
       <p class="result-banner__final">まず、ひとりに届けよう</p>
+      <p class="result-banner__note">勇気noteで愛プットしてくださいね☺️</p>
     </div>
 
     <div class="card photo-upload">
@@ -2300,8 +2296,9 @@ ${who}の
       <div class="sheet sheet--${esc(state.sheetTemplate || "natural")}" id="sheetCapture">
         <div class="sheet__inner">
           ${mascotImg("sheet__mascot-img")}
-          <p class="sheet__eyebrow">MY SOUL PRODUCT</p>
-          <p class="sheet__title">私の魂商品</p>
+          <p class="sheet__eyebrow">MY SOUL PRODUCT ｜ 設計図</p>
+          <p class="sheet__title">私の魂商品・設計図</p>
+          <p class="sheet__title-note">※これは、あなたのための設計図です<br>お客様にお見せするご提案書は、次の「スタジオ」でつくります</p>
           ${state.photo ? `<img class="sheet__photo" src="${state.photo}" alt="">` : ""}
           <h2 class="sheet__name">${esc(productName)}</h2>
           <p class="sheet__name-sub">SOUL PRODUCT DESIGN SHEET</p>
@@ -2394,10 +2391,19 @@ ${who}の
     },
   };
 
+  const MARKET_TEST_FIELDS = [
+    { key: "who", label: "誰に見せた", ph: "例）友人のAさん" },
+    { key: "what", label: "何を届けた", ph: "例）設計図の画像、口頭での説明など" },
+    { key: "reaction", label: "どんな反応だった", ph: "例）「これいいね」と言ってもらえた" },
+    { key: "loved", label: "喜ばれたことは", ph: "例）価格がわかりやすかった" },
+    { key: "unclear", label: "わかりにくかったことは", ph: "例）誰向けかが伝わりにくかった" },
+    { key: "next", label: "次に何を変える", ph: "例）ひとこと目の説明を短くする" },
+  ];
   function renderLastDoorCard() {
     const mission = MISSION_BY_TYPE[state.self1_choice] || MISSION_BY_TYPE.new;
     return `
     <div class="card last-door-card">
+      <img class="door-inline-img" src="assets/img14.webp" alt="NO！完璧　YES！育てる" loading="lazy">
       <span class="eyebrow">🚪最後の扉は、画面の外です</span>
       <p class="step-desc">ここまで来たら<br>次にやることは<br>この画面を眺め続けることではありません🤣<br><br>まず誰かに<br>見せてみよう<br><br>届けてみよう<br><br>聞いてみよう<br><br>商品は<br>人に届けてはじめて<br>育ちはじめます</p>
 
@@ -2415,7 +2421,11 @@ ${who}の
               <input type="checkbox" data-market-test-check="${i}" ${state.market_test_checks[i] ? "checked" : ""}>
               <span>${i + 1}人目に見せた</span>
             </label>
-            <textarea data-market-test-note="${i}" placeholder="反応メモ（任意）" style="min-height:56px;">${esc(state.market_test_notes[i])}</textarea>
+            ${MARKET_TEST_FIELDS.map((f) => `
+              <div class="field" style="margin-top:8px;">
+                <label class="field__label" style="font-size:12.5px;">${esc(f.label)}</label>
+                <input type="text" data-market-test-field="${i}:${f.key}" placeholder="${esc(f.ph)}" value="${esc(state.market_test_notes[i][f.key])}">
+              </div>`).join("")}
           </div>`).join("")}
       </div>
     </div>`;
@@ -2501,9 +2511,10 @@ ${who}の
         saveState();
       });
     });
-    qsa("[data-market-test-note]").forEach((el) => {
+    qsa("[data-market-test-field]").forEach((el) => {
       el.addEventListener("input", () => {
-        state.market_test_notes[Number(el.dataset.marketTestNote)] = el.value;
+        const [i, key] = el.dataset.marketTestField.split(":");
+        state.market_test_notes[Number(i)][key] = el.value;
         saveState();
       });
     });

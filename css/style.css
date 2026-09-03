@@ -682,34 +682,31 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   .d8-time-calc__total{ border-top:none; border-left:1px dashed var(--gold); padding:0 0 0 16px; flex-direction:column; align-items:flex-start; gap:2px; }
 }
 
-/* ---- 扉7：内容ごとの回数・時間入力 ---- */
+/* ---- 扉7：サポート内容（フェーズ設計） ---- */
 
-.d7-item-list{ display:flex; flex-direction:column; gap: 12px; margin: 14px 0; }
-
-.d7-item-row{
+.phase-card{
   background: var(--card-soft);
   border: 1.5px solid var(--line);
   border-radius: var(--radius-md);
-  padding: 14px 16px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
 }
-
-.d7-item-row__label{ font-weight: 700; font-size: 14.5px; color: var(--ink); margin-bottom: 10px; }
-
-.d7-item-row__controls{ display:flex; flex-wrap:wrap; gap: 16px; }
-
-.d7-item-row__field{
-  display:flex; align-items:center; gap: 8px;
-  font-size: 13px; color: var(--ink-soft); font-weight: 700;
+.phase-card__head{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px; }
+.phase-card__num{ font-weight: 800; font-size: 15px; color: var(--bordeaux); font-family: var(--font-serif); }
+.phase-card__move{ display:flex; gap: 6px; }
+.icon-btn{
+  border: 1.5px solid var(--line); background: #fff; border-radius: 8px;
+  padding: 6px 10px; font-size: 13px; color: var(--ink-soft); cursor:pointer;
 }
-
-.d7-item-row__field input[type="text"]{
-  width: 64px; padding: 8px 10px; font-size: 15px; text-align:center;
+.icon-btn:disabled{ opacity: 0.35; cursor: default; }
+.icon-btn--danger{ color: var(--bordeaux); border-color: var(--rose-deep); }
+.phase-card__items{ display:flex; flex-direction:column; gap: 10px; margin: 10px 0; }
+.phase-item-row{ display:flex; gap: 8px; align-items:center; }
+.phase-item-row select{
+  font-family: var(--font-sans); font-size: 13.5px; color: var(--ink);
+  background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 6px; flex: 0 0 auto;
 }
-
-.d7-item-row__field select{
-  font-family: var(--font-sans); font-size: 14px; color: var(--ink);
-  background: #fff; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 10px;
-}
+.phase-item-row input[type="text"]{ flex: 1 1 auto; }
 
 @media (min-width: 860px){
   .d7-item-list{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -939,6 +936,24 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   white-space: pre-line;
 }
 
+.hero__type-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 26px;
+}
+.hero__type-card{
+  background: var(--card-soft);
+  border-radius: var(--radius-md);
+  padding: 14px 8px;
+  text-align: center;
+}
+.hero__type-card__title{ font-size: 12px; color: var(--ink-faint); margin-bottom: 6px; line-height: 1.5; }
+.hero__type-card__body{ font-size: 13.5px; font-weight: 700; color: var(--bordeaux); line-height: 1.5; }
+@media (max-width: 560px){
+  .hero__type-grid{ grid-template-columns: 1fr; }
+}
+
 /* ================= カバーコピー（雑誌風の文字組み） ================= */
 
 .cover-intro{ margin: 4px 0 20px; }
@@ -1010,6 +1025,21 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--ink-faint);
   line-height: 1.9;
   text-align: left;
+}
+.ai-disclaimer__title{
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+
+.door-inline-img{
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
 /* ================= 最後の扉は、画面の外です ================= */
@@ -1093,6 +1123,12 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--gold-deep);
 }
 
+.result-banner__note{
+  font-size: 14px;
+  margin-top: 10px;
+  color: var(--ink-soft);
+}
+
 .sheet-wrap{
   overflow:visible;
 }
@@ -1145,6 +1181,14 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   text-align:center;
   font-size: 15px;
   letter-spacing: 0.14em;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+
+.sheet__title-note{
+  text-align:center;
+  font-size: 11px;
+  line-height: 1.7;
   color: var(--ink-faint);
   margin-bottom: 18px;
 }
