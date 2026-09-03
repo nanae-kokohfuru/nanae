@@ -2066,6 +2066,19 @@ ${who}の
 
       <p class="step-desc">ここまでの回答をもとにした、全${total}ページの横A4ご提案書です<br>これは回答をまとめた報告書ではなく、そのままお客様との相談で使える資料の下書きです<br>文章はあとから直せます写真は入れても入れなくても大丈夫</p>
       <div class="note-box">使い方のお約束：ここにある文章は、あなたの回答をもとにした下書きです<br>盛った実績や、言っていない約束を足すことはしません<br>お客様に渡す前に、必ずあなた自身の言葉で読み直してね</div>
+
+      <div class="canva-guide">
+        <p class="canva-guide__title">Canvaで仕上げるなら</p>
+        <ol class="canva-guide__list">
+          <li>ご提案書をPDFで保存</li>
+          <li>Canvaを開く</li>
+          <li>PDFをCanvaにアップロード</li>
+          <li>写真・色・文字などを自分らしく整える</li>
+          <li>PDFで書き出して完成！</li>
+        </ol>
+        <p class="hint">Canvaを使わなくても、このままPDFで使えます</p>
+      </div>
+
       <button class="btn btn--primary" id="openStudioBtn" type="button">ご提案書スタジオを開く</button>
     </div>`;
   }
@@ -2527,7 +2540,96 @@ ${who}の
 
     ${existingChecklist}
 
+    ${renderGiftSection()}
+
     <div class="restart-row"><button id="restartBtn" type="button">最初からやり直す</button></div>`;
+  }
+
+  /* ---------------------------------------------------------
+     8. GIFT / LOVE / PROOF / RIGHTS｜さらに特大の贈り物
+  --------------------------------------------------------- */
+  // GIFT-02｜参考ご提案書5本。URLは一字も推測・変更・短縮しない
+  const GIFT_PROPOSALS = [
+    { title: "ここらぼ 1回目・ご提案書", url: "https://drive.google.com/file/d/1YPICHwYGa2yNy9qj-i5aza2Hvcp-6BtH/view?usp=sharing" },
+    { title: "ここらぼ 2回目・ご提案書", url: "https://drive.google.com/file/d/15-9h05v_12Wq7eOvEPTwz5xqseps_mxo/view?usp=sharing" },
+    { title: "ここらぼ 3回目・ご提案書", url: "https://drive.google.com/file/d/1U_a0-aw3gmhSd5acM-3-TvrFddevXN7X/view?usp=sharing" },
+    { title: "こころフルネスセルフコーチング講座3期生・ご提案書", url: "https://drive.google.com/file/d/1smfs8z21kI_r_pNbObFl9CLEXvW4SuZj/view?usp=sharing" },
+    { title: "こころとおうちの片付け塾・6期生用・ご提案書", url: "https://drive.google.com/file/d/1UJDwrwdTjitIslXH8HWQk_jmqofeOKXC/view?usp=sharing" },
+  ];
+  // GIFT-03／GIFT-04｜ここすた14本。3つのまとまりに分ける（宿題感を出さない）。URLは一字も推測・変更・短縮しない
+  const GIFT_KOKOSUTA_GROUPS = [
+    {
+      name: "魂商品をつくる", items: [
+        { title: "魂商品の作り方・前半", url: "https://vimeo.com/1042961801/b900c5e66d?share=copy" },
+        { title: "魂商品の作り方・後半", url: "https://vimeo.com/1042963287/d4f1beb31e?share=copy" },
+        { title: "ペルソナ選定方法・前半", url: "https://vimeo.com/1042964558/26e595d6dc?share=copy" },
+        { title: "ペルソナ選定方法・後半", url: "https://vimeo.com/1042966236/f17b4f1b8f?share=copy" },
+      ],
+    },
+    {
+      name: "届ける・売る", items: [
+        { title: "ご提案書の作り方 前半", url: "https://vimeo.com/1042972841/b214da2b1f?share=copy" },
+        { title: "ご提案書の作り方 後半", url: "https://vimeo.com/1042973667/fb5acd94a2b1f?share=copy" },
+        { title: "個別相談【売る場所】の作り方", url: "https://vimeo.com/1042971390/72aa16bfea?share=copy" },
+        { title: "お金が廻るには？", url: "https://vimeo.com/1042955986/338f231876?share=copy" },
+        { title: "起業家の生命線！情報デザイン攻略〜⭐️ 前半", url: "https://vimeo.com/1042975673/bc91bc8e90?share=copy" },
+        { title: "起業家の生命線！情報デザイン攻略〜⭐️ 後半", url: "https://vimeo.com/1042976543/8499cbbaca?share=copy" },
+        { title: "「売る」＝愛と安心を届けること・セールスの基本", url: "https://vimeo.com/1042977065/52c30035a3?share=copy" },
+        { title: "売り込まないのにどんどん売れる新常識セールス方法！", url: "https://vimeo.com/1042982127/63dfd6a178?share=copy" },
+      ],
+    },
+    {
+      name: "起業家として育てる", items: [
+        { title: "「自信」ってなんだろう？", url: "https://vimeo.com/1185726995/077b07d863?share=copy" },
+        { title: "失敗と挑戦", url: "https://vimeo.com/1042607708/e2d509e784?share=copy" },
+      ],
+    },
+  ];
+
+  function renderGiftSection() {
+    return `
+    <div class="card gift-section">
+      <p class="gift-section__eyebrow">さらに<br>特大の贈り物🎁</p>
+
+      <div class="gift-group">
+        <p class="gift-group__title">🎁 参考ご提案書</p>
+        <p class="hint" style="margin-top:0;">丸パクリ用ではありません<br>何をどの順番で伝えているか、どこで未来を見せているか、どこでYESを取っているか、どう商品へつないでいるか<br>を学ぶための参考教材です</p>
+        <div class="gift-cards">
+          ${GIFT_PROPOSALS.map((g) => `<a class="gift-card" href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.title)}</a>`).join("")}
+        </div>
+      </div>
+
+      <div class="gift-group">
+        <p class="gift-group__title">🎬 必見・ここすた</p>
+        <p class="hint" style="margin-top:0;">全部見なければいけない宿題ではありません<br>今のあなたに必要なものから、選んで見てね</p>
+        ${GIFT_KOKOSUTA_GROUPS.map((grp) => `
+          <p class="gift-group__sub">${esc(grp.name)}</p>
+          <div class="gift-cards">
+            ${grp.items.map((g) => `<a class="gift-card" href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.title)}</a>`).join("")}
+          </div>`).join("")}
+      </div>
+
+      <div class="gift-love">
+        <p class="gift-love__title">私は、みんなと約束したから</p>
+        <p class="gift-love__body">ここらぼで一緒に過ごすこの期間<br>「みんなで次元上昇しよう」と約束した<br><br>だからこの期間は<br>私が持っている経験も、考え方も、失敗も、うまくいったことも<br>出し惜しみしないと決めています<br><br>「ここから先は有料だから」と止めるのではなく<br>今ここにいるみんなが、一歩でも現実を動かせるように<br>私にできることは、できるだけ全部渡したい<br><br>それが、私なりの約束の守り方です</p>
+        <p class="gift-love__body">今回渡す、参考ご提案書・ここすた・セールスや商品設計の内容には<br>通常は有料で提供してきた内容、有料講座の中で扱ってきた内容も含まれています<br>「こんな高いものを無料であげている」と言いたいわけではなく<br>約束したから、今できることを渡したい<br>そんな気持ちで届けています</p>
+      </div>
+
+      <div class="gift-proof">
+        <p class="gift-proof__title">このキットの根拠</p>
+        <p class="gift-proof__body">このキットは「AIなら簡単に商品が作れる」「AIなら一瞬」という価値ではありません<br>一般論をAIでまとめた教材でもありません<br><br>実際の販売、実際のお客様、実際の個別相談、実際のご提案書、実際の受講生の反応から磨いてきた<br>ここらぼ独自の実践知を、質問と順番に落としたものです</p>
+        <p class="gift-proof__body">これまで約6年間<br>30万〜80万円の高単価サービスで600名以上、10万円以下の低単価サービスで800名以上にご成約いただいてきました<br>1対1〜10名の少人数セールスでご成約率約8割、1対50名以上の大型セミナーセールスでご成約率約6割<br><br>これは、たまたまではありません<br>お客様がなぜ申し込んだのか、何が決め手だったのか、どこで欲しいと思ったのかを振り返り続け、受講生の成果も見ながら「やっぱりここだな」というポイントを何度も検証してきました<br>だからこそ、再現性の確信があります<br><br>「ななえさんだからできた」ではなく<br>大切なポイントを押さえれば他の人も使えるように、経験を問い・順番・型へ落としました</p>
+        <p class="gift-proof__body">ご提案書も、AIで一瞬で作ったものではありません<br>この6年間で、ご提案書だけでも20回以上、実際に作り直してきました<br>AIがない時代から、考える→作る→お客様へ届ける→反応を見る→また作り直す、を繰り返してきました<br><br>その経験を、みんなが少しでも最短ルートで夢を叶えるために渡しています<br>「ラクして稼ぐ」ではなく、試行錯誤を減らすための地図として使ってください</p>
+      </div>
+
+      <p class="gift-shout">でも<br>もらって止めんなよ〜🤣</p>
+      <p class="gift-love__body" style="text-align:center;">学んで終わり、保存して終わり、スクショして満足ではなく<br>使って、届けて、失敗して、また磨いて<br>ここから、現実を動かしてね<br><br>受け取った愛は、次の誰かに届けて完成です💌</p>
+
+      <div class="gift-rights">
+        <p class="gift-rights__title">大切なお願い</p>
+        <p class="gift-rights__body">本キット・参考ご提案書・ここすた動画・その他付属教材の著作権は、株式会社ここふる・ここらぼに帰属します<br>ここらぼメンバーの学びのための参考教材として提供しています<br><br>転載・複製・転写・再配布・販売・第三者への共有は禁止です<br><br>参考にしながら、自分自身の商品・ご提案書を作るために使用してください<br>参考資料自体を、自分の教材として配布することはできません</p>
+      </div>
+    </div>`;
   }
 
   const MISSION_BY_TYPE = {
