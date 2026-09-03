@@ -22,45 +22,43 @@
   const STORAGE_KEY = "soulProductMiracleKit_v1";
   const TOTAL_DOORS = 10;
 
+  // 最終仕様（GO確定版）の10の扉：
+  // 扉1 ひとりを見つける（+悩みの奥・必須）／扉2 行き先決定／扉3 私が届ける理由／扉4 何を使って届ける？／
+  // 扉5 市場を見る・お財布の行き先／扉6 行き先までの道のり／扉7 サポート内容（フェーズ設計）／
+  // 扉8 届け方／扉9 価格（価格×人数）／扉10 魂商品に名前をつける
   const defaultState = () => ({
-    screen: "start", // start | tane | taneResult | self1 | door | market | studio | celebrate | complete
-    doorIndex: 1,     // 1-10（screen === "door" のときのみ意味を持つ）
+    screen: "start", // start | tane | taneResult | self1 | door | studio | celebrate | complete
+    doorIndex: 1,     // 1-10（screen === "door" のときのみ意味を持つ。新しい10の扉の順序）
 
-    // START｜やりたいのタネ探し（10の扉にはカウントしない。扉の回答とは別枠で保持する）
+    // せるこ・1｜扉前オンボーディング一式（やりたいのタネ探し＋今の商品はどこにいる？）
+    // 10の扉にはカウントしない。扉の回答とは別枠で保持する
     start_q: ["", "", "", "", ""],
     start_tane_selected: "",   // 提示したタネ候補のindex（文字列）、または "other"
     start_tane_other: "",      // 「どれもしっくりこない」を選んだ場合の自由記入
 
     self1_choice: "", // new | polish | grow
 
-    // 社会科見学（扉にはカウントしない軽い一歩。扉6のあと）
-    market_examples: ["", "", ""], // 似た商品・サービスを2〜3個見て気づいたこと（自由記入）
-    market_takeaway: "",   // 取り入れたいこと
-    market_diff: "",       // 自分はこうしたいと思ったこと
-
     // 最後の扉は画面の外です｜3人ミニ市場テスト
     market_test_checks: [false, false, false],
     market_test_notes: ["", "", ""],
 
-    // 扉1（せるこ・2）：ひとりを見つける
+    // 扉1｜推したい／助けたい、ひとりを見つける（+悩みの奥・必須）
     d1_who: "",       // 昔の私 / 実際のお客様・過去のお客様 / 身近にいてなぜか放っておけない人
     d1_situation: "",
     d1_moment: "",
     d1_words: "",
+    d2_pain: "",      // いちばんつらいこと
+    d2_hidden: "",    // 悩みの奥（必須）
+    d2_wish: "",      // 本当に変えたいこと
 
-    // 扉2（せるこ・3）：悩みの奥の壁
-    d2_pain: "",
-    d2_hidden: "",
-    d2_wish: "",
-
-    // 扉3（せるこ・4）：行き先決定
+    // 扉2｜行き先決定
     d3_inner: "",
     d3_action: "",
     d3_reality: "",
     d3_voice: "",
     d3_scene: "",
 
-    // 扉4（せるこ・5）：私が届ける理由
+    // 扉3｜私が届ける理由
     d4_before: "",
     d4_turning: ["", "", ""],
     d4_turning_used: "",
@@ -68,13 +66,26 @@
     d4_after: "",
     d4_why: "",
 
-    // 扉5（せるこ・6）：何を使って連れていく？
+    // 扉4｜何を使って届ける？
     d5_categories: [],      // 選択した大分類
     d5_freeform: {},        // { カテゴリ名: 自由記入テキスト }
     d5_primary: "",         // 表に出す主役（大分類名ひとつ）
     d5_supporting: [],      // 支えるチカラ（大分類名、最大2つ）
 
-    // 扉6（せるこ・7）：どうやって届ける？
+    // 扉5｜市場を見る・お財布の行き先
+    dMkt_spend: "",          // ペルソナは何を検索・購入・お金を払っていそう？
+    dMkt_appeal: [],         // 魅力ポイント（複数選択）
+    dMkt_appeal_other: "",
+    dMkt_takeaway: "",       // 取り入れたいこと
+    dMkt_avoid: "",          // 絶対やりたくないこと
+
+    // 扉6｜行き先までの道のり（時系列4レンズ）
+    d7_steps: ["", "", "", ""],
+
+    // 扉7｜サポート内容（フェーズ設計）
+    dPhase_list: [], // [{ name, goal, period, items: [{type, label}] }]
+
+    // 扉8｜届け方
     d6_size: "",
     d6_place: "",
     d6_place_other: "",
@@ -83,23 +94,18 @@
     d6_between: [],
     d6_between_other: "",
 
-    // 扉7：行き先までの道のり
-    d7_steps: ["", "", "", ""],
-    d7_item_counts: {}, // { 支援内容ラベル: { count: "", duration: "" } }（扉6で選んだ内容ごとに回数・時間を持つ）
+    // 扉9｜価格（価格×人数）
+    dPrice_role: "",          // 商品の役割（4択）
+    dPrice_price: "",         // 今回はいくらから届ける？
+    dPrice_people: "",        // 届けたい人数
+    dPrice_targetRevenue: "", // 目標売上（逆算用・任意）
 
-    // 扉8：価格を決める
-    d8_time_checks: [],
-    d8_weekly_hours: "",
-    d8_period_weeks: "",
-    d8_min_price: "",
-    d8_future_value: "",
-    d8_price: "",
-
-    // 扉9：名前をつける
+    // 扉10｜魂商品に名前をつける
     d9_check: [false, false, false],
     d9_name: "",
 
-    // 扉10：買う理由
+    // 旧「買う理由・信用材料」（独立の扉としては廃止。migrationで保持し、実績はご提案書の
+    // オプションページ・情熱は扉3「だから届けたい」の補助データとして活用する）
     d10_facts: [],
     d10_facts_detail: ["", "", ""],
     d10_passion: "",
@@ -115,6 +121,7 @@
       photos: {},     // { pageKey: dataUrl }
       overrides: {},  // { pageKey: { big: "", body: "" } }（原文は上書きしない。表示用の別データ）
       hidden: [],     // 非表示にしたページキー
+      optionalPages: [], // 追加したオプションページのkey一覧
     },
   });
 
@@ -129,56 +136,58 @@
       // ネストしたデフォルト値を保護（古いデータからの復元時に壊れないように）
       // START「やりたいのタネ探し」は今回の新規追加。旧データに存在しなくてもエラーにせず「START未回答」として扱う
       merged.start_q = Array.isArray(parsed.start_q) && parsed.start_q.length === 5 ? parsed.start_q : ["", "", "", "", ""];
-      merged.market_examples = Array.isArray(parsed.market_examples) ? parsed.market_examples : ["", "", "", ""];
       merged.market_test_checks = Array.isArray(parsed.market_test_checks) && parsed.market_test_checks.length === 3
         ? parsed.market_test_checks : [false, false, false];
       merged.market_test_notes = Array.isArray(parsed.market_test_notes) && parsed.market_test_notes.length === 3
         ? parsed.market_test_notes : ["", "", ""];
       merged.d4_turning = Array.isArray(parsed.d4_turning) ? parsed.d4_turning : ["", "", ""];
+      merged.d5_categories = Array.isArray(parsed.d5_categories) ? parsed.d5_categories : [];
+      merged.d5_supporting = Array.isArray(parsed.d5_supporting) ? parsed.d5_supporting : [];
+      merged.d5_freeform = parsed.d5_freeform && typeof parsed.d5_freeform === "object" ? parsed.d5_freeform : {};
+      merged.d6_during = Array.isArray(parsed.d6_during) ? parsed.d6_during : [];
+      merged.d6_between = Array.isArray(parsed.d6_between) ? parsed.d6_between : [];
       merged.d7_steps = Array.isArray(parsed.d7_steps) ? parsed.d7_steps : ["", "", "", ""];
-      merged.d7_item_counts = parsed.d7_item_counts && typeof parsed.d7_item_counts === "object" ? parsed.d7_item_counts : {};
-      // 旧データ（回数・時間が扉全体でひとつだけだった頃）からの移行：
-      // 新しい画面は扉6で選んだ内容ごとにしか回数を表示しないため、その各内容に同じ回数・時間を割り当てて
-      // 実際に見える場所（扉7の入力欄・完成シートの「回数」欄）に反映されるようにする
-      if ((parsed.d7_count || parsed.d7_duration) && Object.keys(merged.d7_item_counts).length === 0) {
-        // 旧選択肢は "1回"〜"5回以上" のように「回」を含んだ文字列だったが、新しい表示は count に自動で「回」を付け足すため、
-        // 二重に「回回」とならないよう先に取り除く
-        const legacyValue = { count: (parsed.d7_count || "").replace(/回/g, ""), duration: (parsed.d7_duration && parsed.d7_duration !== "まだ決めなくてOK") ? parsed.d7_duration : "" };
-        const legacyDuring = Array.isArray(parsed.d6_during) ? parsed.d6_during : [];
-        const legacyBetween = Array.isArray(parsed.d6_between) ? parsed.d6_between : [];
-        const legacyItems = [];
-        legacyDuring.forEach((v) => {
-          if (v === "その他") { if ((parsed.d6_during_other || "").trim()) legacyItems.push(parsed.d6_during_other.trim()); }
-          else legacyItems.push(v);
-        });
-        legacyBetween.forEach((v) => {
-          if (v === "特になし") return;
-          if (v === "その他") { if ((parsed.d6_between_other || "").trim()) legacyItems.push(parsed.d6_between_other.trim()); }
-          else legacyItems.push(v);
-        });
-        if (legacyItems.length) {
-          legacyItems.forEach((item) => { merged.d7_item_counts[item] = Object.assign({}, legacyValue); });
-        } else {
-          // 扉6の内容が空のときだけ、情報を失わないよう汎用キーで保持
-          merged.d7_item_counts["これまでの内容"] = legacyValue;
-        }
-      }
-      merged.d8_weekly_hours = typeof parsed.d8_weekly_hours === "string" ? parsed.d8_weekly_hours : "";
-      merged.d8_period_weeks = typeof parsed.d8_period_weeks === "string" ? parsed.d8_period_weeks : "";
-      // 旧データ（合計時間を自由入力していた頃）からの移行：週あたりの目安として引き継ぐ
-      if (parsed.d8_time_hours && !merged.d8_weekly_hours) {
-        merged.d8_weekly_hours = parsed.d8_time_hours;
-      }
       merged.d9_check = Array.isArray(parsed.d9_check) ? parsed.d9_check : [false, false, false];
+      merged.d10_facts = Array.isArray(parsed.d10_facts) ? parsed.d10_facts : [];
       merged.d10_facts_detail = Array.isArray(parsed.d10_facts_detail) ? parsed.d10_facts_detail : ["", "", ""];
+      merged.d10_promise_checks = Array.isArray(parsed.d10_promise_checks) ? parsed.d10_promise_checks : [];
       merged.finalChecklist = Array.isArray(parsed.finalChecklist) && parsed.finalChecklist.length === 7
         ? parsed.finalChecklist : [false, false, false, false, false, false, false];
-      merged.d5_freeform = parsed.d5_freeform && typeof parsed.d5_freeform === "object" ? parsed.d5_freeform : {};
-      const deckDefault = { photos: {}, overrides: {}, hidden: [] };
+
+      // 扉5「市場を見る・お財布の行き先」（新規）：旧「市場リサーチ」画面とは質問の内容が異なるため
+      // そのまま移せるデータはないが、「市場から気づいたこと」だけは意味が近いため引き継ぐ
+      merged.dMkt_appeal = Array.isArray(parsed.dMkt_appeal) ? parsed.dMkt_appeal : [];
+      if (!merged.dMkt_takeaway && typeof parsed.market_takeaway === "string" && parsed.market_takeaway) {
+        merged.dMkt_takeaway = parsed.market_takeaway;
+      }
+
+      // 扉7「サポート内容（フェーズ設計）」（新規）：旧データ（扉6で選んだ内容ごとの回数・期間）が
+      // 残っている場合は、失わないよう1つのフェーズとしてまとめて引き継ぐ
+      merged.dPhase_list = Array.isArray(parsed.dPhase_list) ? parsed.dPhase_list : [];
+      if (merged.dPhase_list.length === 0 && parsed.d7_item_counts && typeof parsed.d7_item_counts === "object" && Object.keys(parsed.d7_item_counts).length) {
+        const legacyItems = Object.keys(parsed.d7_item_counts).map((label) => ({ type: "その他", label }));
+        merged.dPhase_list = [{
+          name: "これまでの内容",
+          goal: "",
+          period: parsed.d8_period_weeks || "",
+          items: legacyItems,
+        }];
+      }
+
+      // 扉9「価格」（新規）：旧データで選んでいた価格があれば引き継ぐ
+      if (!merged.dPrice_price && parsed.d8_price) {
+        merged.dPrice_price = String(parsed.d8_price);
+      }
+
+      // 旧「買う理由・信用材料」（独立の扉としては廃止）：d10_passion 等のフィールド自体は
+      // defaultState() にそのまま残しているため Object.assign 済み。扉3「だから届けたい」の
+      // 補助データ（参考表示のみ・新しい質問としては追加しない）として画面側で読み出す
+      const deckDefault = { photos: {}, overrides: {}, hidden: [], optionalPages: [] };
       merged.deck = Object.assign(deckDefault, parsed.deck && typeof parsed.deck === "object" ? parsed.deck : {});
       merged.deck.photos = merged.deck.photos && typeof merged.deck.photos === "object" ? merged.deck.photos : {};
       merged.deck.overrides = merged.deck.overrides && typeof merged.deck.overrides === "object" ? merged.deck.overrides : {};
       merged.deck.hidden = Array.isArray(merged.deck.hidden) ? merged.deck.hidden : [];
+      merged.deck.optionalPages = Array.isArray(merged.deck.optionalPages) ? merged.deck.optionalPages : [];
       return merged;
     } catch (e) {
       return defaultState();
@@ -346,9 +355,6 @@
     } else if (state.screen === "self1") {
       app.className = "app-main app-main--wide";
       app.innerHTML = renderSelf1(); bindSelf1();
-    } else if (state.screen === "market") {
-      app.className = "app-main app-main--wide";
-      app.innerHTML = renderMarket(); bindMarket();
     } else if (state.screen === "door") {
       app.className = "app-main app-main--wide";
       app.innerHTML = `<div class="door-layout">
@@ -384,11 +390,12 @@
       ["連れていく未来", s.d3_action],
       ["私が届ける理由", s.d4_why],
       ["主役のチカラ", s.d5_primary],
-      ["届け方", s.d6_place],
+      ["お財布の行き先", s.dMkt_spend],
       ["道のり", (s.d7_steps || []).filter((x) => x && x.trim()).join("・")],
-      ["価格", s.d8_price ? `${formatYen(s.d8_price)}円` : ""],
+      ["サポート内容", (s.dPhase_list || []).map((p) => p.name).filter(Boolean).join("・")],
+      ["届け方", s.d6_place],
+      ["価格", s.dPrice_price ? `${formatYen(s.dPrice_price)}円` : ""],
       ["商品名", s.d9_name],
-      ["信用の材料", s.d10_passion],
     ];
     const doneCount = rows.filter(([, v]) => v && String(v).trim()).length;
     return `
@@ -671,7 +678,6 @@
   function bindDoor(n) {
     qs("#backBtn").addEventListener("click", () => {
       if (n === 1) { state.screen = "self1"; }
-      else if (n === 7) { state.screen = "market"; }
       else { state.doorIndex = n - 1; }
       saveState();
       render();
@@ -703,12 +709,7 @@
     } else {
       showToast(doorOpenLine, 1800);
     }
-    if (n === 6) {
-      // 扉6のあとは「社会科見学」という軽い一歩をはさむ（扉のカウントには含めない）
-      state.screen = "market";
-    } else {
-      state.doorIndex = n + 1;
-    }
+    state.doorIndex = n + 1;
     saveState();
     render();
   }
@@ -727,7 +728,7 @@
   }
 
   /* ---------------------------------------------------------
-     扉1（せるこ・2）｜推したい！助けたい！ひとりを見つける
+     扉1（せるこ・2）｜推したい！助けたい！ひとりを見つける（+悩みの奥）
   --------------------------------------------------------- */
   const D1_WHO_OPTIONS = ["昔の私", "実際のお客様・過去のお客様", "身近にいて　なぜか放っておけない人"];
   function renderDoor1() {
@@ -759,40 +760,8 @@
           <label class="field__label">そのとき、その人は何て言ってそう？</label>
           <textarea id="d1_words" placeholder="例）何から始めたらいいかわからない">${esc(state.d1_words)}</textarea>
         </div>
-      `,
-      warnId: "warn1",
-    });
-  }
-  function bindDoor1() {
-    qsa('input[name="d1_who"]').forEach((r) => { r.addEventListener("change", () => { state.d1_who = r.value; saveState(); }); });
-    ["d1_situation", "d1_moment", "d1_words"].forEach((id) => {
-      const el = qs("#" + id);
-      el.addEventListener("input", () => { state[id] = el.value; saveState(); });
-    });
-    qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d1_who) { showWarn("warn1", "まず、誰を思い浮かべるか選んでみよう"); return; }
-      if (!requireText(state.d1_situation, "warn1", "その人の今の状況を書いてみよう")) return;
-      if (!requireText(state.d1_moment, "warn1", "困っている一場面を書いてみよう")) return;
-      showToast("お、見えてきた👀", 2200);
-      goNextDoor(1);
-    });
-  }
 
-  /* ---------------------------------------------------------
-     扉2（せるこ・3）｜その悩みの奥の壁
-  --------------------------------------------------------- */
-  function renderDoor2() {
-    const recap = recapCard("見つけた、ひとり", [
-      { label: "その人", value: state.d1_situation },
-      { label: "困っている場面", value: state.d1_moment },
-      { label: "その人の言葉", value: state.d1_words },
-    ]);
-    return doorShell({
-      n: 2, badge: "せるこ・3", title: "その悩みの奥の壁",
-      bodyHtml: `
-        <p class="step-desc">問題定義の根っこを見つけます</p>
-        ${recap}
-        <p class="step-desc">表面に見えている悩みだけで商品を作ると、少し浅くなります<br>その奥にある怖さ・痛み・恥・思い込み<br>全部掘らなくて大丈夫<br><br>今回は、この商品で越える一番大きな壁を、ひとつ見つけます</p>
+        <p class="step-desc" style="margin-top:26px;">表面に見えている悩みだけで商品を作ると、少し浅くなります<br>その奥にある怖さ・痛み・恥・思い込み<br>全部掘らなくて大丈夫<br><br>今回は、この商品で越える一番大きな壁を、ひとつ見つけます</p>
 
         <div class="field">
           <label class="field__label">この状態が続いたら、その人がいちばんつらいのは何？</label>
@@ -800,7 +769,7 @@
         </div>
 
         <div class="field">
-          <label class="field__label">もう一歩だけ深く見る（任意）</label>
+          <label class="field__label">もう一歩だけ深く見る｜悩みの奥</label>
           <textarea id="d2_hidden" placeholder="人にはちょっと言いにくいけれど、本人が心の中で怖がっていることは？">${esc(state.d2_hidden)}</textarea>
         </div>
 
@@ -809,32 +778,37 @@
           <textarea id="d2_wish" placeholder="ここでは、次の未来提示を完成させなくてよいので、問題の根っこを一言でつかむ">${esc(state.d2_wish)}</textarea>
         </div>
       `,
-      warnId: "warn2",
+      warnId: "warn1",
     });
   }
-  function bindDoor2() {
-    ["d2_pain", "d2_hidden", "d2_wish"].forEach((id) => {
+  function bindDoor1() {
+    qsa('input[name="d1_who"]').forEach((r) => { r.addEventListener("change", () => { state.d1_who = r.value; saveState(); }); });
+    ["d1_situation", "d1_moment", "d1_words", "d2_pain", "d2_hidden", "d2_wish"].forEach((id) => {
       const el = qs("#" + id);
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
     });
     qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d2_pain, "warn2", "いちばんつらいことを書いてみよう")) return;
-      if (!requireText(state.d2_wish, "warn2", "本当は何を変えたいか、書いてみよう")) return;
+      if (!state.d1_who) { showWarn("warn1", "まず、誰を思い浮かべるか選んでみよう"); return; }
+      if (!requireText(state.d1_situation, "warn1", "その人の今の状況を書いてみよう")) return;
+      if (!requireText(state.d1_moment, "warn1", "困っている一場面を書いてみよう")) return;
+      if (!requireText(state.d2_pain, "warn1", "いちばんつらいことを書いてみよう")) return;
+      if (!requireText(state.d2_hidden, "warn1", "悩みの奥を、もう一歩だけ見てみよう")) return;
+      if (!requireText(state.d2_wish, "warn1", "本当は何を変えたいか、書いてみよう")) return;
       showToast("よし、救いたい場所が見えてきた", 2200);
-      goNextDoor(2);
+      goNextDoor(1);
     });
   }
 
   /* ---------------------------------------------------------
-     扉3（せるこ・4）｜行き先決定
+     扉2（せるこ・3）｜行き先決定
   --------------------------------------------------------- */
-  function renderDoor3() {
+  function renderDoor2() {
     const recap = recapCard("越えたい壁", [
       { label: "いちばんつらいこと", value: state.d2_pain },
       { label: "本当に変えたいこと", value: state.d2_wish },
     ]);
     return doorShell({
-      n: 3, badge: "せるこ・4", title: "行き先決定",
+      n: 2, badge: "せるこ・3", title: "行き先決定",
       bodyHtml: `
         <p class="step-desc">未来提示をくっきりさせます</p>
         ${recap}
@@ -865,7 +839,7 @@
       warnId: "warn3",
     });
   }
-  function bindDoor3() {
+  function bindDoor2() {
     ["d3_inner", "d3_action", "d3_reality", "d3_voice", "d3_scene"].forEach((id) => {
       const el = qs("#" + id);
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
@@ -874,16 +848,19 @@
       if (!requireText(state.d3_inner, "warn3", "内面の変化を書いてみよう")) return;
       if (!requireText(state.d3_action, "warn3", "できるようになることを書いてみよう")) return;
       showToast("行き先、くっきりしてきた", 2200);
-      goNextDoor(3);
+      goNextDoor(2);
     });
   }
 
   /* ---------------------------------------------------------
-     扉4（せるこ・5）｜私が届ける理由
+     扉3（せるこ・4）｜私が届ける理由
   --------------------------------------------------------- */
-  function renderDoor4() {
+  function renderDoor3() {
+    const passionHint = state.d10_passion
+      ? `<p class="hint" style="margin-top:-4px;">以前ご記入いただいた「それでも届けたい思い」：${esc(state.d10_passion)}<br>よければ参考にしてみてください（この内容をそのまま書き直す必要はありません）</p>`
+      : "";
     return doorShell({
-      n: 4, badge: "せるこ・5", title: "私が届ける理由",
+      n: 3, badge: "せるこ・4", title: "私が届ける理由",
       bodyHtml: `
         <p class="step-desc">なぜ？物語を整理</p>
         <p class="step-desc">なぜ、あなたがこの商品を届けるの？<br>資格や肩書きより先に、あなたが歩いてきた道を振り返ります<br><br>あなたの経験は、4つに分けるとひとつの物語になります</p>
@@ -917,6 +894,7 @@
         <div class="field">
           <label class="field__label">だから私は、この人に届けたい</label>
           <textarea id="d4_why" placeholder="自由記入">${esc(state.d4_why)}</textarea>
+          ${passionHint}
         </div>
 
         <p class="big-quote">あなたの過去は、ただの昔話じゃない<br>あなたが歩いてきた道は、誰かの地図になる</p>
@@ -924,7 +902,7 @@
       warnId: "warn4",
     });
   }
-  function bindDoor4() {
+  function bindDoor3() {
     function renderTurningUsed() {
       const wrap = qs("#turningUsedWrap");
       const grid = qs("#turningUsedGrid");
@@ -957,40 +935,40 @@
       if (!requireText(state.d4_before, "warn4", "あの頃のあなたについて書いてみよう")) return;
       if (!state.d4_turning.some((t) => t.trim())) { showWarn("warn4", "突破口を、ひとつだけでも書いてみよう"); return; }
       if (!requireText(state.d4_why, "warn4", "だから届けたい、その理由を書いてみよう")) return;
-      goNextDoor(4);
+      goNextDoor(3);
     });
   }
 
   /* ---------------------------------------------------------
-     扉5（せるこ・6）｜何を使って連れていく？
+     扉4（せるこ・5）｜何を使って届ける？
   --------------------------------------------------------- */
   const CATEGORY_OPTIONS = [
-    { name: "対話・傾聴", example: "" },
+    { name: "対話・相談", example: "" },
     { name: "コーチング", example: "" },
     { name: "カウンセリング", example: "" },
-    { name: "セラピー・心のケア", example: "" },
-    { name: "心理学・自己理解・自己啓発", example: "心理学 自己肯定感 インナーチャイルド 感情整理" },
+    { name: "セラピー・心ケア", example: "" },
+    { name: "心理学・自己理解・自己受容", example: "心理学 自己肯定感 インナーチャイルド 感情整理" },
     { name: "潜在意識", example: "" },
     { name: "ジャーナリング・内省", example: "" },
-    { name: "占術・スピリチュアル", example: "数秘 星読み チャクラ カード エネルギーワーク" },
+    { name: "占い・スピリチュアル", example: "数秘 星読み チャクラ カード エネルギーワーク" },
     { name: "身体・健康・美容", example: "" },
-    { name: "料理・食・発酵", example: "料理 パン 和菓子 麹 発酵 薬膳" },
-    { name: "講師・教育", example: "" },
-    { name: "診断・分析", example: "" },
-    { name: "制作・クリエイティブ", example: "デザイン 写真 動画 ライティング Web イラスト" },
+    { name: "料理・食・栄養", example: "料理 パン 和菓子 麹 発酵 薬膳" },
+    { name: "運動・習慣", example: "" },
+    { name: "整理・片付", example: "" },
+    { name: "創作・クリエイティブ", example: "デザイン 写真 動画 ライティング Web イラスト" },
     { name: "ビジネス・ブランディング", example: "" },
     { name: "自分自身の経験", example: "" },
     { name: "その他", example: "" },
   ];
 
-  function renderDoor5() {
+  function renderDoor4() {
     const cards = CATEGORY_OPTIONS.map((c, i) => choiceCard({
       type: "checkbox", name: "d5_cat", value: c.name, id: "d5_cat_" + i,
       checked: state.d5_categories.includes(c.name), label: c.name,
     })).join("");
 
     return doorShell({
-      n: 5, badge: "せるこ・6", title: "何を使って連れていく？",
+      n: 4, badge: "せるこ・5", title: "何を使って届ける？",
       bodyHtml: `
         <p class="step-desc">あなたができることは、全部捨てなくて大丈夫<br>必要なら全部使っていい<br><br>でも、お客様から見える場所に全部並べると「結局、何の人？」になります🤣<br><br>今回決めるのは、何を捨てるかではなく、何を前に出すか</p>
 
@@ -1007,7 +985,7 @@
     });
   }
 
-  function bindDoor5() {
+  function bindDoor4() {
     function renderFreeform() {
       const area = qs("#d5FreeformArea");
       area.innerHTML = state.d5_categories.map((catName) => {
@@ -1118,7 +1096,7 @@
     qs("#nextBtn").addEventListener("click", () => {
       if (state.d5_categories.length === 0) { showWarn("warn5", "使うものを、最低ひとつ選んでみよう"); return; }
       if (!state.d5_primary) { showWarn("warn5", "表に出す主役を、ひとつ選んでみよう"); return; }
-      goNextDoor(5);
+      goNextDoor(4);
     });
   }
 
@@ -1184,7 +1162,7 @@ ${who}の
     { v: "その他", sub: "" },
   ];
 
-  function renderDoor6() {
+  function renderDoor8() {
     const sizeCards = D6_SIZE_OPTIONS.map((o, i) => choiceCard({
       type: "radio", name: "d6_size", value: o.v, id: "d6_size_" + i, shape: "round",
       checked: state.d6_size === o.v, label: o.v, sub: o.sub,
@@ -1203,7 +1181,7 @@ ${who}の
     })).join("");
 
     return doorShell({
-      n: 6, badge: "せるこ・7", title: "どうやって届ける？",
+      n: 8, badge: "せるこ・9", title: "どうやって届ける？",
       bodyHtml: `
         <p class="step-desc">商品を受け取る場面をつくろう</p>
         <p class="step-desc">ここまでで、誰に・どんな悩みを・どんな未来へ・何を使って届けるかが見えてきました<br>次は、お客様が実際にどんな形でこの商品を受けるのかを決めます</p>
@@ -1237,7 +1215,7 @@ ${who}の
       warnId: "warn6",
     });
   }
-  function bindDoor6() {
+  function bindDoor8() {
     qsa('input[name="d6_size"]').forEach((r) => { r.addEventListener("change", () => { state.d6_size = r.value; saveState(); }); });
     qsa('input[name="d6_place"]').forEach((r) => {
       r.addEventListener("change", () => {
@@ -1269,318 +1247,340 @@ ${who}の
     qs("#nextBtn").addEventListener("click", () => {
       if (!state.d6_size) { showWarn("warn6", "何人くらいに届けるか選んでみよう"); return; }
       if (!state.d6_place) { showWarn("warn6", "どこで届けるか選んでみよう"); return; }
-      goNextDoor(6);
-    });
-  }
-
-  /* ---------------------------------------------------------
-     ちょっと社会科見学👀（扉にはカウントしない軽い一歩・扉6のあと）
-  --------------------------------------------------------- */
-  function renderMarket() {
-    const examplePlaceholders = [
-      "例）誰に届けている？　何を届けている？　どんな形？　価格は？　どんな見せ方をしている？",
-      "例）誰に届けている？　何を届けている？　どんな形？　価格は？　どんな見せ方をしている？",
-      "例）誰に届けている？　何を届けている？　どんな形？　価格は？　どんな見せ方をしている？",
-    ];
-    const rows = state.market_examples.map((v, i) => `
-      <div class="field" style="margin-top:${i === 0 ? 0 : 16}px;">
-        <label class="field__label">似ている商品・サービス　その${i + 1}（任意）</label>
-        <textarea id="market_ex_${i}" placeholder="${esc(examplePlaceholders[i])}" style="min-height:90px;">${esc(v)}</textarea>
-      </div>`).join("");
-    return `
-    <div class="card">
-      ${doorMascot()}
-      <span class="eyebrow">ちょっと社会科見学👀</span>
-      <h2 class="step-title">同じような商品を、2〜3個のぞいてみよう</h2>
-      <p class="step-desc">これは正解探しではなく、社会科見学です<br><br>売れている人の正解を探すことでも<br>競合を真似することでもなく<br><br>あなたの妄想を<br>現実世界とつなげてみる時間です</p>
-      ${rows}
-      <div class="field" style="margin-top:22px;">
-        <label class="field__label">見てみて、自分の商品に取り入れたいことは？</label>
-        <textarea id="market_takeaway" placeholder="例）写真の見せ方が分かりやすかった">${esc(state.market_takeaway)}</textarea>
-      </div>
-      <div class="field">
-        <label class="field__label">逆に、私はこうしたいと思ったことは？</label>
-        <textarea id="market_diff" placeholder="例）もっと価格をシンプルに見せたい">${esc(state.market_diff)}</textarea>
-      </div>
-      <div class="nav-row" style="margin-top:22px;">
-        <button class="btn btn--ghost" id="marketBackBtn" type="button">← 前へ</button>
-        <button class="btn btn--primary" id="marketNextBtn" type="button">次へ →</button>
-      </div>
-      <div class="restart-row"><button id="restartBtn" type="button">最初からやり直す</button></div>
-    </div>`;
-  }
-  function bindMarket() {
-    state.market_examples.forEach((_, i) => {
-      qs(`#market_ex_${i}`).addEventListener("input", (e) => { state.market_examples[i] = e.target.value; saveState(); });
-    });
-    qs("#market_takeaway").addEventListener("input", (e) => { state.market_takeaway = e.target.value; saveState(); });
-    qs("#market_diff").addEventListener("input", (e) => { state.market_diff = e.target.value; saveState(); });
-    qs("#marketBackBtn").addEventListener("click", () => { state.doorIndex = 6; state.screen = "door"; saveState(); render(); });
-    qs("#restartBtn").addEventListener("click", openResetModal);
-    qs("#marketNextBtn").addEventListener("click", () => {
-      state.doorIndex = 7;
-      state.screen = "door";
-      saveState();
-      render();
-    });
-  }
-
-  /* ---------------------------------------------------------
-     扉7｜行き先までの道のりをつくる
-  --------------------------------------------------------- */
-  const D7_DURATION_OPTIONS = ["", "30分", "45分", "60分", "90分", "120分", "まだ決めなくてOK"];
-
-  // 扉6で選んだ「一緒にいる時間／会っていない時間」の内容ごとに、回数・時間を入力する対象を作る
-  function d7SupportItems() {
-    const items = [];
-    (state.d6_during || []).forEach((v) => {
-      if (v === "その他") { if (state.d6_during_other.trim()) items.push(state.d6_during_other.trim()); }
-      else items.push(v);
-    });
-    (state.d6_between || []).forEach((v) => {
-      if (v === "特になし") return;
-      if (v === "その他") { if (state.d6_between_other.trim()) items.push(state.d6_between_other.trim()); }
-      else items.push(v);
-    });
-    return items;
-  }
-  function d7ItemValue(item) {
-    return state.d7_item_counts[item] || { count: "", duration: "" };
-  }
-  function d7ItemSummaryLine() {
-    return d7SupportItems()
-      .map((item) => {
-        const v = d7ItemValue(item);
-        if (!v.count) return "";
-        const dur = v.duration && v.duration !== "まだ決めなくてOK" ? `・${v.duration}` : "";
-        return `${item}［${v.count}回${dur}］`;
-      })
-      .filter(Boolean)
-      .join("　");
-  }
-
-  function renderDoor7() {
-    const recap = recapCard("ここまでの道しるべ", [
-      { label: "現在地", value: state.d1_moment },
-      { label: "問題の根っこ", value: state.d2_pain },
-      { label: "行き先", value: state.d3_action },
-      { label: "届け方", value: [state.d6_size, state.d6_place].filter(Boolean).join(" / ") },
-    ]);
-    const items = d7SupportItems();
-    const itemRows = items.length ? items.map((item, i) => {
-      const v = d7ItemValue(item);
-      return `
-      <div class="d7-item-row">
-        <p class="d7-item-row__label">${esc(item)}</p>
-        <div class="d7-item-row__controls">
-          <label class="d7-item-row__field">回数
-            <input type="text" inputmode="numeric" class="d7-item-count" data-item="${esc(item)}" placeholder="例）6" value="${esc(v.count)}">回
-          </label>
-          <label class="d7-item-row__field">1回の時間
-            <select class="d7-item-duration" data-item="${esc(item)}">
-              ${D7_DURATION_OPTIONS.map((d) => `<option value="${esc(d)}" ${v.duration === d ? "selected" : ""}>${d ? esc(d) : "（選ぶ）"}</option>`).join("")}
-            </select>
-          </label>
-        </div>
-      </div>`;
-    }).join("") : `
-      <p class="hint">扉6で「一緒にいる時間・会っていない時間」に何をするかを選ぶと、ここに回数の入力欄が出てきます</p>`;
-
-    return doorShell({
-      n: 7, title: "行き先までの道のりをつくる",
-      bodyHtml: `
-        ${recap}
-        <p class="step-desc">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？<br>必要な順番を、小さく分けてみます</p>
-
-        <p class="step-question">行き先までに必要なことを、最大4つ</p>
-        <div class="field"><input type="text" id="d7_step_0" placeholder="① まず" value="${esc(state.d7_steps[0])}"></div>
-        <div class="field"><input type="text" id="d7_step_1" placeholder="② 次に" value="${esc(state.d7_steps[1])}"></div>
-        <div class="field"><input type="text" id="d7_step_2" placeholder="③ その次に" value="${esc(state.d7_steps[2])}"></div>
-        <div class="field"><input type="text" id="d7_step_3" placeholder="④ 必要なら" value="${esc(state.d7_steps[3])}"></div>
-        <p class="hint">全部埋めなくてOK</p>
-
-        <p class="step-question" style="margin-top:26px;">扉6で選んだ内容ごとに、何回くらい必要そう？</p>
-        <div class="d7-item-list">${itemRows}</div>
-        <div class="note-box">書いた数＝回数ではありません<br>1回でいくつか進んでもOK<br>実践する時間が必要なら、次回まで間を空けてもOK<br><br>行き先まで、本当に必要な回数だけ<br>豪華に見せるために増やさない🤣</div>
-      `,
-      warnId: "warn7",
-    });
-  }
-  function bindDoor7() {
-    [0, 1, 2, 3].forEach((i) => {
-      qs(`#d7_step_${i}`).addEventListener("input", (e) => { state.d7_steps[i] = e.target.value; saveState(); });
-    });
-    qsa(".d7-item-count").forEach((el) => {
-      el.addEventListener("input", () => {
-        const item = el.dataset.item;
-        state.d7_item_counts[item] = Object.assign({ count: "", duration: "" }, state.d7_item_counts[item], { count: el.value });
-        saveState();
-      });
-    });
-    qsa(".d7-item-duration").forEach((el) => {
-      el.addEventListener("change", () => {
-        const item = el.dataset.item;
-        state.d7_item_counts[item] = Object.assign({ count: "", duration: "" }, state.d7_item_counts[item], { duration: el.value });
-        saveState();
-      });
-    });
-
-    qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d7_steps.some((s) => s.trim())) { showWarn("warn7", "行き先までの道のりを、ひとつだけでも書いてみよう"); return; }
-      const items = d7SupportItems();
-      if (items.length && !items.some((item) => d7ItemValue(item).count)) {
-        showWarn("warn7", "何回くらい必要そうか、ひとつだけでも入力してみよう");
-        return;
-      }
-      goNextDoor(7);
-    });
-  }
-
-  /* ---------------------------------------------------------
-     扉8｜価格を決める
-  --------------------------------------------------------- */
-  const D8_TIME_OPTIONS = [
-    "セッション・講義をする時間", "事前に考える・準備する時間", "資料や教材をつくる時間",
-    "質問やフォローをする時間", "振り返り・添削・確認をする時間", "移動・場所の準備", "その他",
-  ];
-  const D8_FUTURE_OPTIONS = [
-    { v: "small", label: "小さな一歩をつくる商品" },
-    { v: "daily", label: "日常にわかりやすい変化をつくる商品" },
-    { v: "big", label: "長年の悩みを大きく変える商品" },
-  ];
-  const PRICE_PRESETS = [3000, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 150000, 200000, 300000, 500000];
-
-  function d8TimeTotal() {
-    const weekly = Number(state.d8_weekly_hours) || 0;
-    const weeks = Number(state.d8_period_weeks) || 0;
-    return weekly * weeks;
-  }
-  function d8TimeTotalLabel() {
-    const total = d8TimeTotal();
-    return total > 0 ? `約${total}時間` : "-";
-  }
-
-  function renderDoor8() {
-    const timeCards = D8_TIME_OPTIONS.map((v, i) => choiceCard({
-      type: "checkbox", name: "d8_time", value: v, id: "d8_time_" + i,
-      checked: state.d8_time_checks.includes(v), label: v,
-    })).join("");
-    const futureCards = D8_FUTURE_OPTIONS.map((o) => choiceCard({
-      type: "radio", name: "d8_future", value: o.v, id: "d8_future_" + o.v, shape: "round",
-      checked: state.d8_future_value === o.v, label: o.label,
-    })).join("");
-    const priceNum = Number(state.d8_price) || 0;
-
-    return doorShell({
-      n: 8, badge: "扉8", title: "この商品、いくらで届ける？",
-      bodyHtml: `
-        <p class="step-desc">いきなり金額を決めなくて大丈夫<br>価格を考えるときは、まず3つの価値から見てみよう</p>
-
-        <p class="step-question">① あなたが使う時間と労力</p>
-        <p class="step-desc">お客様と直接話す時間だけが仕事ではありません</p>
-        <div class="choice-grid">${timeCards}</div>
-        <div class="d8-time-calc">
-          <div class="d8-time-calc__row">
-            <label class="field__label">1週間あたり、ひとりのお客様にどのくらい時間を使いそう？</label>
-            <div class="d8-time-calc__input"><input type="text" inputmode="numeric" id="d8_weekly_hours" placeholder="例）2" value="${esc(state.d8_weekly_hours)}"><span>時間 / 週</span></div>
-          </div>
-          <div class="d8-time-calc__row">
-            <label class="field__label">それが何週間くらい続きそう？</label>
-            <div class="d8-time-calc__input"><input type="text" inputmode="numeric" id="d8_period_weeks" placeholder="例）8" value="${esc(state.d8_period_weeks)}"><span>週間</span></div>
-          </div>
-          <div class="d8-time-calc__total">
-            <span>合計のめやす</span>
-            <strong id="d8TimeTotal">${esc(d8TimeTotalLabel())}</strong>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field__label">その時間と労力に対して、正直これくらいはいただきたい金額</label>
-          <input type="text" id="d8_min_price" placeholder="¥" value="${esc(state.d8_min_price)}">
-        </div>
-
-        <p class="step-question" style="margin-top:26px;">② あなたが渡している知識・経験・技術</p>
-        <div class="note-box">あなたがそこまで来るために、学んできたこと・資格・専門技術・お金をかけて身につけたこと・何年も積み重ねた経験・失敗してわかったこと・お客様を支えてきた実績があります<br><br>あなたが何年もかけて得たものを、お客様はショートカットして受け取れる<br>その価値も、忘れないでね</div>
-
-        <p class="step-question" style="margin-top:26px;">③ お客様が手にする未来の価値</p>
-        <div class="choice-grid">${futureCards}</div>
-
-        <p class="step-question" style="margin-top:26px;">今回の価格を決めよう</p>
-        <p class="step-desc">安いから売れる、ではありません<br>高ければ価値がある、でもありません<br>今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を、まず決めよう</p>
-        <div class="price-preset-grid" id="pricePresetGrid">
-          ${PRICE_PRESETS.map((p) => `<button type="button" class="price-preset-btn${priceNum === p ? " is-active" : ""}" data-price="${p}">${p.toLocaleString()}円</button>`).join("")}
-        </div>
-        <div class="price-custom-row">
-          <input type="text" inputmode="numeric" id="d8_price" placeholder="自分で金額を入力">
-          <span class="hint" style="margin:0;">円</span>
-        </div>
-        <div class="sheet__price" style="margin-top:14px;">
-          <div class="sheet__price-label">今回の価格</div>
-          <div class="sheet__price-value" id="pricePreview">¥${priceNum.toLocaleString()}</div>
-        </div>
-        <div class="note-box">これは最終価格じゃなくていい<br>まず届ける▶︎お客様の反応を見る▶︎商品を磨く▶︎実績が増える<br>そのたびに、価格を見直していい</div>
-      `,
-      warnId: "warn8",
-    });
-  }
-  function bindDoor8() {
-    qsa('input[name="d8_time"]').forEach((cb) => {
-      cb.addEventListener("change", () => { state.d8_time_checks = qsa('input[name="d8_time"]').filter((b) => b.checked).map((b) => b.value); saveState(); });
-    });
-    qs("#d8_weekly_hours").addEventListener("input", (e) => {
-      state.d8_weekly_hours = e.target.value;
-      qs("#d8TimeTotal").textContent = d8TimeTotalLabel();
-      saveState();
-    });
-    qs("#d8_period_weeks").addEventListener("input", (e) => {
-      state.d8_period_weeks = e.target.value;
-      qs("#d8TimeTotal").textContent = d8TimeTotalLabel();
-      saveState();
-    });
-    qs("#d8_min_price").addEventListener("input", (e) => { state.d8_min_price = e.target.value; saveState(); });
-    qsa('input[name="d8_future"]').forEach((r) => { r.addEventListener("change", () => { state.d8_future_value = r.value; saveState(); }); });
-
-    const priceInput = qs("#d8_price");
-    priceInput.value = state.d8_price ? formatYen(state.d8_price) : "";
-
-    function setPrice(n) {
-      state.d8_price = String(n);
-      priceInput.value = formatYen(n);
-      qs("#pricePreview").textContent = "¥" + formatYen(n);
-      qsa(".price-preset-btn").forEach((btn) => btn.classList.toggle("is-active", Number(btn.dataset.price) === n));
-      saveState();
-    }
-
-    qsa(".price-preset-btn").forEach((btn) => {
-      btn.addEventListener("click", () => setPrice(Number(btn.dataset.price)));
-    });
-    priceInput.addEventListener("input", () => {
-      const digits = priceInput.value.replace(/[^\d]/g, "");
-      const n = Number(digits) || 0;
-      priceInput.value = digits ? formatYen(digits) : "";
-      state.d8_price = digits;
-      qs("#pricePreview").textContent = "¥" + n.toLocaleString();
-      qsa(".price-preset-btn").forEach((b) => b.classList.toggle("is-active", Number(b.dataset.price) === n));
-      saveState();
-    });
-
-    qs("#nextBtn").addEventListener("click", () => {
-      if (!state.d8_price || Number(state.d8_price) <= 0) { showWarn("warn8", "価格を決めてみよう（プリセットか自由入力で）"); return; }
       goNextDoor(8);
     });
   }
 
   /* ---------------------------------------------------------
-     扉9｜この魂商品に名前をつける
+     扉5（せるこ・6）｜市場を見る・お財布の行き先
+  --------------------------------------------------------- */
+  const DMKT_APPEAL_OPTIONS = [
+    "写真・世界観の見せ方", "価格の見せ方・わかりやすさ", "言葉づかい・キャッチコピー",
+    "実績・お客様の声の見せ方", "特典・オファーの組み方", "申込みまでの導線のわかりやすさ", "その他",
+  ];
+  function renderDoor5() {
+    return doorShell({
+      n: 5, badge: "せるこ・6", title: "市場を見る・お財布の行き先",
+      bodyHtml: `
+        <img class="door-inline-img" src="assets/img02.webp" alt="市場を見る・お財布の行き先" loading="lazy">
+        <p class="step-desc">これは正解探しではなく、社会科見学です<br>売れている人の真似をすることでも、競合と比べて落ち込むことでもありません<br><br>あなたが届けたい人は、今すでに「何か」にお財布を開いています<br>そのお金は、どこに向かっているでしょうか？</p>
+
+        <div class="field">
+          <label class="field__label">あなたが届けたい人は、今どんなことにお金を使っていそう？</label>
+          <textarea id="dMkt_spend" placeholder="例）カウンセリング、オンライン講座、占い、ヨガのレッスンチケットなど">${esc(state.dMkt_spend)}</textarea>
+        </div>
+
+        <p class="step-question">同じような商品・サービスを2〜3個のぞいてみて、いいなと思ったのはどこ？（複数選択可）</p>
+        <div class="choice-grid">${DMKT_APPEAL_OPTIONS.map((v, i) => choiceCard({
+          type: "checkbox", name: "dMkt_appeal", value: v, id: "dMkt_appeal_" + i,
+          checked: state.dMkt_appeal.includes(v), label: v,
+        })).join("")}</div>
+        <div class="inline-input" id="dMktAppealOtherWrap" ${state.dMkt_appeal.includes("その他") ? "" : "hidden"}>
+          <input type="text" id="dMkt_appeal_other" placeholder="その他の内容を入力" value="${esc(state.dMkt_appeal_other)}">
+        </div>
+
+        <div class="field">
+          <label class="field__label">見てみて、自分の商品に取り入れたいことは？</label>
+          <textarea id="dMkt_takeaway" placeholder="例）写真の見せ方が分かりやすかった">${esc(state.dMkt_takeaway)}</textarea>
+        </div>
+        <div class="field">
+          <label class="field__label">逆に、私はこうしたくないな、と思ったことは？</label>
+          <textarea id="dMkt_avoid" placeholder="例）価格が見つけにくかったので、私はシンプルに見せたい">${esc(state.dMkt_avoid)}</textarea>
+        </div>
+        <div class="note-box">競合を真似することでも、正解を探すことでもなく<br>あなたの妄想を、現実世界とつなげてみる時間です</div>
+      `,
+      warnId: "warn5b",
+    });
+  }
+  function bindDoor5() {
+    qs("#dMkt_spend").addEventListener("input", (e) => { state.dMkt_spend = e.target.value; saveState(); });
+    qsa('input[name="dMkt_appeal"]').forEach((cb) => {
+      cb.addEventListener("change", () => {
+        state.dMkt_appeal = qsa('input[name="dMkt_appeal"]').filter((b) => b.checked).map((b) => b.value);
+        qs("#dMktAppealOtherWrap").hidden = !state.dMkt_appeal.includes("その他");
+        saveState();
+      });
+    });
+    qs("#dMkt_appeal_other").addEventListener("input", (e) => { state.dMkt_appeal_other = e.target.value; saveState(); });
+    qs("#dMkt_takeaway").addEventListener("input", (e) => { state.dMkt_takeaway = e.target.value; saveState(); });
+    qs("#dMkt_avoid").addEventListener("input", (e) => { state.dMkt_avoid = e.target.value; saveState(); });
+    qs("#nextBtn").addEventListener("click", () => {
+      if (!requireText(state.dMkt_spend, "warn5b", "お財布の行き先を、想像して書いてみよう")) return;
+      goNextDoor(5);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     扉6（せるこ・7）｜行き先までの道のり
+  --------------------------------------------------------- */
+  // 扉7「サポート内容（フェーズ設計）」で組んだフェーズ構成を短くまとめる（完成シート・ご提案書で使用）
+  function d7ItemSummaryLine() {
+    return (state.dPhase_list || [])
+      .map((p) => {
+        const itemsLabel = (p.items || []).map((it) => it.label).filter(Boolean).join("・");
+        if (!itemsLabel) return "";
+        const period = p.period ? `［${p.period}］` : "";
+        return `${p.name || "フェーズ"}：${itemsLabel}${period}`;
+      })
+      .filter(Boolean)
+      .join("　");
+  }
+
+  function renderDoor6() {
+    const recap = recapCard("ここまでの道しるべ", [
+      { label: "現在地", value: state.d1_moment },
+      { label: "問題の根っこ", value: state.d2_pain },
+      { label: "行き先", value: state.d3_action },
+    ]);
+    return doorShell({
+      n: 6, badge: "せるこ・7", title: "行き先までの道のり",
+      bodyHtml: `
+        <img class="door-inline-img" src="assets/img03.webp" alt="商品とは、行き先までの道のり" loading="lazy">
+        ${recap}
+        <p class="step-desc">商品とは、その人を今いる場所から行き先まで連れていく「道のり」そのものです<br>その道のりを、時系列で少しずつくっきりさせます</p>
+        <img class="door-inline-img" src="assets/img05.webp" alt="行き先までの道のり" loading="lazy">
+
+        <p class="step-question">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？</p>
+        <p class="step-desc">必要な順番を、小さく分けてみます（回数はまだ考えなくてOK・次の扉で決めます）</p>
+        <div class="field"><input type="text" id="d7_step_0" placeholder="① まず" value="${esc(state.d7_steps[0])}"></div>
+        <div class="field"><input type="text" id="d7_step_1" placeholder="② 次に" value="${esc(state.d7_steps[1])}"></div>
+        <div class="field"><input type="text" id="d7_step_2" placeholder="③ その次に" value="${esc(state.d7_steps[2])}"></div>
+        <div class="field"><input type="text" id="d7_step_3" placeholder="④ 必要なら" value="${esc(state.d7_steps[3])}"></div>
+        <p class="hint">全部埋めなくてOK</p>
+      `,
+      warnId: "warn7",
+    });
+  }
+  function bindDoor6() {
+    [0, 1, 2, 3].forEach((i) => {
+      qs(`#d7_step_${i}`).addEventListener("input", (e) => { state.d7_steps[i] = e.target.value; saveState(); });
+    });
+    qs("#nextBtn").addEventListener("click", () => {
+      if (!state.d7_steps.some((s) => s.trim())) { showWarn("warn7", "行き先までの道のりを、ひとつだけでも書いてみよう"); return; }
+      goNextDoor(6);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     扉7（せるこ・8）｜サポート内容（フェーズ設計）
+  --------------------------------------------------------- */
+  const D_PHASE_ITEM_TYPES = ["セッション", "学び", "ワーク", "フォロー", "その他"];
+  const PRICE_PRESETS = [3000, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 150000, 200000, 300000, 500000];
+
+  function renderDoor7() {
+    return doorShell({
+      n: 7, badge: "せるこ・8", title: "サポート内容（フェーズ設計）",
+      bodyHtml: `
+        <img class="door-inline-img" src="assets/img06.webp" alt="サポート内容・フェーズ設計" loading="lazy">
+        <p class="step-desc">支える中身は、決まった型にはめなくて大丈夫<br>「セッション◯回＋動画」のような固定フォーマットではなく、行き先までの道のりに合わせて、必要なフェーズを自由に組み立てよう<br><br>セッション・学び・ワーク・フォローを、フェーズごとに自由に組み合わせられます</p>
+        <div id="phaseListArea"></div>
+        <button type="button" class="btn btn--ghost" id="addPhaseBtn" style="margin-top:14px;">＋ フェーズを追加</button>
+        <p class="hint" style="margin-top:10px;">最低ひとつ、フェーズを組んでみよう（回数・期間はここで決めればOK）</p>
+      `,
+      warnId: "warn7b",
+    });
+  }
+  function bindDoor7() {
+    function renderPhaseList() {
+      const area = qs("#phaseListArea");
+      area.innerHTML = (state.dPhase_list || []).map((phase, pi) => `
+        <div class="phase-card" data-phase="${pi}">
+          <div class="phase-card__head">
+            <p class="phase-card__num">フェーズ ${pi + 1}</p>
+            <div class="phase-card__move">
+              <button type="button" class="icon-btn" data-move-up="${pi}" ${pi === 0 ? "disabled" : ""}>↑</button>
+              <button type="button" class="icon-btn" data-move-down="${pi}" ${pi === state.dPhase_list.length - 1 ? "disabled" : ""}>↓</button>
+              <button type="button" class="icon-btn icon-btn--danger" data-remove-phase="${pi}">削除</button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label">フェーズ名</label>
+            <input type="text" data-phase-name="${pi}" placeholder="例）土台をつくる" value="${esc(phase.name)}">
+          </div>
+          <div class="field">
+            <label class="field__label">このフェーズのゴール</label>
+            <input type="text" data-phase-goal="${pi}" placeholder="例）自分の軸となる考え方を整理する" value="${esc(phase.goal)}">
+          </div>
+          <div class="field">
+            <label class="field__label">期間・回数のめやす</label>
+            <input type="text" data-phase-period="${pi}" placeholder="例）1ヶ月・全4回" value="${esc(phase.period)}">
+          </div>
+          <div class="phase-card__items">
+            ${(phase.items || []).map((item, ii) => `
+              <div class="phase-item-row">
+                <select data-item-type="${pi}:${ii}">
+                  ${D_PHASE_ITEM_TYPES.map((t) => `<option value="${esc(t)}" ${item.type === t ? "selected" : ""}>${esc(t)}</option>`).join("")}
+                </select>
+                <input type="text" data-item-label="${pi}:${ii}" placeholder="内容（例：オンラインセッション60分）" value="${esc(item.label)}">
+                <button type="button" class="icon-btn icon-btn--danger" data-remove-item="${pi}:${ii}">×</button>
+              </div>`).join("")}
+          </div>
+          <button type="button" class="btn btn--ghost btn--sm" data-add-item="${pi}">＋ このフェーズに内容を追加</button>
+        </div>
+      `).join("") || `<p class="hint">まだフェーズがありません。「＋ フェーズを追加」から始めよう</p>`;
+      bindPhaseListEvents();
+    }
+    function bindPhaseListEvents() {
+      qsa("[data-phase-name]").forEach((el) => el.addEventListener("input", () => { state.dPhase_list[Number(el.dataset.phaseName)].name = el.value; saveState(); }));
+      qsa("[data-phase-goal]").forEach((el) => el.addEventListener("input", () => { state.dPhase_list[Number(el.dataset.phaseGoal)].goal = el.value; saveState(); }));
+      qsa("[data-phase-period]").forEach((el) => el.addEventListener("input", () => { state.dPhase_list[Number(el.dataset.phasePeriod)].period = el.value; saveState(); }));
+      qsa("[data-item-type]").forEach((el) => el.addEventListener("change", () => {
+        const [pi, ii] = el.dataset.itemType.split(":").map(Number);
+        state.dPhase_list[pi].items[ii].type = el.value; saveState();
+      }));
+      qsa("[data-item-label]").forEach((el) => el.addEventListener("input", () => {
+        const [pi, ii] = el.dataset.itemLabel.split(":").map(Number);
+        state.dPhase_list[pi].items[ii].label = el.value; saveState();
+      }));
+      qsa("[data-remove-item]").forEach((el) => el.addEventListener("click", () => {
+        const [pi, ii] = el.dataset.removeItem.split(":").map(Number);
+        state.dPhase_list[pi].items.splice(ii, 1); saveState(); renderPhaseList();
+      }));
+      qsa("[data-add-item]").forEach((el) => el.addEventListener("click", () => {
+        const pi = Number(el.dataset.addItem);
+        state.dPhase_list[pi].items.push({ type: "セッション", label: "" }); saveState(); renderPhaseList();
+      }));
+      qsa("[data-remove-phase]").forEach((el) => el.addEventListener("click", () => {
+        state.dPhase_list.splice(Number(el.dataset.removePhase), 1); saveState(); renderPhaseList();
+      }));
+      qsa("[data-move-up]").forEach((el) => el.addEventListener("click", () => {
+        const i = Number(el.dataset.moveUp);
+        if (i > 0) { const [p] = state.dPhase_list.splice(i, 1); state.dPhase_list.splice(i - 1, 0, p); saveState(); renderPhaseList(); }
+      }));
+      qsa("[data-move-down]").forEach((el) => el.addEventListener("click", () => {
+        const i = Number(el.dataset.moveDown);
+        if (i < state.dPhase_list.length - 1) { const [p] = state.dPhase_list.splice(i, 1); state.dPhase_list.splice(i + 1, 0, p); saveState(); renderPhaseList(); }
+      }));
+    }
+
+    renderPhaseList();
+    qs("#addPhaseBtn").addEventListener("click", () => {
+      state.dPhase_list.push({ name: "", goal: "", period: "", items: [] });
+      saveState();
+      renderPhaseList();
+    });
+
+    qs("#nextBtn").addEventListener("click", () => {
+      if (state.dPhase_list.length === 0) { showWarn("warn7b", "フェーズを、最低ひとつ組んでみよう"); return; }
+      if (!state.dPhase_list.some((p) => p.name.trim())) { showWarn("warn7b", "フェーズに名前をつけてみよう"); return; }
+      goNextDoor(7);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     扉9（せるこ・10）｜価格（価格 × 人数）
+  --------------------------------------------------------- */
+  const DPRICE_ROLE_OPTIONS = [
+    "はじめの一歩を届ける商品", "本命として、じっくり届ける商品",
+    "続けて通ってもらう商品", "ここぞの特別な商品",
+  ];
+  function renderDoor9() {
+    const priceNum = Number(state.dPrice_price) || 0;
+    const peopleNum = Number(state.dPrice_people) || 0;
+    return doorShell({
+      n: 9, badge: "せるこ・10", title: "価格を決める",
+      bodyHtml: `
+        <img class="door-inline-img" src="assets/img08.webp" alt="価格って、どう決めるの？" loading="lazy">
+        <p class="step-desc">価格は、あなたの給料ではありません<br>時間を切り売りする金額ではなく、あなたが届ける価値そのものの値段です<br><br>安いから売れる、でもありません<br>高ければ価値がある、でもありません<br>今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を見つけよう</p>
+
+        <img class="door-inline-img" src="assets/img09.webp" alt="商品の役割を選ぶ" loading="lazy">
+        <p class="step-question">① この商品は、あなたのビジネスの中でどんな役割？</p>
+        <div class="choice-grid">${DPRICE_ROLE_OPTIONS.map((v, i) => choiceCard({
+          type: "radio", name: "dPrice_role", value: v, id: "dPrice_role_" + i, shape: "round",
+          checked: state.dPrice_role === v, label: v,
+        })).join("")}</div>
+
+        <p class="step-question" style="margin-top:26px;">② 今回はいくらから届ける？</p>
+        <div class="price-preset-grid" id="pricePresetGrid">
+          ${PRICE_PRESETS.map((p) => `<button type="button" class="price-preset-btn${priceNum === p ? " is-active" : ""}" data-price="${p}">${p.toLocaleString()}円</button>`).join("")}
+        </div>
+        <div class="price-custom-row">
+          <input type="text" inputmode="numeric" id="dPrice_price_input" placeholder="自分で金額を入力">
+          <span class="hint" style="margin:0;">円</span>
+        </div>
+
+        <p class="step-question" style="margin-top:26px;">③ 届けたい人数は？</p>
+        <div class="field">
+          <input type="text" inputmode="numeric" id="dPrice_people" placeholder="例）5" value="${esc(state.dPrice_people)}">
+          <p class="hint">まずは今回・今期届けたい人数のめやすでOK</p>
+        </div>
+
+        <div class="sheet__price" style="margin-top:14px;">
+          <div class="sheet__price-label">価格 × 人数 ＝ 見えてくる売上</div>
+          <div class="sheet__price-value" id="revenuePreview">¥${priceNum.toLocaleString()} × ${peopleNum || 0}人 ＝ ¥${(priceNum * peopleNum).toLocaleString()}</div>
+        </div>
+
+        <p class="step-question" style="margin-top:26px;">目標の売上から、逆算してみる（任意）</p>
+        <div class="field"><input type="text" inputmode="numeric" id="dPrice_targetRevenue" placeholder="例）500000" value="${esc(state.dPrice_targetRevenue)}"></div>
+        <p class="hint" id="reverseCalcHint"></p>
+
+        <div class="note-box">これは最終価格じゃなくていい<br>まず届ける▶︎お客様の反応を見る▶︎商品を磨く▶︎実績が増える<br>そのたびに、価格を見直していい</div>
+      `,
+      warnId: "warn9b",
+    });
+  }
+  function bindDoor9() {
+    qsa('input[name="dPrice_role"]').forEach((r) => { r.addEventListener("change", () => { state.dPrice_role = r.value; saveState(); }); });
+
+    const priceInput = qs("#dPrice_price_input");
+    priceInput.value = state.dPrice_price ? formatYen(state.dPrice_price) : "";
+
+    function updateRevenue() {
+      const p = Number(state.dPrice_price) || 0;
+      const ppl = Number(state.dPrice_people) || 0;
+      qs("#revenuePreview").textContent = `¥${p.toLocaleString()} × ${ppl || 0}人 ＝ ¥${(p * ppl).toLocaleString()}`;
+      updateReverseCalc();
+    }
+    function updateReverseCalc() {
+      const target = Number(state.dPrice_targetRevenue) || 0;
+      const p = Number(state.dPrice_price) || 0;
+      const hint = qs("#reverseCalcHint");
+      hint.textContent = (target > 0 && p > 0)
+        ? `目標¥${target.toLocaleString()}に対して、この価格なら約${Math.ceil(target / p)}人に届けると届きそう`
+        : "";
+    }
+
+    function setPrice(n) {
+      state.dPrice_price = String(n);
+      priceInput.value = formatYen(n);
+      qsa(".price-preset-btn").forEach((btn) => btn.classList.toggle("is-active", Number(btn.dataset.price) === n));
+      saveState();
+      updateRevenue();
+    }
+    qsa(".price-preset-btn").forEach((btn) => { btn.addEventListener("click", () => setPrice(Number(btn.dataset.price))); });
+    priceInput.addEventListener("input", () => {
+      const digits = priceInput.value.replace(/[^\d]/g, "");
+      const n = Number(digits) || 0;
+      priceInput.value = digits ? formatYen(digits) : "";
+      state.dPrice_price = digits;
+      qsa(".price-preset-btn").forEach((b) => b.classList.toggle("is-active", Number(b.dataset.price) === n));
+      saveState();
+      updateRevenue();
+    });
+    qs("#dPrice_people").addEventListener("input", (e) => { state.dPrice_people = e.target.value; saveState(); updateRevenue(); });
+    qs("#dPrice_targetRevenue").addEventListener("input", (e) => { state.dPrice_targetRevenue = e.target.value; saveState(); updateReverseCalc(); });
+    updateRevenue();
+
+    qs("#nextBtn").addEventListener("click", () => {
+      if (!state.dPrice_role) { showWarn("warn9b", "商品の役割を選んでみよう"); return; }
+      if (!state.dPrice_price || Number(state.dPrice_price) <= 0) { showWarn("warn9b", "価格を決めてみよう（プリセットか自由入力で）"); return; }
+      goNextDoor(9);
+    });
+  }
+
+  /* ---------------------------------------------------------
+     扉10（せるこ・11）｜魂商品に名前をつける
   --------------------------------------------------------- */
   const D9_CHECK_LABELS = [
     "初めて見た人でも何の商品かなんとなくわかる",
     "お客様が見て「私のことかも」と思える",
     "行き先や変化が想像できる",
   ];
-  function renderDoor9() {
+  function renderDoor10() {
     return doorShell({
-      n: 9, badge: "扉9", title: "我が子に、最初の名前を",
+      n: 10, badge: "せるこ・11", title: "我が子に、最初の名前を",
       bodyHtml: `
+        <img class="door-inline-img" src="assets/img01.webp" alt="魂商品は、わが子です" loading="lazy">
         <p class="step-desc">ここまで一生懸命考えてきた商品<br>誰を助けたいか、どんな壁を越えるか、どんな未来へ連れていくか、なぜ私が届けるのか、何を使って、どう届けるのか<br><br>少しずつ、ひとつの商品になってきました<br>ここで一度、この我が子に名前をつけてみよう</p>
 
         <div class="note-box">名前は、かっこよさより伝わりやすさ<br><br>ありがちなのが、謎の英語・聞いたことのない造語・自分だけ気分が上がる自己満ポエムタイトル🤣<br><br>でも、お客様が見た瞬間に「何のサービス？」「私に関係ある？」「どうなれるの？」がわからなければもったいない<br><br>誰のための商品か・何が変わるのか・どんな行き先へ行けるのかこのどれかが伝わる名前を考えてみよう</div>
@@ -1601,7 +1601,7 @@ ${who}の
       warnId: "warn9",
     });
   }
-  function bindDoor9() {
+  function bindDoor10() {
     qsa("[data-d9check]").forEach((cb) => {
       cb.addEventListener("change", () => { state.d9_check[Number(cb.dataset.d9check)] = cb.checked; saveState(); });
     });
@@ -1609,83 +1609,6 @@ ${who}の
     input.addEventListener("input", () => { state.d9_name = input.value; saveState(); });
     qs("#nextBtn").addEventListener("click", () => {
       if (!requireText(state.d9_name, "warn9", "仮の名前でいいので、つけてみよう")) return;
-      goNextDoor(9);
-    });
-  }
-
-  /* ---------------------------------------------------------
-     扉10｜あなたから買う理由を見つける
-  --------------------------------------------------------- */
-  const D10_FACT_OPTIONS = [
-    "資格・専門知識", "学んできたこと", "実務・活動年数", "お客様を支援した人数",
-    "販売・提供した実績", "お客様の成果・変化", "自分自身の経験・ビフォーアフター",
-    "仕事・生活・子育てなどの実体験", "その他",
-  ];
-  const D10_PROMISE_OPTIONS = [
-    "丁寧に話を聞く", "一人ひとりに向き合う", "自分が経験したことを惜しみなく伝える",
-    "一緒に実践する", "最後まで誠実に届ける", "その他",
-  ];
-  function renderDoor10() {
-    const factCards = D10_FACT_OPTIONS.map((v, i) => choiceCard({
-      type: "checkbox", name: "d10_fact", value: v, id: "d10_fact_" + i,
-      checked: state.d10_facts.includes(v), label: v,
-    })).join("");
-    const promiseCards = D10_PROMISE_OPTIONS.map((v, i) => choiceCard({
-      type: "checkbox", name: "d10_promise_cb", value: v, id: "d10_promise_cb_" + i,
-      checked: state.d10_promise_checks.includes(v), label: v,
-    })).join("");
-    return doorShell({
-      n: 10, badge: "扉10", title: "あなたから買う理由を見つける",
-      bodyHtml: `
-        <p class="step-desc">この商品を支えている、あなたの宝物</p>
-        <p class="step-desc">ここまでで、あなたの魂商品がカタチになりました<br>最後にもうひとつ<br><br>同じような商品やサービスがあったとしても、あなたから受けたい理由はどこにある？<br><br>ここでは、商品を支えている事実・経験・情熱を集めます<br>資格の数を競うページではありません<br>お客様が安心して「あなたにお願いしたい」と思える材料を見つけます</p>
-
-        <p class="step-question">① 支える事実（最大3つ）</p>
-        <div class="choice-grid">${factCards}</div>
-        <div class="field" style="margin-top:14px;">
-          <input type="text" id="d10_fact_detail_0" placeholder="① 関係する事実" value="${esc(state.d10_facts_detail[0])}">
-        </div>
-        <div class="field"><input type="text" id="d10_fact_detail_1" placeholder="② 関係する事実" value="${esc(state.d10_facts_detail[1])}"></div>
-        <div class="field"><input type="text" id="d10_fact_detail_2" placeholder="③ 関係する事実" value="${esc(state.d10_facts_detail[2])}"></div>
-
-        <div class="field" style="margin-top:22px;">
-          <label class="field__label">② 情熱｜それでも、なぜ届けたい？</label>
-          <textarea id="d10_passion" placeholder="例）昔の私みたいな人に、同じ遠回りをしてほしくない">${esc(state.d10_passion)}</textarea>
-        </div>
-
-        <p class="step-question" style="margin-top:22px;">③ お客様に約束できること</p>
-        <p class="step-desc">実績がまだ少なくても大丈夫<br>今のあなたが、お客様に約束できることは何？</p>
-        <div class="choice-grid">${promiseCards}</div>
-        <div class="field" style="margin-top:14px;">
-          <label class="field__label">私がお客様に約束すること</label>
-          <textarea id="d10_promise" placeholder="自由記入">${esc(state.d10_promise)}</textarea>
-        </div>
-
-        <p class="big-quote">あなたの商品を選ぶ理由は、資格ひとつ、実績ひとつではありません<br>歩いてきた道・身につけた力・積み重ねた事実・そして届けたいという情熱<br>その全部が、あなたの信用になる</p>
-      `,
-      warnId: "warn10",
-    });
-  }
-  function bindDoor10() {
-    qsa('input[name="d10_fact"]').forEach((cb) => {
-      cb.addEventListener("change", () => {
-        const checked = qsa('input[name="d10_fact"]').filter((b) => b.checked);
-        if (checked.length > 3) { cb.checked = false; showToast("支える事実は、最大3つまで"); return; }
-        state.d10_facts = checked.map((b) => b.value);
-        saveState();
-      });
-    });
-    [0, 1, 2].forEach((i) => {
-      qs(`#d10_fact_detail_${i}`).addEventListener("input", (e) => { state.d10_facts_detail[i] = e.target.value; saveState(); });
-    });
-    qs("#d10_passion").addEventListener("input", (e) => { state.d10_passion = e.target.value; saveState(); });
-    qsa('input[name="d10_promise_cb"]').forEach((cb) => {
-      cb.addEventListener("change", () => { state.d10_promise_checks = qsa('input[name="d10_promise_cb"]').filter((b) => b.checked).map((b) => b.value); saveState(); });
-    });
-    qs("#d10_promise").addEventListener("input", (e) => { state.d10_promise = e.target.value; saveState(); });
-
-    qs("#nextBtn").addEventListener("click", () => {
-      if (!requireText(state.d10_passion, "warn10", "それでも届けたい理由を書いてみよう")) return;
       goNextDoor(10);
     });
   }
@@ -1873,7 +1796,7 @@ ${who}の
         break;
       case "product":
         big = productName;
-        body = `¥${(Number(state.d8_price) || 0).toLocaleString()}`;
+        body = `¥${(Number(state.dPrice_price) || 0).toLocaleString()}`;
         break;
       case "trust":
         cards = state.d10_facts_detail.filter((f) => f.trim()).map((f) => ({ label: "支える事実", value: truncateText(f, 50) }));
@@ -2341,7 +2264,7 @@ ${who}の
     const productName = state.d9_name || "（仮）魂商品";
     const deliverStyle = [state.d6_size, state.d6_place === "その他" ? state.d6_place_other : state.d6_place].filter(Boolean).join(" / ");
     const countLabel = d7ItemSummaryLine() || "-";
-    const priceNum = Number(state.d8_price) || 0;
+    const priceNum = Number(state.dPrice_price) || 0;
     const journeySteps = state.d7_steps.filter((s) => s.trim());
     const existingChecklist = state.self1_choice && state.self1_choice !== "new" ? renderExistingChecklist() : "";
     const analysis = analysisProvider.run(state);
