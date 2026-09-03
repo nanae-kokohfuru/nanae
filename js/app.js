@@ -1138,7 +1138,7 @@ ${who}の
   }
 
   /* ---------------------------------------------------------
-     扉6（せるこ・7）｜どうやって届ける？
+     扉8（せるこ・9）｜どうやって届ける？
   --------------------------------------------------------- */
   const D6_SIZE_OPTIONS = [
     { v: "1対1", sub: "ひとりに合わせて、じっくり伴走できる" },
@@ -1638,12 +1638,12 @@ ${who}の
 
       const conceptCore = wall && future
         ? `「${wall}」という壁を、「${primary}」で越えて、「${future}」まで連れていく\nこの組み合わせが、今回のコンセプトの核になりそう`
-        : `扉2・扉3の回答が増えるほど、コンセプトの核はもっとくっきりしてくるはず`;
+        : `扉1・扉2の回答が増えるほど、コンセプトの核はもっとくっきりしてくるはず`;
 
       const restCount = (s.d5_categories || []).length - 1 - (s.d5_supporting ? s.d5_supporting.length : 0);
       const diffSeed = restCount > 0
         ? `裏に${restCount}個、まだ表に出していない力がある\nここが、他の商品との違いになる種かもしれない`
-        : `扉5で選んだ「${primary}」の掛け合わせ自体が、あなたにしかできない組み合わせ`;
+        : `扉4で選んだ「${primary}」の掛け合わせ自体が、あなたにしかできない組み合わせ`;
 
       const overload = [];
       if ((s.d6_during || []).length >= 5) overload.push("一緒にいる時間にやること");
@@ -1665,7 +1665,7 @@ ${who}の
         ? (/^[a-zA-Z\s]+$/.test(s.d9_name.trim())
             ? `商品名「${s.d9_name}」は、英語だけだと少し伝わりにくいかも\n日本語で「誰の・何が変わる」を一言足すと、もっと入口が広くなりそう`
             : `商品名「${s.d9_name}」、悪くない${future ? `\n「${future}」が一言入ると、さらに伝わりやすくなるかも` : ""}`)
-        : `扉9で名前が決まると、ここにもヒントが出せる`;
+        : `扉10で名前が決まると、ここにもヒントが出せる`;
 
       const nextStep = `爆速1ミリでやるなら、扉1で見つけた「${s.d1_moment || "その人が困っている場面"}」を、そのままひとこと誰かに話してみること\n反応があった言葉が、次の一歩の答えになる`;
 
@@ -2182,7 +2182,7 @@ ${who}の
           ${studioActivePage ? `
             <div class="a4-shell" id="studioCanvasShell">
               <div class="a4-page sheet sheet--${tpl}">${renderDeckPageInner(studioActivePage)}</div>
-            </div>` : `<p class="hint">まだ表示できるページがありません<br>扉6・扉6以降の内容を入力すると、ここにページが増えていきます</p>`}
+            </div>` : `<p class="hint">まだ表示できるページがありません<br>ページをすべて非表示にしている場合は、左のリストから表示に戻してみよう</p>`}
         </div>
         <aside class="studio__edit">
           ${studioActivePage ? renderStudioEditPanel(studioActivePage) : ""}
