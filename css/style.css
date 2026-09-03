@@ -925,14 +925,23 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--ink);
 }
 
-.hero__desc{
-  text-align:left;
-  font-size: 14.5px;
-  color: var(--ink-soft);
-  background: var(--card-soft);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  margin-bottom: 26px;
+/* ================= HERO（LP調・余白で区切る） ================= */
+
+.hero--lp{ padding: 40px 24px 26px; }
+@media (min-width: 640px){ .hero--lp{ padding: 56px 40px 34px; } }
+
+.hero-lp__block{
+  max-width: 520px;
+  margin: 0 auto 44px;
+}
+.hero-lp__block--top{ margin-bottom: 40px; }
+.hero-lp__block:last-of-type{ margin-bottom: 0; }
+
+.hero-lp__intro{
+  text-align: center;
+  font-size: 17px;
+  line-height: 2.05;
+  color: var(--ink);
   white-space: pre-line;
 }
 
@@ -940,7 +949,6 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  margin-bottom: 26px;
 }
 .hero__type-card{
   background: var(--card-soft);
@@ -954,67 +962,16 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   .hero__type-grid{ grid-template-columns: 1fr; }
 }
 
-/* ================= カバーコピー（雑誌風の文字組み） ================= */
-
-.cover-intro{ margin: 4px 0 20px; }
-
-.cover-intro__eyebrow{
-  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
-  color: var(--gold-deep); margin-bottom: 10px; line-height: 1.7;
-}
-
-.cover-intro__gift{
-  font-family: var(--font-serif); font-weight: 800; font-size: 24px;
+.hero-lp__goal{ text-align: center; }
+.hero-lp__goal-title{
+  font-family: var(--font-serif); font-weight: 800; font-size: 19px;
   color: var(--bordeaux); margin-bottom: 14px;
 }
+.hero-lp__goal .gold-line{ margin-bottom: 18px; }
+.hero-lp__goal-body{ font-size: 16px; color: var(--ink-soft); line-height: 2; white-space: pre-line; }
 
-.cover-intro__sub{
-  font-size: 14px; color: var(--ink-soft); font-weight: 700; margin-top: 12px;
-}
-
-.cover-pullquote{
-  font-family: var(--font-serif); font-weight: 800;
-  font-size: 21px; line-height: 1.6;
-  color: var(--bordeaux);
-  margin: 18px 0;
-}
-
-.cover-pullquote--md{ font-size: 19px; margin: 22px 0; }
-
-.cover-pullquote--lg{
-  font-size: 23px;
-  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  margin: 26px 0;
-}
-
-.cover-message{ text-align:center; margin: 22px 0; }
-
-.cover-body{
-  font-size: 16px; line-height: 1.9; color: var(--ink);
-  margin: 14px 0; white-space: pre-line; font-weight: 500;
-}
-
-.cover-closing{
-  font-family: var(--font-serif); font-weight: 800; font-size: 22px;
-  color: var(--bordeaux); text-align:center; margin-top: 30px; line-height: 1.6;
-}
-
-/* ================= このキットのゴール／注意書き ================= */
-
-.goal-box{
-  margin: 26px 0 0;
-  padding: 20px;
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--rose-pale), var(--card-soft));
-  border: 1px dashed var(--rose-deep);
-  text-align: left;
-}
-.goal-box__title{
-  font-family: var(--font-serif); font-weight: 800; font-size: 17px;
-  color: var(--bordeaux); margin-bottom: 10px; text-align:center;
-}
-.goal-box__body{ font-size: 14.5px; color: var(--ink-soft); line-height: 1.9; }
+.hero-lp__cta{ text-align: center; }
+.hero-lp__cta .restart-row{ margin-top: 14px; }
 
 .ai-disclaimer{
   margin-top: 26px;
@@ -1031,6 +988,16 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   font-size: 12.5px;
   color: var(--ink-soft);
   margin-bottom: 8px;
+}
+.ai-disclaimer--subdued{
+  margin-top: 40px;
+  padding: 18px 4px 0;
+  background: none;
+  border-top: 1px solid var(--line-soft);
+  border-radius: 0;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .door-inline-img{

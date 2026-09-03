@@ -434,43 +434,49 @@
   --------------------------------------------------------- */
   function renderStart() {
     return `
-    <div class="card hero">
-      ${mascotImg("hero__mascot-img")}
-      <p class="hero__brand">ここらぼ直伝！</p>
-      <h1 class="hero__title">魂商品作成<br>ミラクルキット</h1>
-      <span class="hero__subtitle">商品をカタチにする10の扉</span>
-      <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
+    <div class="card hero hero--lp">
+      <section class="hero-lp__block hero-lp__block--top">
+        ${mascotImg("hero__mascot-img")}
+        <p class="hero__brand">ここらぼ直伝！</p>
+        <h1 class="hero__title">魂商品作成<br>ミラクルキット</h1>
+        <span class="hero__subtitle">商品をカタチにする10の扉</span>
+        <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
+        <p class="hero__catch">「やってみたい」を<br>「誰かに届けられるカタチ」へ💌</p>
+      </section>
 
-      <p class="hero__catch">「やってみたい」を<br>「誰かに届けられるカタチ」へ💌</p>
+      <section class="hero-lp__block">
+        <p class="hero-lp__intro">いきなり完璧な商品を作らなくて大丈夫<br><br>まずは、目の前のひとりに届けられる<br>「はじめの一品」をつくってみよう<br><br>商品は<br>つくる → 届ける → 反応を見る → 磨く<br><br>この繰り返しで育っていくものだから今回は<br><br>100点ではなく、まず外に出せるカタチまで<br><br>チョッピーとワクワク進んでいこう！</p>
+      </section>
 
-      <div class="hero__desc">このキットは、質問に答えていくだけで<br>あなたの「やってみたい」を、まず一人に届けられる<br>「はじめの一品」の叩き台にしていくキットです<br><br>チョッピー（nanaeAI）が、あなたのモヤモヤを一緒に整理します</div>
-
-      <div class="hero__type-grid">
-        <div class="hero__type-card">
-          <p class="hero__type-card__title">商品がまだない人は</p>
-          <p class="hero__type-card__body">ここからカタチに</p>
+      <section class="hero-lp__block">
+        <div class="hero__type-grid">
+          <div class="hero__type-card">
+            <p class="hero__type-card__title">商品がまだない人は</p>
+            <p class="hero__type-card__body">ここからカタチに</p>
+          </div>
+          <div class="hero__type-card">
+            <p class="hero__type-card__title">すでにある商品は</p>
+            <p class="hero__type-card__body">もっとくっきり磨く</p>
+          </div>
+          <div class="hero__type-card">
+            <p class="hero__type-card__title">育ってきた商品は</p>
+            <p class="hero__type-card__body">次の一歩へ育てる</p>
+          </div>
         </div>
-        <div class="hero__type-card">
-          <p class="hero__type-card__title">すでにある商品は</p>
-          <p class="hero__type-card__body">もっとくっきり磨く</p>
-        </div>
-        <div class="hero__type-card">
-          <p class="hero__type-card__title">育ってきた商品は</p>
-          <p class="hero__type-card__body">次の一歩へ育てる</p>
-        </div>
-      </div>
+      </section>
 
-      <div class="goal-box">
-        <p class="goal-box__title">このキットのGOAL💌</p>
-        <p class="goal-box__body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
-      </div>
+      <section class="hero-lp__block hero-lp__goal">
+        <p class="hero-lp__goal-title">このキットのGOAL💌</p>
+        <div class="gold-line"></div>
+        <p class="hero-lp__goal-body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
+      </section>
 
-      <div class="nav-row" style="margin-top:22px;">
+      <section class="hero-lp__block hero-lp__cta">
         <button class="btn btn--primary" id="startBtn" type="button">早速、創ってみる！</button>
-      </div>
-      ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
+        ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
+      </section>
 
-      <div class="ai-disclaimer">
+      <div class="ai-disclaimer ai-disclaimer--subdued">
         <p class="ai-disclaimer__title">【注意事項】</p>
         <p>このキットは、AIが売れる商品を勝手に作るツールではありません<br>あなたの経験・想い・やってみたいことを、チョッピーと一緒に整理して、まず人に見せられるカタチにするためのキットです<br><br>チョッピーの提案は正解ではありません<br>違和感があれば、あなたの言葉を優先してどんどん書き換えてください<br><br>このキットの利用によって、売上・集客・成果等を保証するものではありません<br>実際のお客様の反応を見ながら、ご自身の判断で商品を育ててください<br><br>法律・医療・健康・金融等に関わる表現や、効果効能・成果保証等を含む商品については、必要に応じて専門家・関係機関にご確認ください</p>
       </div>
