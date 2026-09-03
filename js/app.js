@@ -815,9 +815,9 @@
     return doorShell({
       n: 2, badge: "せるこ・3", title: "行き先決定",
       bodyHtml: `
-        <p class="step-desc">未来提示をくっきりさせます</p>
         ${recap}
-        <p class="step-desc">この商品を受けたあと、その人の人生に何が起きていたら最高か<br>「幸せになる」「自信がつく」「自分らしくなる」で止めない<br><br>未来を4段階で、少しずつくっきりさせます</p>
+        <img class="door-inline-img" src="assets/img04.webp" alt="「行き先」が全て" loading="lazy">
+        <p class="step-desc">「幸せになる」「自信がつく」で止めず、未来を4段階でくっきりさせます</p>
 
         <div class="field">
           <label class="field__label">① 内面はどう変わる？</label>
@@ -1188,12 +1188,12 @@ ${who}の
     return doorShell({
       n: 8, badge: "せるこ・9", title: "どうやって届ける？",
       bodyHtml: `
-        <p class="step-desc">商品を受け取る場面をつくろう</p>
-        <p class="step-desc">ここまでで、誰に・どんな悩みを・どんな未来へ・何を使って届けるかが見えてきました<br>次は、お客様が実際にどんな形でこの商品を受けるのかを決めます</p>
+        <img class="door-inline-img" src="assets/img07.webp" alt="実際にどうやるの？" loading="lazy">
+        <p class="step-desc">お客様が実際にどんな形でこの商品を受けるのかを決めます</p>
 
         <p class="step-question">① 何人くらいに届ける？</p>
         <div class="choice-grid">${sizeCards}</div>
-        <div class="note-box">講座・セッション・レッスンという名前は、まだ決めなくてOK<br>1人でも講座はできます<br>10人でもグループセッションはできます<br><br>大切なのは呼び方ではなく、誰に・どんな関わり方で・行き先まで届けるか<br><br>はじめて商品を届ける人は、最初から大人数にしなくても大丈夫<br>1対1や少人数だと、お客様がどこで困るのか・何を喜ぶのかがよく見えます<br>まず近くで届ける→磨く→人数を増やす<br>商品を育ててから大きくしても遅くありません</div>
+        <div class="note-box">呼び方はまだ決めなくてOK<br>はじめて届ける人は、1対1や少人数だとお客様の反応がよく見える<br>商品を育ててから人数を増やしても遅くありません</div>
 
         <p class="step-question" style="margin-top:26px;">② どこで届ける？</p>
         <div class="choice-grid">${placeCards}</div>
@@ -1268,7 +1268,7 @@ ${who}の
       n: 5, badge: "せるこ・6", title: "市場を見る・お財布の行き先",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img02.webp" alt="市場を見る・お財布の行き先" loading="lazy">
-        <p class="step-desc">これは正解探しではなく、社会科見学です<br>売れている人の真似をすることでも、競合と比べて落ち込むことでもありません<br><br>あなたが届けたい人は、今すでに「何か」にお財布を開いています<br>そのお金は、どこに向かっているでしょうか？</p>
+        <p class="step-desc">競合と比べて落ち込む時間ではありません<br>社会科見学のつもりで、気軽に見てみよう</p>
 
         <div class="field">
           <label class="field__label">あなたが届けたい人は、今どんなことにお金を使っていそう？</label>
@@ -1342,7 +1342,6 @@ ${who}の
       bodyHtml: `
         <img class="door-inline-img" src="assets/img03.webp" alt="商品とは、行き先までの道のり" loading="lazy">
         ${recap}
-        <p class="step-desc">商品とは、その人を今いる場所から行き先まで連れていく「道のり」そのものです<br>その道のりを、時系列で少しずつくっきりさせます</p>
         <img class="door-inline-img" src="assets/img05.webp" alt="行き先までの道のり" loading="lazy">
 
         <p class="step-question">その未来まで行くために、何を知る？　何をやる？　何ができるようになる？</p>
@@ -1377,7 +1376,7 @@ ${who}の
       n: 7, badge: "せるこ・8", title: "サポート内容（フェーズ設計）",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img06.webp" alt="サポート内容・フェーズ設計" loading="lazy">
-        <p class="step-desc">支える中身は、決まった型にはめなくて大丈夫<br>「セッション◯回＋動画」のような固定フォーマットではなく、行き先までの道のりに合わせて、必要なフェーズを自由に組み立てよう<br><br>セッション・学び・ワーク・フォローを、フェーズごとに自由に組み合わせられます</p>
+        <p class="step-desc">行き先までの道のりに合わせて、必要なフェーズを自由に組み立てよう</p>
         <div id="phaseListArea"></div>
         <button type="button" class="btn btn--ghost" id="addPhaseBtn" style="margin-top:14px;">＋ フェーズを追加</button>
         <p class="hint" style="margin-top:10px;">最低ひとつ、フェーズを組んでみよう（回数・期間はここで決めればOK）</p>
@@ -1486,7 +1485,7 @@ ${who}の
       n: 9, badge: "せるこ・10", title: "価格を決める",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img08.webp" alt="価格って、どう決めるの？" loading="lazy">
-        <p class="step-desc">価格は、あなたの給料ではありません<br>時間を切り売りする金額ではなく、あなたが届ける価値そのものの値段です<br><br>安いから売れる、でもありません<br>高ければ価値がある、でもありません<br>今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を見つけよう</p>
+        <p class="step-desc">今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を見つけよう</p>
 
         <img class="door-inline-img" src="assets/img09.webp" alt="商品の役割を選ぶ" loading="lazy">
         <p class="step-question">① この商品は、あなたのビジネスの中でどんな役割？</p>
@@ -1586,7 +1585,7 @@ ${who}の
       n: 10, badge: "せるこ・11", title: "我が子に、最初の名前を",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img01.webp" alt="魂商品は、わが子です" loading="lazy">
-        <p class="step-desc">ここまで一生懸命考えてきた商品<br>誰を助けたいか、どんな壁を越えるか、どんな未来へ連れていくか、なぜ私が届けるのか、何を使って、どう届けるのか<br><br>少しずつ、ひとつの商品になってきました<br>ここで一度、この我が子に名前をつけてみよう</p>
+        <p class="step-desc">ここまで一生懸命考えてきた商品に、名前をつけてみよう</p>
 
         <div class="note-box">名前は、かっこよさより伝わりやすさ<br><br>ありがちなのが、謎の英語・聞いたことのない造語・自分だけ気分が上がる自己満ポエムタイトル🤣<br><br>でも、お客様が見た瞬間に「何のサービス？」「私に関係ある？」「どうなれるの？」がわからなければもったいない<br><br>誰のための商品か・何が変わるのか・どんな行き先へ行けるのかこのどれかが伝わる名前を考えてみよう</div>
 
@@ -2060,9 +2059,16 @@ ${who}の
       <h2 class="step-title" style="font-size:19px;">いよいよ、ご提案書の叩き台ができちゃいますよ〜ワクワク</h2>
 
       <img class="door-inline-img" src="assets/img10.webp" alt="商品って、どうやって売るの？" loading="lazy">
+      <p class="step-desc" style="text-align:center;">知ってもらう、から、ご提案する、までの道があります</p>
+
       <img class="door-inline-img" src="assets/img11.webp" alt="マーケティングファネル" loading="lazy">
+      <p class="step-desc" style="text-align:center;">全員に売らなくていい</p>
+
       <img class="door-inline-img" src="assets/img12.webp" alt="個別相談・セールスって、どうやるの？" loading="lazy">
+      <p class="step-desc" style="text-align:center;">ここからは、個別相談で使う「ご提案書」の出番です</p>
+
       <img class="door-inline-img" src="assets/img13.webp" alt="魂商品・全体MAP" loading="lazy">
+      <p class="step-desc" style="text-align:center;">準備はいい？　今どこにいるか、確認してみよう</p>
 
       <p class="step-desc">ここまでの回答をもとにした、全${total}ページの横A4ご提案書です<br>これは回答をまとめた報告書ではなく、そのままお客様との相談で使える資料の下書きです<br>文章はあとから直せます写真は入れても入れなくても大丈夫</p>
       <div class="note-box">使い方のお約束：ここにある文章は、あなたの回答をもとにした下書きです<br>盛った実績や、言っていない約束を足すことはしません<br>お客様に渡す前に、必ずあなた自身の言葉で読み直してね</div>
@@ -2092,6 +2098,33 @@ ${who}の
     "実績・プロフィール", "お客様の声", "Before / After事例", "特典", "複数コース比較",
     "詳細カリキュラム", "スケジュール", "自己投資物語", "価格・価値説明", "支払方法", "申込方法", "申込期限", "FAQ",
   ];
+  // STUDIO-07｜入口フェーズ（self1_choice）に応じたおすすめオプションページ。自動追加はせず「提案」のみ
+  const OPTIONAL_PAGE_SUGGESTIONS = {
+    new: [],
+    polish: ["実績・プロフィール", "お客様の声", "特典", "Before / After事例"],
+    grow: ["複数コース比較", "Before / After事例", "詳細カリキュラム", "実績・プロフィール", "FAQ", "価格・価値説明"],
+  };
+
+  const SELF1_LABEL_SHORT = { new: "🌱 商品がまだない人", polish: "🔥 商品はある・磨きたい人", grow: "🚀 売れている商品をもっと育てたい人" };
+
+  // STUDIO-07｜入口フェーズをスタジオにも反映。自動で大量追加はせず、あくまで「提案」に留める
+  function renderOptionalSuggestions() {
+    const choice = state.self1_choice;
+    if (!choice) return "";
+    const already = (state.deck.optionalPages || []).map((p) => p.label);
+    const suggestions = (OPTIONAL_PAGE_SUGGESTIONS[choice] || []).filter((s) => !already.includes(s));
+    if (choice === "new") {
+      return `<div class="studio-suggest"><p class="studio-suggest__title">${esc(SELF1_LABEL_SHORT[choice])}のあなたへ</p><p class="hint" style="margin:0;">まずは基本版のまま、最初のひとりへ届けることを優先してみよう<br>必要になったら、いつでもオプションページを追加できます</p></div>`;
+    }
+    if (!suggestions.length) return "";
+    return `
+      <div class="studio-suggest">
+        <p class="studio-suggest__title">${esc(SELF1_LABEL_SHORT[choice])}のあなたには、こんなページがおすすめです</p>
+        <div class="studio-suggest__chips">
+          ${suggestions.map((s) => `<button type="button" class="studio-suggest__chip" data-studio-suggest-add="${esc(s)}">＋ ${esc(s)}</button>`).join("")}
+        </div>
+      </div>`;
+  }
 
   function renderStudioEditPanel(pageKey) {
     const yesDef = DECK_YES_PAGES.find((p) => p.key === pageKey);
@@ -2157,6 +2190,7 @@ ${who}の
           <button type="button" class="studio-mode-switch__btn${presentMode === "front" ? " is-active" : ""}" data-present-mode="front">前半のみ表示（YES前）</button>
           <button type="button" class="studio-mode-switch__btn${presentMode === "full" ? " is-active" : ""}" data-present-mode="full">全ページ表示（YES②後）</button>
         </div>
+        ${renderOptionalSuggestions()}
       </div>
       <div class="studio__body">
         <aside class="studio__thumbs">
@@ -2171,7 +2205,7 @@ ${who}の
               ${hiddenPages.map((p) => `<button type="button" class="studio-thumb-hidden" data-studio-unhide="${p.key}">${esc(p.label)}　表示に戻す</button>`).join("")}
             </div>` : ""}
           <div class="studio-add-optional">
-            <label class="field__label" style="font-size:12px;">＋ オプションページを追加</label>
+            <label class="field__label">＋ オプションページを追加</label>
             <select id="studioOptionalSelect">
               <option value="">選んでください</option>
               ${OPTIONAL_PAGE_CANDIDATES.map((c) => `<option value="${esc(c)}">${esc(c)}</option>`).join("")}
@@ -2255,19 +2289,22 @@ ${who}の
       });
     });
 
+    function addOptionalPage(label) {
+      if (!label) return;
+      const key = "opt_" + label.replace(/[^\p{L}\p{N}]/gu, "").slice(0, 24) + "_" + Date.now();
+      state.deck.optionalPages.push({ key, label, big: label, body: "" });
+      studioActivePage = key;
+      saveState();
+      showToast(`「${label}」ページを追加しました`);
+      render();
+    }
     const optionalSelect = qs("#studioOptionalSelect");
     if (optionalSelect) {
-      optionalSelect.addEventListener("change", () => {
-        const label = optionalSelect.value;
-        if (!label) return;
-        const key = "opt_" + label.replace(/[^\p{L}\p{N}]/gu, "").slice(0, 24) + "_" + Date.now();
-        state.deck.optionalPages.push({ key, label, big: label, body: "" });
-        studioActivePage = key;
-        saveState();
-        showToast(`「${label}」ページを追加しました`);
-        render();
-      });
+      optionalSelect.addEventListener("change", () => addOptionalPage(optionalSelect.value));
     }
+    qsa("[data-studio-suggest-add]").forEach((btn) => {
+      btn.addEventListener("click", () => addOptionalPage(btn.dataset.studioSuggestAdd));
+    });
     qsa("[data-studio-remove-optional]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const key = btn.dataset.studioRemoveOptional;
@@ -2679,7 +2716,7 @@ ${who}の
             </label>
             ${MARKET_TEST_FIELDS.map((f) => `
               <div class="field" style="margin-top:8px;">
-                <label class="field__label" style="font-size:12.5px;">${esc(f.label)}</label>
+                <label class="field__label">${esc(f.label)}</label>
                 <input type="text" data-market-test-field="${i}:${f.key}" placeholder="${esc(f.ph)}" value="${esc(state.market_test_notes[i][f.key])}">
               </div>`).join("")}
           </div>`).join("")}
