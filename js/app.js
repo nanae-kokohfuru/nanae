@@ -1434,6 +1434,7 @@ ${who}の
   --------------------------------------------------------- */
   const D_PHASE_ITEM_TYPES = ["セッション", "学び・動画", "ワーク・実践", "フォロー", "その他"];
   const PRICE_PRESETS = [3000, 5000, 10000, 15000, 20000, 30000, 50000, 75000, 100000, 150000, 200000, 300000, 500000];
+  const PEOPLE_PRESETS = [1, 2, 3, 5, 10];
 
   function renderDoor7() {
     return doorShell({
@@ -1569,14 +1570,14 @@ ${who}の
           <span class="hint" style="margin:0;">円</span>
         </div>
 
-        <p class="step-question" style="margin-top:26px;">③ 届けたい人数は？</p>
-        <div class="field">
-          <input type="text" inputmode="numeric" id="dPrice_people" placeholder="例）5" value="${esc(state.dPrice_people)}">
-          <p class="hint">まずは今回・今期届けたい人数のめやすでOK</p>
+        <p class="step-question" style="margin-top:26px;">③ 今月、届けたい人数は？</p>
+        <div class="price-preset-grid" id="peoplePresetGrid">
+          ${PEOPLE_PRESETS.map((n) => `<button type="button" class="price-preset-btn${peopleNum === n ? " is-active" : ""}" data-people="${n}">${n}人</button>`).join("")}
         </div>
+        <p class="hint">まずは今回・今期届けたい人数のめやすでOK</p>
 
         <div class="sheet__price" style="margin-top:14px;">
-          <div class="sheet__price-label">価格 × 人数 ＝ 見えてくる売上</div>
+          <div class="sheet__price-label">今月の売上シミュレーション</div>
           <div class="sheet__price-value" id="revenuePreview">¥${priceNum.toLocaleString()} × ${peopleNum || 0}人 ＝ ¥${(priceNum * peopleNum).toLocaleString()}</div>
         </div>
 
@@ -1613,21 +1614,27 @@ ${who}の
     function setPrice(n) {
       state.dPrice_price = String(n);
       priceInput.value = formatYen(n);
-      qsa(".price-preset-btn").forEach((btn) => btn.classList.toggle("is-active", Number(btn.dataset.price) === n));
+      qsa(".price-preset-btn[data-price]").forEach((btn) => btn.classList.toggle("is-active", Number(btn.dataset.price) === n));
       saveState();
       updateRevenue();
     }
-    qsa(".price-preset-btn").forEach((btn) => { btn.addEventListener("click", () => setPrice(Number(btn.dataset.price))); });
+    qsa(".price-preset-btn[data-price]").forEach((btn) => { btn.addEventListener("click", () => setPrice(Number(btn.dataset.price))); });
     priceInput.addEventListener("input", () => {
       const digits = priceInput.value.replace(/[^\d]/g, "");
       const n = Number(digits) || 0;
       priceInput.value = digits ? formatYen(digits) : "";
       state.dPrice_price = digits;
-      qsa(".price-preset-btn").forEach((b) => b.classList.toggle("is-active", Number(b.dataset.price) === n));
+      qsa(".price-preset-btn[data-price]").forEach((b) => b.classList.toggle("is-active", Number(b.dataset.price) === n));
       saveState();
       updateRevenue();
     });
-    qs("#dPrice_people").addEventListener("input", (e) => { state.dPrice_people = e.target.value; saveState(); updateRevenue(); });
+    function setPeople(n) {
+      state.dPrice_people = String(n);
+      qsa(".price-preset-btn[data-people]").forEach((btn) => btn.classList.toggle("is-active", Number(btn.dataset.people) === n));
+      saveState();
+      updateRevenue();
+    }
+    qsa(".price-preset-btn[data-people]").forEach((btn) => { btn.addEventListener("click", () => setPeople(Number(btn.dataset.people))); });
     qs("#dPrice_targetRevenue").addEventListener("input", (e) => { state.dPrice_targetRevenue = e.target.value; saveState(); updateReverseCalc(); });
     updateRevenue();
 
