@@ -367,6 +367,9 @@
     if (state.screen === "start") {
       app.className = "app-main";
       app.innerHTML = renderStart(); bindStart();
+    } else if (state.screen === "kitIntro") {
+      app.className = "app-main";
+      app.innerHTML = renderKitIntro(); bindKitIntro();
     } else if (state.screen === "tane") {
       app.className = "app-main app-main--wide";
       app.innerHTML = renderTane(); bindTane();
@@ -435,44 +438,18 @@
   function renderStart() {
     return `
     <div class="card hero hero--lp">
+      <div class="hero-cover">
+        <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
+      </div>
+
       <section class="hero-lp__block hero-lp__block--top">
-        ${mascotImg("hero__mascot-img")}
-        <p class="hero__brand">ここらぼ直伝！</p>
-        <h1 class="hero__title">魂商品作成<br>ミラクルキット</h1>
-        <span class="hero__subtitle">商品をカタチにする10の扉</span>
-        <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="hero__chotty-logo">
-        <p class="hero__catch">「やってみたい」を<br>「誰かに届けられるカタチ」へ💌</p>
-      </section>
-
-      <section class="hero-lp__block">
-        <p class="hero-lp__intro">いきなり完璧な商品を作らなくて大丈夫<br><br>まずは、目の前のひとりに届けられる<br>「はじめの一品」をつくってみよう<br><br>商品は<br>つくる → 届ける → 反応を見る → 磨く<br><br>この繰り返しで育っていくものだから今回は<br><br>100点ではなく、まず外に出せるカタチまで<br><br>チョッピーとワクワク進んでいこう！</p>
-      </section>
-
-      <section class="hero-lp__block">
-        <div class="hero__type-grid">
-          <div class="hero__type-card">
-            <p class="hero__type-card__title">商品がまだない人は</p>
-            <p class="hero__type-card__body">ここからカタチに</p>
-          </div>
-          <div class="hero__type-card">
-            <p class="hero__type-card__title">すでにある商品は</p>
-            <p class="hero__type-card__body">もっとくっきり磨く</p>
-          </div>
-          <div class="hero__type-card">
-            <p class="hero__type-card__title">育ってきた商品は</p>
-            <p class="hero__type-card__body">次の一歩へ育てる</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="hero-lp__block hero-lp__goal">
         <p class="hero-lp__goal-title">このキットのGOAL💌</p>
         <div class="gold-line"></div>
         <p class="hero-lp__goal-body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
       </section>
 
       <section class="hero-lp__block hero-lp__cta">
-        <button class="btn btn--primary" id="startBtn" type="button">早速、創ってみる！</button>
+        <button class="btn btn--primary" id="startBtn" type="button">早速、使ってみる！</button>
         ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
       </section>
 
@@ -483,13 +460,67 @@
     </div>`;
   }
 
+  /* ---------------------------------------------------------
+     4-0. 2ページ目｜このキットの考え方（UI-REF-02準拠、読み物のみ・非クリック）
+  --------------------------------------------------------- */
+  function renderKitIntro() {
+    return `
+    <div class="card hero hero--lp">
+      <section class="hero-lp__block hero-lp__block--top">
+        ${mascotImg("hero__mascot-img")}
+        <p class="hero-lp__eyebrow">KOKOLabo Original Method</p>
+        <div class="gold-line gold-line--sparkle"></div>
+        <h2 class="hero-lp__title2">このキットの考え方</h2>
+        <p class="hero-lp__intro">あなたの中に眠っていた<br>「やってみたい」を<br><span class="hero-lp__intro-emph">届く・売れる・巡る商品へ</span><br>育てていくための相棒です</p>
+      </section>
+
+      <section class="hero-lp__block">
+        <div class="kit-intro__steps">
+          <div class="kit-intro__step">
+            <p class="kit-intro__step-no">01</p>
+            <p class="kit-intro__step-body">あなたの中にある<br>宝石を見つける</p>
+          </div>
+          <div class="kit-intro__step">
+            <p class="kit-intro__step-no">02</p>
+            <p class="kit-intro__step-body">想いを<br>届くカタチにする</p>
+          </div>
+          <div class="kit-intro__step">
+            <p class="kit-intro__step-no">03</p>
+            <p class="kit-intro__step-body">売れて、巡っていく<br>商品を育てる</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero-lp__block">
+        <p class="hero-lp__eyebrow hero-lp__eyebrow--center">✦ あなたは、どこからはじめる？ ✦</p>
+        <div class="kit-intro__rows">
+          <div class="kit-intro__row"><span class="kit-intro__row-no">01</span><span class="kit-intro__row-body">はじめての商品をつくりたい</span></div>
+          <div class="kit-intro__row"><span class="kit-intro__row-no">02</span><span class="kit-intro__row-body">今ある商品をもっと磨きたい</span></div>
+          <div class="kit-intro__row"><span class="kit-intro__row-no">03</span><span class="kit-intro__row-body">育ってきた商品を次のステージへ</span></div>
+        </div>
+        <p class="hint kit-intro__hint">実際にどこから始めるかは、このあと選べます</p>
+      </section>
+
+      <section class="hero-lp__block hero-lp__cta">
+        <button class="btn btn--primary" id="kitIntroNextBtn" type="button">早速、使ってみる！</button>
+      </section>
+    </div>`;
+  }
+  function bindKitIntro() {
+    qs("#kitIntroNextBtn").addEventListener("click", () => {
+      state.screen = "tane";
+      saveState();
+      render();
+    });
+  }
+
   function hasAnyProgress() {
     return state.screen !== "start";
   }
 
   function bindStart() {
     qs("#startBtn").addEventListener("click", () => {
-      state.screen = "tane";
+      state.screen = "kitIntro";
       saveState();
       render();
     });
@@ -662,9 +693,9 @@
   /* ---------------------------------------------------------
      5. 扉 共通シェル
   --------------------------------------------------------- */
-  function doorShell({ n, title, bodyHtml, warnId }) {
+  function doorShell({ n, title, bodyHtml, warnId, brandClass }) {
     return `
-    <div class="card">
+    <div class="card${brandClass ? " " + brandClass : ""}">
       ${doorMascot()}
       <p class="door-progress-mini">扉 ${n} / ${TOTAL_DOORS}</p>
       <span class="seko-badge">せるこ・${n + 1}</span>
@@ -749,6 +780,7 @@
     })).join("");
     return doorShell({
       n: 1, badge: "せるこ・2", title: "推したい！助けたい！ひとりを見つける",
+      brandClass: "door1-brand",
       bodyHtml: `
         <p class="step-desc">商品は、みんなのためにつくろうとするとぼやけます<br>まずは、たったひとり<br><br>細かいペルソナ設定はまだいりません<br>今は、その人の顔や毎日が少し浮かべばOK</p>
 

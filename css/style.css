@@ -552,6 +552,25 @@ img{ max-width: 100%; display:block; }
   font-weight:800;
 }
 
+/* ================= 扉1限定・ブランド基準試作（UI-REF準拠） =================
+   .door1-brand は renderDoor1() の出力にのみ付与される。ここでのルールは
+   すべて .door1-brand 配下に限定し、扉2〜10・他画面の共通クラスは変更しない。 */
+.door1-brand{ padding: 36px 24px; }
+@media (min-width: 640px){ .door1-brand{ padding: 44px 40px; } }
+.door1-brand .step-title{
+  text-align: center;
+  font-family: var(--font-serif);
+}
+.door1-brand .step-title::after{
+  content: "";
+  display: block;
+  width: 56px; height: 3px; margin: 16px auto 0; border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--gold-shine), var(--rose), transparent);
+}
+.door1-brand .step-desc{
+  line-height: 2;
+}
+
 .step-desc{
   font-size: 16.5px;
   color: var(--ink-soft);
@@ -891,44 +910,20 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   border-radius: 8px;
 }
 
-.hero__brand{
-  font-size: 13px;
-  color: var(--gold-deep);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  margin-bottom: 10px;
-}
-
-.hero__title{
-  font-size: 30px;
-  line-height: 1.5;
-  margin-bottom: 8px;
-}
-
-.hero__subtitle{
-  display:inline-block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #fff;
-  background: var(--accent-red);
-  padding: 5px 16px;
-  border-radius: 999px;
-  margin-bottom: 22px;
-  letter-spacing: 0.08em;
-}
-
-.hero__catch{
-  font-family: var(--font-serif);
-  font-size: 18px;
-  line-height: 2;
-  margin-bottom: 22px;
-  color: var(--ink);
-}
-
 /* ================= HERO（LP調・余白で区切る） ================= */
 
 .hero--lp{ padding: 40px 24px 26px; }
 @media (min-width: 640px){ .hero--lp{ padding: 56px 40px 34px; } }
+
+/* 表紙（UI-REF-01完成画像）をカードの角丸に沿って縁いっぱいにブリード表示 */
+.hero-cover{
+  margin: -40px -24px 32px;
+}
+@media (min-width: 640px){ .hero-cover{ margin: -56px -40px 40px; } }
+.hero-cover__img{
+  width: 100%;
+  display: block;
+}
 
 .hero-lp__block{
   max-width: 520px;
@@ -937,6 +932,21 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .hero-lp__block--top{ margin-bottom: 40px; }
 .hero-lp__block:last-of-type{ margin-bottom: 0; }
 
+.hero-lp__eyebrow{
+  font-size: 13px;
+  color: var(--gold-deep);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.hero-lp__eyebrow--center{ margin-top: 6px; margin-bottom: 18px; font-size: 14.5px; letter-spacing: 0.08em; }
+
+.hero-lp__title2{
+  font-family: var(--font-serif); font-weight: 800; font-size: 26px;
+  color: var(--ink); text-align: center; margin: 14px 0 22px;
+}
+
 .hero-lp__intro{
   text-align: center;
   font-size: 17px;
@@ -944,23 +954,42 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--ink);
   white-space: pre-line;
 }
-
-.hero__type-grid{
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+.hero-lp__intro-emph{
+  display: inline-block;
+  font-family: var(--font-serif); font-weight: 800; font-size: 22px;
+  color: var(--bordeaux); margin: 6px 0;
 }
-.hero__type-card{
-  background: var(--card-soft);
-  border-radius: var(--radius-md);
-  padding: 14px 8px;
+
+.kit-intro__steps{
+  display: flex;
+  gap: 8px;
+}
+.kit-intro__step{
+  flex: 1;
+  text-align: center;
+  padding: 0 6px;
+  border-left: 1px solid var(--line-soft);
+}
+.kit-intro__step:first-child{ border-left: none; }
+.kit-intro__step-no{ font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--gold-deep); margin-bottom: 8px; }
+.kit-intro__step-body{ font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+@media (max-width: 560px){
+  .kit-intro__steps{ flex-direction: column; gap: 20px; }
+  .kit-intro__step{ border-left: none; border-top: 1px solid var(--line-soft); padding: 14px 0 0; }
+  .kit-intro__step:first-child{ border-top: none; padding-top: 0; }
+}
+
+.kit-intro__rows{ display: flex; flex-direction: column; }
+.kit-intro__row{
+  display: flex; align-items: baseline; justify-content: center; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-soft);
   text-align: center;
 }
-.hero__type-card__title{ font-size: 13.5px; color: var(--ink-soft); margin-bottom: 6px; line-height: 1.5; font-weight: 600; }
-.hero__type-card__body{ font-size: 15.5px; font-weight: 800; color: var(--bordeaux); line-height: 1.5; }
-@media (max-width: 560px){
-  .hero__type-grid{ grid-template-columns: 1fr; }
-}
+.kit-intro__row:last-child{ border-bottom: none; }
+.kit-intro__row-no{ font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: var(--gold-deep); flex: none; }
+.kit-intro__row-body{ font-size: 15.5px; color: var(--ink); font-weight: 600; }
+.kit-intro__hint{ text-align: center; margin-top: 14px; }
 
 .hero-lp__goal{ text-align: center; }
 .hero-lp__goal-title{
