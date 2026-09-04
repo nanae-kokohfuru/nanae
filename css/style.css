@@ -628,41 +628,42 @@ img{ max-width: 100%; display:block; }
   background: linear-gradient(90deg, transparent, var(--champagne-deep), var(--champagne), transparent);
 }
 
-/* 「読む」ブロック＝中央軸＋読みやすい最大幅。文字量に応じて幅・行間・余白を個別指定 */
+/* 「読む」ブロック＝中央軸＋読みやすい最大幅。文字量に応じて幅・行間・余白を個別指定。
+   本文・質問文・補足文・選択肢は視認性調整で一段拡大（50〜60代の可読性優先） */
 .door1-brand .step-desc,
 .seko1-brand .step-desc{
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto 26px;
-  font-size: 18px;
-  line-height: 2;
+  font-size: 19.5px;
+  line-height: 2.05;
   color: var(--ink);
 }
 .door1-brand .step-question,
 .seko1-brand .step-question{
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto 14px;
-  font-size: 19.5px;
-  line-height: 1.6;
+  font-size: 20.5px;
+  line-height: 1.65;
 }
 .door1-brand .field__label,
 .seko1-brand .field__label{
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto 10px;
   color: var(--champagne-deep);
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
 }
 .door1-brand .hint,
 .seko1-brand .hint{
-  max-width: 560px;
+  max-width: 580px;
   margin: 10px auto 0;
   color: var(--ink-soft);
-  font-size: 15px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.75;
 }
 .door1-brand .choice-grid,
 .seko1-brand .choice-grid{
-  max-width: 600px;
+  max-width: 620px;
   margin: 0 auto;
 }
 .door1-brand .choice-card,
@@ -671,7 +672,9 @@ img{ max-width: 100%; display:block; }
   text-align: center;
 }
 .door1-brand .choice-card__text,
-.seko1-brand .choice-card__text{ font-size: 17px; }
+.seko1-brand .choice-card__text{ font-size: 18px; }
+.door1-brand .choice-card__sub,
+.seko1-brand .choice-card__sub{ font-size: 14.5px; }
 /* 扉限定：教材画像（IMG-01〜14のうち扉内使用分）は既定の420px上限をやめ、
    サイドバーを除いたメインコンテンツ枠の横幅いっぱいに拡大表示する。
    画像自体（アスペクト比・トリミング・素材）は一切変更しない */
@@ -805,16 +808,6 @@ img{ max-width: 100%; display:block; }
   margin: -10px 0 18px;
 }
 
-/* せるこ1限定：door1-brandより本文をわずかに拡大し、50〜60代の可読性を強化。
-   door1-brand自体の値は変更しない（別セレクタとして後方で上書き） */
-.seko1-brand .step-desc{
-  font-size: 19px;
-  line-height: 2.05;
-}
-.seko1-brand .hint{
-  font-size: 15.5px;
-}
-
 /* self1固有：選択後に出るメッセージ枠（.persona-note）。白カード感除去の一貫性のため、
    濃い黄土色の枠・背景を弱め、地の背景に馴染む控えめな表示にする（文言は無変更） */
 .seko1-brand .persona-note{
@@ -834,12 +827,12 @@ img{ max-width: 100%; display:block; }
   margin: 8px auto 0;
 }
 
-/* サイドバー（育っていく商品プレビュー）：扉1表示中のみ淡いブランド調へ。
-   .door-layout.door1-brand は render() 側で state.doorIndex===1 の時だけ付与され、
-   扉2〜10表示時の .product-preview（既定の白カード）には一切影響しない */
+/* サイドバー（育っていく商品プレビュー）：扉画面（全扉共通）で淡いブランド調へ。
+   視認性調整：記入済み行の背景・枠線をさらに一段弱め、本文より目立たない
+   静かな表示にする（構造・サイズ・機能は変更しない） */
 .door-layout.door1-brand .product-preview{
-  background: rgba(255,255,255,0.4);
-  border-color: rgba(205,168,118,0.4);
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(205,168,118,0.22);
   box-shadow: none;
 }
 .door-layout.door1-brand .product-preview__title{
@@ -849,8 +842,8 @@ img{ max-width: 100%; display:block; }
   color: var(--champagne-deep);
 }
 .door-layout.door1-brand .product-preview__row.is-filled{
-  background: var(--champagne-light);
-  border-color: rgba(205,168,118,0.45);
+  background: rgba(205,168,118,0.1);
+  border-color: rgba(205,168,118,0.22);
 }
 
 .step-desc{
