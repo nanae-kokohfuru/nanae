@@ -1882,11 +1882,17 @@ ${who}の
         big = productName;
         body = `¥${(Number(state.dPrice_price) || 0).toLocaleString()}`;
         break;
-      case "trust":
-        cards = state.d10_facts_detail.filter((f) => f.trim()).map((f) => ({ label: "支える事実", value: truncateText(f, 50) }));
-        big = summarizeForDeck.big(state.d10_passion, 46);
-        body = summarizeForDeck.body([state.d10_promise]);
+      case "trust": {
+        const trustFacts = state.d10_facts_detail.filter((f) => f.trim());
+        if (trustFacts.length) {
+          cards = trustFacts.map((f) => ({ label: "支える事実", value: truncateText(f, 50) }));
+        } else if (state.d4_turning_used) {
+          cards = [{ label: "突破口", value: truncateText(state.d4_turning_used, 50) }];
+        }
+        big = summarizeForDeck.big(state.d10_passion || state.d4_after || state.d4_why, 46);
+        body = summarizeForDeck.body([state.d10_promise || state.d4_why]);
         break;
+      }
       case "closing":
         big = `${productName}\n完成`;
         body = summarizeForDeck.body([state.d4_why, state.d10_passion], 140);
@@ -1913,7 +1919,7 @@ ${who}の
       case "journey": return state.d7_steps.some((s) => s.trim()) || !!d7ItemSummaryLine();
       case "product_preview": return true;
       case "product_price": return true;
-      case "trust": return !!(state.d10_passion || state.d10_facts_detail.some((f) => f.trim()));
+      case "trust": return !!(state.d10_passion || state.d10_facts_detail.some((f) => f.trim()) || state.d4_why || state.d4_after);
       case "closing": return true;
       default: return (state.deck.optionalPages || []).some((p) => p.key === key);
     }
@@ -2293,6 +2299,14 @@ ${who}の
           ${studioActivePage ? renderStudioEditPanel(studioActivePage) : ""}
         </aside>
       </div>
+      <div style="padding:18px 22px 26px;">
+        <div class="canva-guide" style="margin-top:0;">
+          <p class="canva-guide__title">ここで、ご提案書の「中身」が完成です💌</p>
+          <p class="hint" style="margin-top:0;">PDFで保存したら、最後はCanvaへ<br>写真・色・フォント・世界観をのせて<br>あなたらしい「私のご提案書」に仕上げてね</p>
+          <p class="hint" style="margin-top:8px;">① PDFで保存 → ② Canvaにアップロード → ③ 自分らしく整える → 完成！</p>
+          <p class="hint" style="margin-top:8px;">※Canvaを使わず、このままPDFで使用してもOK</p>
+        </div>
+      </div>
     </div>`;
   }
 
@@ -2632,8 +2646,8 @@ ${who}の
         ${mascotImg("chotty-card__intro-img")}
         <div>
           <img src="assets/chotnanapt-logo.png" alt="ChotNANAPT" class="chotty-card__logo">
-          <span class="eyebrow" style="margin-bottom:4px;">チョッピー（nanaeAI）総評</span>
-          <p class="step-desc" style="margin-bottom:0;">チョッピー（nanaeAI）が、あなたの商品を読み解きます</p>
+          <span class="eyebrow" style="margin-bottom:4px;">チョッピー総評</span>
+          <p class="step-desc" style="margin-bottom:0;">ここまでの回答をもとに、チョッピーが商品を一緒に整理します</p>
         </div>
       </div>
       ${analysis.map((a) => `

@@ -1399,6 +1399,8 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 /* ================= 最後の扉は、画面の外です ================= */
 
 .last-door-card{ text-align:left; }
+.last-door-card > .eyebrow{ display:flex; width:fit-content; margin:0 auto 14px; }
+.last-door-card > .step-desc{ text-align:center; }
 
 .mission-box{
   margin: 18px 0;
@@ -1796,6 +1798,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 /* ================= 詳細版：横A4資料（デッキ） ================= */
 
 .deck-intro{ margin-top: 22px; }
+.deck-intro > .eyebrow{ display:flex; width:fit-content; margin:0 auto 14px; }
 .deck-intro__count{ font-size: 15px; }
 
 .deck{
@@ -1979,6 +1982,8 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .checklist-card{
   margin-top: 22px;
 }
+.checklist-card > .eyebrow{ display:flex; width:fit-content; margin:0 auto 14px; }
+.checklist-card > .step-title{ text-align:center; }
 
 .checklist-item{
   display:flex;
