@@ -381,7 +381,8 @@
       app.innerHTML = renderSelf1(); bindSelf1();
     } else if (state.screen === "door") {
       app.className = "app-main app-main--wide";
-      app.innerHTML = `<div class="door-layout">
+      const doorLayoutBrand = state.doorIndex === 1 ? " door1-brand" : "";
+      app.innerHTML = `<div class="door-layout${doorLayoutBrand}">
         <div class="door-layout__main">${renderDoor(state.doorIndex)}</div>
         <aside class="door-layout__preview">${renderProductPreview()}</aside>
       </div>`;

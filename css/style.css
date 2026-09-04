@@ -569,16 +569,25 @@ img{ max-width: 100%; display:block; }
 }
 
 /* ================= 扉1限定・ブランド基準試作（UI-REF準拠） =================
-   .door1-brand は renderDoor1() の出力にのみ付与される。ここでのルールは
-   すべて .door1-brand 配下（および .card.door1-brand 自体）に限定し、
-   扉2〜10・他画面の共通クラス（.card / .btn--primary 等の既定値）は変更しない。 */
+   .door1-brand は renderDoor1() の出力（.card）と、扉1表示中のみ .door-layout
+   に付与される（render()側で state.doorIndex===1 の時だけ付与）。ここでのルールは
+   すべて .door1-brand 配下に限定し、扉2〜10・他画面の共通クラス
+   （.card / .btn--primary / .choice-card / .seko-badge 等の既定値）は変更しない。
+   基本方針：読む部分＝中央軸（text-align:centerを既定にしつつ、要素ごとに
+   文字量に応じた最大幅・行間・余白を個別調整）／textarea・input内の文字＝左揃え。 */
 .card.door1-brand{
-  background: rgba(255,255,255,0.55);
+  background: transparent;
   box-shadow: none;
   border: none;
-  padding: 32px 24px;
+  padding: 32px 0;
+  overflow: visible;
+  text-align: center;
 }
-@media (min-width: 640px){ .card.door1-brand{ padding: 40px 36px; } }
+@media (min-width: 640px){ .card.door1-brand{ padding: 40px 4px; } }
+.card.door1-brand::before{ content: none; }
+
+.door1-brand .door-progress-mini{ text-align: center; }
+
 .door1-brand .step-title{
   text-align: center;
   font-family: var(--font-serif);
@@ -588,16 +597,124 @@ img{ max-width: 100%; display:block; }
   content: "";
   display: block;
   width: 56px; height: 3px; margin: 18px auto 0; border-radius: 999px;
-  background: linear-gradient(90deg, transparent, var(--gold-shine), var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--champagne-deep), var(--champagne), transparent);
 }
+
+/* 「読む」ブロック＝中央軸＋読みやすい最大幅。文字量に応じて幅・行間・余白を個別指定 */
 .door1-brand .step-desc{
+  max-width: 600px;
+  margin: 0 auto 26px;
+  font-size: 18px;
   line-height: 2;
+  color: var(--ink);
+}
+.door1-brand .step-question{
+  max-width: 600px;
+  margin: 0 auto 14px;
+  font-size: 19.5px;
+  line-height: 1.6;
+}
+.door1-brand .field__label{
+  max-width: 600px;
+  margin: 0 auto 10px;
+  color: var(--champagne-deep);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.door1-brand .hint{
+  max-width: 560px;
+  margin: 10px auto 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.door1-brand .choice-grid{
+  max-width: 600px;
+  margin: 0 auto;
+}
+.door1-brand .choice-card{
+  justify-content: center;
+  text-align: center;
+}
+.door1-brand .choice-card__text{ font-size: 17px; }
+/* 選択中の色をマスタード寄りの --gold からブランドのシャンパンブロンズへ統一 */
+.door1-brand .choice-card input:checked ~ .choice-card__mark{ border-color: var(--champagne-deep); }
+.door1-brand .choice-card__mark::after{ background: var(--champagne-deep); }
+.door1-brand .choice-card:has(input:checked){
+  border-color: var(--champagne-deep);
+  background: var(--champagne-light);
+}
+
+/* 「書く」ブロック＝ブロック自体は中央の読み幅に揃えつつ、textarea内の文字は左揃えを維持 */
+.door1-brand .field{
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.door1-brand textarea,
+.door1-brand input[type="text"],
+.door1-brand input[type="number"]{
+  text-align: left;
+  background: var(--champagne-light);
+  border-color: rgba(205,168,118,0.55);
+  border-radius: 14px;
+}
+.door1-brand textarea:focus,
+.door1-brand input:focus{
+  border-color: var(--champagne-deep);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(205,168,118,0.18);
+}
+
+.door1-brand .nav-row{
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .door1-brand .nav-row .btn--primary{
   background: linear-gradient(135deg, var(--champagne-light), var(--champagne) 55%, var(--champagne-deep));
   color: var(--ink);
   box-shadow: 0 3px 10px rgba(180,150,110,0.22);
   border: 1px solid rgba(205,168,118,0.5);
+}
+.door1-brand .nav-row .btn--ghost{
+  background: transparent;
+  border: none;
+  color: var(--ink-faint);
+}
+
+/* せるこバッジ＝形・役割は既存のまま、深いルビージュエリー調の質感のみ変更 */
+.door1-brand .seko-badge{
+  background:
+    radial-gradient(120% 140% at 22% 18%, rgba(255,255,255,0.32), transparent 44%),
+    linear-gradient(155deg, #7A1B30 0%, var(--bordeaux) 55%, #4A0F1A 100%);
+  box-shadow:
+    0 3px 10px rgba(74,15,26,0.28),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -2px 4px rgba(0,0,0,0.16);
+}
+.door1-brand .seko-badge::after{
+  color: rgba(255,255,255,0.92);
+  text-shadow: none;
+}
+
+/* サイドバー（育っていく商品プレビュー）：扉1表示中のみ淡いブランド調へ。
+   .door-layout.door1-brand は render() 側で state.doorIndex===1 の時だけ付与され、
+   扉2〜10表示時の .product-preview（既定の白カード）には一切影響しない */
+.door-layout.door1-brand .product-preview{
+  background: rgba(255,255,255,0.4);
+  border-color: rgba(205,168,118,0.4);
+  box-shadow: none;
+}
+.door-layout.door1-brand .product-preview__title{
+  color: var(--ink);
+}
+.door-layout.door1-brand .product-preview__count{
+  color: var(--champagne-deep);
+}
+.door-layout.door1-brand .product-preview__row.is-filled{
+  background: var(--champagne-light);
+  border-color: rgba(205,168,118,0.45);
 }
 
 .step-desc{
