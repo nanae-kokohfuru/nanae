@@ -365,10 +365,10 @@
   function render() {
     updateHeader();
     if (state.screen === "start") {
-      app.className = "app-main";
+      app.className = "app-main app-main--brand";
       app.innerHTML = renderStart(); bindStart();
     } else if (state.screen === "kitIntro") {
-      app.className = "app-main";
+      app.className = "app-main app-main--brand";
       app.innerHTML = renderKitIntro(); bindKitIntro();
     } else if (state.screen === "tane") {
       app.className = "app-main app-main--wide";
@@ -435,25 +435,32 @@
   /* ---------------------------------------------------------
      4. START 画面
   --------------------------------------------------------- */
+  // 「最初に戻る」：保存データ・回答・進捗は一切消さず、画面だけをSTARTへ戻す（リセットとは別機能）
+  function goToStartKeepData() {
+    state.screen = "start";
+    saveState();
+    render();
+  }
+
   function renderStart() {
     return `
-    <div class="card hero hero--lp">
+    <div class="brand-page">
       <div class="hero-cover">
         <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
       </div>
 
-      <section class="hero-lp__block hero-lp__block--top">
-        <p class="hero-lp__goal-title">このキットのGOAL💌</p>
+      <section class="brand-section brand-section--top">
+        <p class="brand-goal__title">このキットのGOAL💌</p>
         <div class="gold-line"></div>
-        <p class="hero-lp__goal-body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
+        <p class="brand-goal__body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
       </section>
 
-      <section class="hero-lp__block hero-lp__cta">
-        <button class="btn btn--primary" id="startBtn" type="button">早速、使ってみる！</button>
+      <section class="brand-section brand-cta">
+        <button class="btn btn--gold-cta" id="startBtn" type="button">早速、使ってみる！</button>
         ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
       </section>
 
-      <div class="ai-disclaimer ai-disclaimer--subdued">
+      <div class="ai-disclaimer ai-disclaimer--subdued brand-disclaimer">
         <p class="ai-disclaimer__title">【注意事項】</p>
         <p>このキットは、AIが売れる商品を勝手に作るツールではありません<br>あなたの経験・想い・やってみたいことを、チョッピーと一緒に整理して、まず人に見せられるカタチにするためのキットです<br><br>チョッピーの提案は正解ではありません<br>違和感があれば、あなたの言葉を優先してどんどん書き換えてください<br><br>このキットの利用によって、売上・集客・成果等を保証するものではありません<br>実際のお客様の反応を見ながら、ご自身の判断で商品を育ててください<br><br>法律・医療・健康・金融等に関わる表現や、効果効能・成果保証等を含む商品については、必要に応じて専門家・関係機関にご確認ください</p>
       </div>
@@ -465,16 +472,16 @@
   --------------------------------------------------------- */
   function renderKitIntro() {
     return `
-    <div class="card hero hero--lp">
-      <section class="hero-lp__block hero-lp__block--top">
+    <div class="brand-page">
+      <section class="brand-section brand-section--top">
         ${mascotImg("hero__mascot-img")}
-        <p class="hero-lp__eyebrow">KOKOLabo Original Method</p>
-        <div class="gold-line gold-line--sparkle"></div>
-        <h2 class="hero-lp__title2">このキットの考え方</h2>
-        <p class="hero-lp__intro">あなたの中に眠っていた<br>「やってみたい」を<br><span class="hero-lp__intro-emph">届く・売れる・巡る商品へ</span><br>育てていくための相棒です</p>
+        <p class="brand-eyebrow">KOKOLabo Original Method</p>
+        <div class="gold-line"></div>
+        <h2 class="brand-title2">このキットの考え方</h2>
+        <p class="brand-intro">あなたの中に眠っていた<br>「やってみたい」を<br><span class="brand-intro__emph">届く・売れる・巡る商品へ</span><br>育てていくための相棒です</p>
       </section>
 
-      <section class="hero-lp__block">
+      <section class="brand-section">
         <div class="kit-intro__steps">
           <div class="kit-intro__step">
             <p class="kit-intro__step-no">01</p>
@@ -491,8 +498,8 @@
         </div>
       </section>
 
-      <section class="hero-lp__block">
-        <p class="hero-lp__eyebrow hero-lp__eyebrow--center">✦ あなたは、どこからはじめる？ ✦</p>
+      <section class="brand-section">
+        <p class="brand-eyebrow brand-eyebrow--center">✦ あなたは、どこからはじめる？ ✦</p>
         <div class="kit-intro__rows">
           <div class="kit-intro__row"><span class="kit-intro__row-no">01</span><span class="kit-intro__row-body">はじめての商品をつくりたい</span></div>
           <div class="kit-intro__row"><span class="kit-intro__row-no">02</span><span class="kit-intro__row-body">今ある商品をもっと磨きたい</span></div>
@@ -501,9 +508,11 @@
         <p class="hint kit-intro__hint">実際にどこから始めるかは、このあと選べます</p>
       </section>
 
-      <section class="hero-lp__block hero-lp__cta">
-        <button class="btn btn--primary" id="kitIntroNextBtn" type="button">早速、使ってみる！</button>
+      <section class="brand-section brand-cta">
+        <button class="btn btn--gold-cta" id="kitIntroNextBtn" type="button">早速、使ってみる！</button>
       </section>
+
+      <div class="brand-nav"><button type="button" id="kitIntroHomeBtn" class="brand-nav__link">最初に戻る</button></div>
     </div>`;
   }
   function bindKitIntro() {
@@ -512,6 +521,7 @@
       saveState();
       render();
     });
+    qs("#kitIntroHomeBtn").addEventListener("click", goToStartKeepData);
   }
 
   function hasAnyProgress() {
@@ -707,6 +717,7 @@
         <button class="btn btn--primary" id="nextBtn" type="button">${n === TOTAL_DOORS ? "扉を完成させる" : "次へ →"}</button>
       </div>
       <div class="restart-row"><button id="restartBtn" type="button">最初からやり直す</button></div>
+      ${brandClass ? `<div class="brand-nav"><button type="button" id="brandHomeBtn" class="brand-nav__link">最初に戻る</button></div>` : ""}
     </div>`;
   }
 
@@ -725,6 +736,7 @@
       render();
     });
     qs("#restartBtn").addEventListener("click", openResetModal);
+    qs("#brandHomeBtn")?.addEventListener("click", goToStartKeepData);
     const binders = {
       1: bindDoor1, 2: bindDoor2, 3: bindDoor3, 4: bindDoor4, 5: bindDoor5,
       6: bindDoor6, 7: bindDoor7, 8: bindDoor8, 9: bindDoor9, 10: bindDoor10,
