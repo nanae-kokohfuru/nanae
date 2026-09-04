@@ -564,7 +564,7 @@
         <textarea id="start_q_${i}" placeholder="ここに書いてみよう">${esc(state.start_q[i])}</textarea>
       </div>`).join("");
     return `
-    <div class="card">
+    <div class="card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">まず「やりたい」のタネを集めよう</h2>
@@ -604,7 +604,7 @@
     const candidates = taneCandidates();
     const chosen = state.start_tane_selected;
     return `
-    <div class="card">
+    <div class="card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">チョッピーが見つけた<br>あなたの「やりたいのタネ」💌</h2>
@@ -667,7 +667,7 @@
   function renderSelf1() {
     const chosen = SELF1_OPTIONS.find((o) => o.id === state.self1_choice);
     return `
-    <div class="card self1-card">
+    <div class="card self1-card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
       <h2 class="step-title">まず　今の商品はどこにいる？</h2>
