@@ -942,7 +942,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   position: relative;
   overflow-x: hidden;
 }
-/* 表紙の光がページ全体に続いているように見せる、ごく淡い放射光（2ページ目と共有） */
+/* 表紙の光がページ全体に続いているように見せる、ごく淡い放射光（START・2ページ目で共有） */
 .brand-page::before{
   content: "";
   position: absolute;
@@ -953,49 +953,22 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   pointer-events: none;
   z-index: -1;
 }
-/* START画面限定：表紙実測色（淡いピンクベージュ）でページ背景を上書きし、
-   表紙〜GOAL間の色差を弱める。黄・茶・マスタードには寄せない */
-.brand-page--cover::before{
-  background:
-    radial-gradient(ellipse 55% 40% at 50% 0%, rgba(226,201,163,0.4), transparent 68%),
-    radial-gradient(ellipse 70% 55% at 50% 46%, rgba(203,178,169,0.35), transparent 72%);
-}
 
-/* 表紙（UI-REF-01完成画像）：ページ幅いっぱいに広げず、上品な最大幅で中央配置。
-   影・角丸で「カード」に見せず、下端はマスクでページ背景へ溶け込ませる */
+/* 表紙（UI-REF-01完成画像）＝第一部。画像そのものは無加工でそのまま表示し、
+   PC幅に見合った十分な存在感のサイズで中央配置する。影・枠は付けない */
 .hero-cover{
   display: flex;
   justify-content: center;
-  margin: 0;
-  position: relative;
+  margin: 0 0 52px;
 }
 .hero-cover__img{
   width: 100%;
-  max-width: 440px;
+  max-width: 560px;
   display: block;
+  border-radius: var(--radius-lg);
 }
-/* START画面限定：影をなくし、下端のみをごく短い範囲でページ背景へフェード。
-   ダイヤモンドの反射は画像下97.7%付近まで届くため、フェード開始点はそれより
-   十分下（97%）に置き、透明になり切るのは画像最下部（100%）のみに限定する */
-.hero-cover--fade .hero-cover__img{
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: none;
-  mask-image: linear-gradient(to bottom, #000 0%, #000 96%, rgba(0,0,0,0.85) 97.7%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 96%, rgba(0,0,0,0.85) 97.7%, transparent 100%);
-}
-@media (min-width: 640px){
-  .hero-cover--fade .hero-cover__img{ max-width: 500px; }
-}
-/* 表紙下端の実測トーンを画像の裏側に淡く敷き、フェードで透けた先の色を近づける */
-.hero-cover--fade::after{
-  content: "";
-  position: absolute;
-  left: 50%; bottom: -60px;
-  width: 100%; max-width: 560px; height: 140px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse 62% 100% at 50% 0%, rgba(203,178,169,0.6), rgba(203,178,169,0) 78%);
-  pointer-events: none;
-  z-index: -1;
+@media (min-width: 1024px){
+  .hero-cover__img{ max-width: 620px; }
 }
 
 .brand-section{
@@ -1065,32 +1038,26 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .kit-intro__row-body{ font-size: 18px; color: var(--ink); font-weight: 600; }
 .kit-intro__hint{ text-align: center; margin-top: 16px; }
 
-/* GOALは表紙と同じ「1枚のビジュアル」の続きとして、小さなキャプション→大きな一文→
-   支える本文、という表紙自身の組版リズムを踏襲する。枠・カード・白い箱は使わない */
+/* GOALは表紙に続く「第二部」。白いカード・枠には入れず、表紙と同じ余白の中で
+   自然につながるよう、キャプション→細いアクセント線→本文という組版だけで見せる */
 .brand-goal{
   max-width: 640px;
   margin: 0 auto 56px;
-  padding-top: 8px;
-  position: relative;
-}
-/* START画面限定：表紙の余韻の中でGOALが続いて見えるよう、間隔を詰める */
-.brand-goal--tight{
-  margin-top: -26px;
-  padding-top: 0;
 }
 .brand-goal__eyebrow{
   font-size: 14px;
   letter-spacing: 0.16em;
   color: var(--champagne-deep);
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
-.brand-goal__statement{
-  font-family: var(--font-serif); font-weight: 800; font-size: 30px;
-  color: var(--ink); line-height: 1.55; margin-bottom: 22px;
+.brand-goal .gold-line{ margin-bottom: 30px; }
+.brand-goal__body{ font-size: 20px; color: var(--ink); line-height: 2.05; white-space: pre-line; }
+.brand-goal__emph{
+  display: inline-block;
+  font-family: var(--font-serif); font-weight: 800; font-size: 24px;
+  color: var(--champagne-deep); margin: 6px 0;
 }
-.brand-goal .gold-line{ margin-bottom: 26px; }
-.brand-goal__body{ font-size: 18px; color: var(--ink-soft); line-height: 2.15; white-space: pre-line; }
 
 .brand-cta{ text-align: center; }
 .brand-cta .restart-row{ margin-top: 16px; }

@@ -444,16 +444,15 @@
 
   function renderStart() {
     return `
-    <div class="brand-page brand-page--cover">
-      <div class="hero-cover hero-cover--fade">
+    <div class="brand-page">
+      <div class="hero-cover">
         <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
       </div>
 
-      <section class="brand-goal brand-goal--tight">
+      <section class="brand-goal">
         <p class="brand-goal__eyebrow">このキットのGOAL💌</p>
-        <p class="brand-goal__statement">完璧な商品を<br>完成させることではありません</p>
         <div class="gold-line"></div>
-        <p class="brand-goal__body">あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
+        <p class="brand-goal__body">あなたの中に眠っていた「やってみたい」<br>その想いを、<span class="brand-goal__emph">届く・売れる・巡る商品へ</span><br>あなたに最短ルートで次元上昇してほしい<br>そんな想いを込めた<br>ここらぼからのスペシャルギフトです</p>
       </section>
 
       <section class="brand-section brand-cta">
