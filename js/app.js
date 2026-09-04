@@ -2127,12 +2127,16 @@ ${who}の
 
       <img class="door-inline-img" src="assets/img10.webp" alt="商品って、どうやって売るの？" loading="lazy">
       <p class="step-desc" style="text-align:center;">知ってもらう、から、ご提案する、までの道があります</p>
+      <p class="step-desc" style="text-align:center;">SNS → LINE等 → 特典・価値教育 → 体験会／個別相談 → 成約</p>
 
       <img class="door-inline-img" src="assets/img11.webp" alt="マーケティングファネル" loading="lazy">
+      <span class="eyebrow">愛の1本道</span>
+      <p class="step-desc" style="text-align:center;">見つけてもらう → 気になってもらう → 好きになってもらう → 信頼してもらう → 届ける</p>
       <p class="step-desc" style="text-align:center;">全員に売らなくていい</p>
 
       <img class="door-inline-img" src="assets/img12.webp" alt="個別相談・セールスって、どうやるの？" loading="lazy">
       <p class="step-desc" style="text-align:center;">ここからは、個別相談で使う「ご提案書」の出番です</p>
+      <p class="step-desc" style="text-align:center;">ご提案書＝未来のお客さまへのラブレターの最終形態</p>
 
       <img class="door-inline-img" src="assets/img13.webp" alt="魂商品・全体MAP" loading="lazy">
       <p class="step-desc" style="text-align:center;">準備はいい？　今どこにいるか、確認してみよう</p>
