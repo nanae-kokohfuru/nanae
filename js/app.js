@@ -342,6 +342,7 @@
   function updateHeader() {
     if (state.screen === "door") {
       appHeader.hidden = false;
+      appHeader.classList.add("app-header--brand");
       const doneDoors = state.doorIndex - 1;
       const pct = doneDoors * 10;
       progressFill.style.width = pct + "%";
@@ -351,11 +352,13 @@
       progressFill.parentElement.setAttribute("aria-valuenow", pct);
     } else if (state.screen === "complete") {
       appHeader.hidden = false;
+      appHeader.classList.remove("app-header--brand");
       progressFill.style.width = "100%";
       progressLabel.textContent = "10の扉 全部OPEN！";
       progressDoor.textContent = "";
     } else {
       appHeader.hidden = true;
+      appHeader.classList.remove("app-header--brand");
     }
   }
 
@@ -381,8 +384,7 @@
       app.innerHTML = renderSelf1(); bindSelf1();
     } else if (state.screen === "door") {
       app.className = "app-main app-main--wide";
-      const doorLayoutBrand = state.doorIndex === 1 ? " door1-brand" : "";
-      app.innerHTML = `<div class="door-layout${doorLayoutBrand}">
+      app.innerHTML = `<div class="door-layout door1-brand">
         <div class="door-layout__main">${renderDoor(state.doorIndex)}</div>
         <aside class="door-layout__preview">${renderProductPreview()}</aside>
       </div>`;
@@ -551,9 +553,9 @@
   const TANE_QUESTIONS = [
     { q: "今まで、時間を忘れるくらいハマったことは？", hint: "仕事でも、趣味でも、遊びでもOK\n子どもの頃のことでも大丈夫" },
     { q: "人から「それ得意だよね」「教えて」と言われることは？", hint: "自分では普通だと思っていることも書いてみよう" },
-    { q: "お金にならなくても、ついやっちゃうことは？", hint: "頼まれていないのにやっちゃう\n調べちゃう\n作っちゃう\n話しちゃう\nそんなことでもOK" },
+    { q: "お金にならなくても、ついやっちゃうことは？", hint: "頼まれていないのにやっちゃう　調べちゃう　作っちゃう　話しちゃう\nそんなことでもOK" },
     { q: "今まで学んだこと・経験したことの中で\n「これ好きだったな」「もっとやりたいな」と思うものは？", hint: "資格や仕事だけでなく\n人生経験・趣味・子育て・遊びなどもOK" },
-    { q: "もし\n「売れる？」\n「私にできる？」\nを一切考えなくていいなら\n何をやってみたい？", hint: "まだ商品になっていなくてOK\n妄想レベルでOK" },
+    { q: "もし「売れる？」「私にできる？」を一切考えなくていいなら\n何をやってみたい？", hint: "まだ商品になっていなくてOK\n妄想レベルでOK" },
   ];
 
   function renderTane() {
@@ -567,8 +569,9 @@
     <div class="card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
+      <p class="seko1-substep">1 / 3</p>
       <h2 class="step-title">まず「やりたい」のタネを集めよう</h2>
-      <p class="step-desc">ここでは<br>「売れるかな？」<br>「私にできるかな？」<br>はいったん横にポイッ🤣<br><br>正解も<br>需要も<br>肩書きも<br>一旦考えなくてOK<br><br>あなたの中にある<br>「ちょっとやってみたい」<br>のタネを集めてみよう</p>
+      <p class="step-desc">ここでは「売れるかな？」「私にできるかな？」はいったん横にポイッ🤣<br><br>正解も需要も肩書きも一旦考えなくてOK<br><br>あなたの中にある「ちょっとやってみたい」のタネを集めてみよう</p>
       ${rows}
       <p class="warn-msg" id="warnTane"></p>
       <div class="nav-row" style="margin-top:22px;">
@@ -607,6 +610,7 @@
     <div class="card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
+      <p class="seko1-substep">2 / 3</p>
       <h2 class="step-title">チョッピーが見つけた<br>あなたの「やりたいのタネ」💌</h2>
       <p class="step-desc">5つの回答から、特にくっきり書けていたものを<br>そのままの言葉で並べてみたよ<br><br>もしかするとあなたは<br>これらのどれかに<br>ワクワクする人なのかもしれません<br>（あくまで仮説だから、しっくりこなければ気にしないで）</p>
       <div class="choice-grid">
@@ -670,6 +674,7 @@
     <div class="card self1-card seko1-brand">
       ${doorMascot()}
       <span class="seko-badge">せるこ・1</span>
+      <p class="seko1-substep">3 / 3</p>
       <h2 class="step-title">まず　今の商品はどこにいる？</h2>
       <p class="step-desc">正解も優劣もありません<br>今いる場所がわかれば、ここからやることが見えてきます</p>
       <div class="choice-grid">
@@ -871,6 +876,7 @@
     ]);
     return doorShell({
       n: 2, badge: "せるこ・3", title: "行き先決定",
+      brandClass: "door1-brand",
       bodyHtml: `
         ${recap}
         <img class="door-inline-img" src="assets/img04.webp" alt="「行き先」が全て" loading="lazy">
@@ -892,17 +898,13 @@
           <label class="field__label">④ 周りの人から、何て言われたら最高？</label>
           <textarea id="d3_voice" placeholder="例）最近、楽しそうだね">${esc(state.d3_voice)}</textarea>
         </div>
-        <div class="field">
-          <label class="field__label">行き先を写真1枚にすると？</label>
-          <textarea id="d3_scene" placeholder="いつ・どこで・誰が・何をしていて・どんな言葉が聞こえる？を一文で">${esc(state.d3_scene)}</textarea>
-        </div>
         <div class="note-box">未来は、物語にするともっと届く<br>情報だけではなく、物語で伝える<br>次の扉で、あなた自身の物語を整理します</div>
       `,
       warnId: "warn3",
     });
   }
   function bindDoor2() {
-    ["d3_inner", "d3_action", "d3_reality", "d3_voice", "d3_scene"].forEach((id) => {
+    ["d3_inner", "d3_action", "d3_reality", "d3_voice"].forEach((id) => {
       const el = qs("#" + id);
       el.addEventListener("input", () => { state[id] = el.value; saveState(); });
     });
@@ -923,6 +925,7 @@
       : "";
     return doorShell({
       n: 3, badge: "せるこ・4", title: "私が届ける理由",
+      brandClass: "door1-brand",
       bodyHtml: `
         <p class="step-desc">なぜ？物語を整理</p>
         <p class="step-desc">なぜ、あなたがこの商品を届けるの？<br>資格や肩書きより先に、あなたが歩いてきた道を振り返ります<br><br>あなたの経験は、4つに分けるとひとつの物語になります</p>
@@ -1031,6 +1034,7 @@
 
     return doorShell({
       n: 4, badge: "せるこ・5", title: "何を使って届ける？",
+      brandClass: "door1-brand",
       bodyHtml: `
         <p class="step-desc">あなたができることは、全部捨てなくて大丈夫<br>必要なら全部使っていい<br><br>でも、お客様から見える場所に全部並べると「結局、何の人？」になります🤣<br><br>今回決めるのは、何を捨てるかではなく、何を前に出すか</p>
 
@@ -1244,6 +1248,7 @@ ${who}の
 
     return doorShell({
       n: 8, badge: "せるこ・9", title: "どうやって届ける？",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img07.webp" alt="実際にどうやるの？" loading="lazy">
         <p class="step-desc">お客様が実際にどんな形でこの商品を受けるのかを決めます</p>
@@ -1323,6 +1328,7 @@ ${who}の
   function renderDoor5() {
     return doorShell({
       n: 5, badge: "せるこ・6", title: "市場を見る・お財布の行き先",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img02.webp" alt="市場を見る・お財布の行き先" loading="lazy">
         <p class="step-desc">競合と比べて落ち込む時間ではありません<br>社会科見学のつもりで、気軽に見てみよう</p>
@@ -1396,6 +1402,7 @@ ${who}の
     ]);
     return doorShell({
       n: 6, badge: "せるこ・7", title: "行き先までの道のり",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img03.webp" alt="商品とは、行き先までの道のり" loading="lazy">
         ${recap}
@@ -1431,6 +1438,7 @@ ${who}の
   function renderDoor7() {
     return doorShell({
       n: 7, badge: "せるこ・8", title: "サポート内容（フェーズ設計）",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img06.webp" alt="サポート内容・フェーズ設計" loading="lazy">
         <p class="step-desc">行き先までの道のりに合わせて、必要なフェーズを自由に組み立てよう</p>
@@ -1540,6 +1548,7 @@ ${who}の
     const peopleNum = Number(state.dPrice_people) || 0;
     return doorShell({
       n: 9, badge: "せるこ・10", title: "価格を決める",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img08.webp" alt="価格って、どう決めるの？" loading="lazy">
         <p class="step-desc">今のあなたが「この内容なら、この価格で喜んで届けたい」と思える金額を見つけよう</p>
@@ -1640,6 +1649,7 @@ ${who}の
   function renderDoor10() {
     return doorShell({
       n: 10, badge: "せるこ・11", title: "我が子に、最初の名前を",
+      brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img01.webp" alt="魂商品は、わが子です" loading="lazy">
         <p class="step-desc">ここまで一生懸命考えてきた商品に、名前をつけてみよう</p>
