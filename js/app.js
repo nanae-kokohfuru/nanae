@@ -1486,7 +1486,7 @@ ${who}の
           </div>
           <button type="button" class="btn btn--ghost btn--sm" data-add-item="${pi}">＋ このフェーズに内容を追加</button>
         </div>
-      `).join("") || `<p class="hint">まだフェーズがありません。「＋ フェーズを追加」から始めよう</p>`;
+      `).join("") || `<p class="hint">まだフェーズがありません<br>「＋ フェーズを追加」から始めよう</p>`;
       bindPhaseListEvents();
     }
     function bindPhaseListEvents() {
