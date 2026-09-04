@@ -942,7 +942,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   position: relative;
   overflow-x: hidden;
 }
-/* 表紙の光がページ全体に続いているように見せる、ごく淡い放射光 */
+/* 表紙の光がページ全体に続いているように見せる、ごく淡い放射光（2ページ目と共有） */
 .brand-page::before{
   content: "";
   position: absolute;
@@ -953,9 +953,16 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   pointer-events: none;
   z-index: -1;
 }
+/* START画面限定：表紙実測色（淡いピンクベージュ）でページ背景を上書きし、
+   表紙〜GOAL間の色差を弱める。黄・茶・マスタードには寄せない */
+.brand-page--cover::before{
+  background:
+    radial-gradient(ellipse 55% 40% at 50% 0%, rgba(226,201,163,0.4), transparent 68%),
+    radial-gradient(ellipse 70% 55% at 50% 46%, rgba(203,178,169,0.35), transparent 72%);
+}
 
 /* 表紙（UI-REF-01完成画像）：ページ幅いっぱいに広げず、上品な最大幅で中央配置。
-   影を強く落とさず「一枚のビジュアルの一部」に見せる */
+   影・角丸で「カード」に見せず、下端はマスクでページ背景へ溶け込ませる */
 .hero-cover{
   display: flex;
   justify-content: center;
@@ -966,16 +973,29 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   width: 100%;
   max-width: 440px;
   display: block;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 6px 24px rgba(160,120,80,0.18);
 }
-/* 表紙の下端の色をそのまま受け継ぎ、GOALへ自然に溶け込ませる帯 */
-.hero-cover__glow{
-  max-width: 440px;
-  height: 120px;
-  margin: -60px auto 0;
-  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(224,201,178,0.85), rgba(224,201,178,0) 75%);
+/* START画面限定：影をなくし、下端のみをごく短い範囲でページ背景へフェード。
+   ダイヤモンドの反射は画像下97.7%付近まで届くため、フェード開始点はそれより
+   十分下（97%）に置き、透明になり切るのは画像最下部（100%）のみに限定する */
+.hero-cover--fade .hero-cover__img{
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 96%, rgba(0,0,0,0.85) 97.7%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 96%, rgba(0,0,0,0.85) 97.7%, transparent 100%);
+}
+@media (min-width: 640px){
+  .hero-cover--fade .hero-cover__img{ max-width: 500px; }
+}
+/* 表紙下端の実測トーンを画像の裏側に淡く敷き、フェードで透けた先の色を近づける */
+.hero-cover--fade::after{
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -60px;
+  width: 100%; max-width: 560px; height: 140px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 62% 100% at 50% 0%, rgba(203,178,169,0.6), rgba(203,178,169,0) 78%);
   pointer-events: none;
+  z-index: -1;
 }
 
 .brand-section{
@@ -1052,6 +1072,11 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   margin: 0 auto 56px;
   padding-top: 8px;
   position: relative;
+}
+/* START画面限定：表紙の余韻の中でGOALが続いて見えるよう、間隔を詰める */
+.brand-goal--tight{
+  margin-top: -26px;
+  padding-top: 0;
 }
 .brand-goal__eyebrow{
   font-size: 14px;

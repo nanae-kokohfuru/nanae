@@ -444,13 +444,12 @@
 
   function renderStart() {
     return `
-    <div class="brand-page">
-      <div class="hero-cover">
+    <div class="brand-page brand-page--cover">
+      <div class="hero-cover hero-cover--fade">
         <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
       </div>
-      <div class="hero-cover__glow" aria-hidden="true"></div>
 
-      <section class="brand-goal">
+      <section class="brand-goal brand-goal--tight">
         <p class="brand-goal__eyebrow">このキットのGOAL💌</p>
         <p class="brand-goal__statement">完璧な商品を<br>完成させることではありません</p>
         <div class="gold-line"></div>
