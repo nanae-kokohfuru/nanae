@@ -446,7 +446,11 @@
     return `
     <div class="brand-page">
       <div class="hero-cover">
-        <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
+        <div class="hero-cover__stage">
+          <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
+          <div class="hero-cover__fade-bg" aria-hidden="true"></div>
+        </div>
+        <div class="hero-cover__tail" aria-hidden="true"></div>
       </div>
 
       <section class="brand-goal">
@@ -456,7 +460,7 @@
       </section>
 
       <section class="brand-section brand-cta">
-        <button class="btn btn--gold-cta" id="startBtn" type="button">このキットの考え方へ →</button>
+        <button class="btn btn--gold-cta" id="startBtn" type="button">魂商品つくり、はじまりはじまり〜 →</button>
         ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
       </section>
 

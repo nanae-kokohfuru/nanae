@@ -954,21 +954,52 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   z-index: -1;
 }
 
-/* 表紙（UI-REF-01完成画像）＝第一部。画像そのものは無加工でそのまま表示し、
-   PC幅に見合った十分な存在感のサイズで中央配置する。影・枠は付けない */
+/* 表紙（UI-REF-01完成画像）＝第一部。画像は無加工・縦横比維持のまま、
+   START専用コンテナの横幅いっぱいに表示する（width/heightの個別指定はしない＝
+   width:100%＋height:autoでアスペクト比を保つ）。影・枠・カード化はしない */
 .hero-cover{
-  display: flex;
-  justify-content: center;
-  margin: 0 0 52px;
+  position: relative;
+}
+.hero-cover__stage{
+  position: relative;
 }
 .hero-cover__img{
-  width: 100%;
-  max-width: 560px;
   display: block;
-  border-radius: var(--radius-lg);
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 2;
+  /* ダイヤモンド本体は画像下端から約10〜19%の位置（実測: 水面に浮くダイヤの
+     底は約90%地点）にあるため、フェードは92%より下（＝ダイヤより確実に下の
+     水面のみ）に限定する。ダイヤ本体・文字は一切フェードしない */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 92%, transparent 100%);
 }
-@media (min-width: 1024px){
-  .hero-cover__img{ max-width: 620px; }
+/* 画像自体を透明にした分だけ、実測色の単色を裏に敷いて色の継ぎ目をなくす。
+   画像のピクセルには一切手を加えず、フェードで透けた先の色を合わせるだけ */
+.hero-cover__fade-bg{
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 12%;
+  background: #CBAD9F;
+  z-index: 1;
+}
+/* 画像下端の実測色（#CBAD9F、cover.webp最終行から採取）から始まり、
+   ページ背景へ透明フェードするだけの帯。画像自体には一切手を加えない。
+   「画像の終わり」を新しい要素の色で覆い隠すのではなく、実測色で
+   継ぎ目なく引き継いでからページ背景へ抜けるための帯 */
+.hero-cover__tail{
+  width: 100%;
+  height: 15vw;
+  min-height: 90px;
+  max-height: 180px;
+  margin-top: -1px;
+  background: linear-gradient(to bottom,
+    #CBAD9F 0%,
+    rgba(203,173,159,0.82) 28%,
+    rgba(203,173,159,0.36) 60%,
+    rgba(203,173,159,0) 100%);
+  pointer-events: none;
 }
 
 .brand-section{
