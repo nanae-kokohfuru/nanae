@@ -1349,6 +1349,16 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   width: 100%;
 }
 
+/* ゴールドCTAの大型版（ご提案書スタジオ入口専用。色は.btn--gold-ctaと完全に同一、サイズのみ拡大） */
+.btn--gold-cta-lg{
+  min-height: 78px;
+  font-size: 21px;
+  padding: 24px 28px;
+}
+@media (max-width: 480px){
+  .btn--gold-cta-lg{ min-height: 66px; font-size: 19px; padding: 18px 20px; }
+}
+
 .brand-nav{ text-align: center; margin-top: 40px; }
 .brand-nav__sep{ color: var(--ink-faint); font-size: 13px; margin: 0 6px; }
 .brand-nav__link{
@@ -1442,9 +1452,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .gift-group{ margin-bottom: 26px; }
 .gift-group__title{
   font-family: var(--font-serif); font-weight: 800; font-size: 17px;
-  color: var(--gold-deep); margin-bottom: 8px;
+  color: var(--gold-deep); margin-bottom: 8px; text-align:center;
 }
-.gift-group__sub{ font-size: 14.5px; font-weight: 800; color: var(--ink); margin: 16px 0 8px; }
+.gift-group__sub{ font-size: 14.5px; font-weight: 800; color: var(--ink); margin: 16px 0 8px; text-align:center; }
 .gift-cards{ display:grid; grid-template-columns: 1fr; gap: 10px; }
 @media (min-width: 640px){ .gift-cards{ grid-template-columns: 1fr 1fr; } }
 .gift-card{
@@ -1461,6 +1471,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 }
 .gift-card:hover{ border-color: var(--gold); box-shadow: var(--shadow-md); }
 .gift-card::before{ content: "▶ "; color: var(--gold-deep); }
+.gift-card--drive{ display:flex; flex-direction:column; gap:4px; }
+.gift-card--drive .gift-card__title{ font-weight:700; }
+.gift-card--drive .gift-card__dl{ font-size:12.5px; font-weight:700; color: var(--gold-deep); }
 
 .gift-love, .gift-proof, .gift-rights{
   margin-top: 24px;
@@ -1488,7 +1501,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   background: var(--card-soft);
   border: 1px dashed var(--line);
 }
-.canva-guide__title{ font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 10px; }
+.canva-guide__title{ font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 10px; text-align:center; }
 .canva-guide__list{ margin: 0 0 8px; padding-left: 20px; font-size: 14.5px; color: var(--ink-soft); line-height: 2; }
 
 .persona-title{
@@ -1799,6 +1812,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 
 .deck-intro{ margin-top: 22px; }
 .deck-intro > .eyebrow{ display:flex; width:fit-content; margin:0 auto 14px; }
+.deck-intro .step-title{ text-align:center; }
 .deck-intro__count{ font-size: 15px; }
 
 .deck{

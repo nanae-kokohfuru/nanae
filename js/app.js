@@ -2169,7 +2169,7 @@ ${who}の
         <p class="hint">Canvaを使わなくても、このままPDFで使えます</p>
       </div>
 
-      <button class="btn btn--primary" id="openStudioBtn" type="button">ご提案書スタジオを開く</button>
+      <button class="btn btn--gold-cta btn--gold-cta-lg" id="openStudioBtn" type="button">ご提案書スタジオで実際に作成する →</button>
     </div>`;
   }
 
@@ -2522,7 +2522,7 @@ ${who}の
       </div>
 
       <div class="nav-row" style="margin-top:26px;">
-        <button class="btn btn--primary" id="celebrateNextBtn" type="button">商品設計シートを見る</button>
+        <button class="btn btn--gold-cta" id="celebrateNextBtn" type="button">商品設計シートを見る</button>
       </div>
     </div>`;
   }
@@ -2678,6 +2678,12 @@ ${who}の
      8. GIFT / LOVE / PROOF / RIGHTS｜さらに特大の贈り物
   --------------------------------------------------------- */
   // GIFT-02｜参考ご提案書5本。URLは一字も推測・変更・短縮しない
+  // GIFT-02｜Google Driveの大容量PDFはブラウザ内プレビューができないため、
+  // 同じfile IDのまま「ダウンロード」導線のURLに変換する（file IDは一切変更しない）
+  function driveDownloadUrl(viewUrl) {
+    const m = viewUrl.match(/\/file\/d\/([^/]+)\//);
+    return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : viewUrl;
+  }
   const GIFT_PROPOSALS = [
     { title: "ここらぼ 1回目・ご提案書", url: "https://drive.google.com/file/d/1YPICHwYGa2yNy9qj-i5aza2Hvcp-6BtH/view?usp=sharing" },
     { title: "ここらぼ 2回目・ご提案書", url: "https://drive.google.com/file/d/15-9h05v_12Wq7eOvEPTwz5xqseps_mxo/view?usp=sharing" },
@@ -2722,9 +2728,9 @@ ${who}の
 
       <div class="gift-group">
         <p class="gift-group__title">🎁 参考ご提案書</p>
-        <p class="hint" style="margin-top:0;">丸パクリ用ではありません<br>何をどの順番で伝えているか、どこで未来を見せているか、どこでYESを取っているか、どう商品へつないでいるか<br>を学ぶための参考教材です</p>
+        <p class="hint" style="margin-top:0;">参考ご提案書はPDFでダウンロードしてご覧ください<br>丸パクリ用ではありません<br>何をどの順番で伝えているか、どこで未来を見せているか、どこでYESを取っているか、どう商品へつないでいるか<br>を学ぶための参考教材です</p>
         <div class="gift-cards">
-          ${GIFT_PROPOSALS.map((g) => `<a class="gift-card" href="${esc(g.url)}" target="_blank" rel="noopener">${esc(g.title)}</a>`).join("")}
+          ${GIFT_PROPOSALS.map((g) => `<a class="gift-card gift-card--drive" href="${esc(driveDownloadUrl(g.url))}" target="_blank" rel="noopener"><span class="gift-card__title">${esc(g.title)}</span><span class="gift-card__dl">参考ご提案書PDFをダウンロード</span></a>`).join("")}
         </div>
       </div>
 
