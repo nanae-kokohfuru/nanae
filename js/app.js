@@ -448,15 +448,17 @@
       <div class="hero-cover">
         <img class="hero-cover__img" src="assets/cover.webp" alt="ここらぼ直伝！魂商品作成ミラクルキット｜眠っていた「想い」を届くカタチへ">
       </div>
+      <div class="hero-cover__glow" aria-hidden="true"></div>
 
-      <section class="brand-section brand-section--top">
-        <p class="brand-goal__title">このキットのGOAL💌</p>
+      <section class="brand-goal">
+        <p class="brand-goal__eyebrow">このキットのGOAL💌</p>
+        <p class="brand-goal__statement">完璧な商品を<br>完成させることではありません</p>
         <div class="gold-line"></div>
-        <p class="brand-goal__body">GOALは、完璧な商品を完成させることではありません<br><br>あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
+        <p class="brand-goal__body">あなたの中にある「やってみたい」を拾って<br>それを誰かの喜びにつなげて<br>まず人に見せられる「はじめの一品」の叩き台をつくること<br><br>そこから、届ける▶︎反応を見る▶︎磨く<br>あなたの商品を、お客様と一緒に育てていきます</p>
       </section>
 
       <section class="brand-section brand-cta">
-        <button class="btn btn--gold-cta" id="startBtn" type="button">早速、使ってみる！</button>
+        <button class="btn btn--gold-cta" id="startBtn" type="button">このキットの考え方へ →</button>
         ${hasAnyProgress() ? `<div class="restart-row"><button id="continueBtn" type="button">前回の続きから再開する →</button></div>` : ""}
       </section>
 
@@ -512,7 +514,7 @@
         <button class="btn btn--gold-cta" id="kitIntroNextBtn" type="button">早速、使ってみる！</button>
       </section>
 
-      <div class="brand-nav"><button type="button" id="kitIntroHomeBtn" class="brand-nav__link">最初に戻る</button></div>
+      <div class="brand-nav"><button type="button" id="kitIntroHomeBtn" class="brand-nav__link">← 表紙に戻る</button></div>
     </div>`;
   }
   function bindKitIntro() {
@@ -717,7 +719,7 @@
         <button class="btn btn--primary" id="nextBtn" type="button">${n === TOTAL_DOORS ? "扉を完成させる" : "次へ →"}</button>
       </div>
       <div class="restart-row"><button id="restartBtn" type="button">最初からやり直す</button></div>
-      ${brandClass ? `<div class="brand-nav"><button type="button" id="brandHomeBtn" class="brand-nav__link">最初に戻る</button></div>` : ""}
+      ${brandClass ? `<div class="brand-nav"><button type="button" id="brandBackBtn" class="brand-nav__link">← ひとつ前に戻る</button><span class="brand-nav__sep">・</span><button type="button" id="brandHomeBtn" class="brand-nav__link">最初に戻る</button></div>` : ""}
     </div>`;
   }
 
@@ -729,13 +731,15 @@
     return renderers[n]();
   }
   function bindDoor(n) {
-    qs("#backBtn").addEventListener("click", () => {
+    const goBackOne = () => {
       if (n === 1) { state.screen = "self1"; }
       else { state.doorIndex = n - 1; }
       saveState();
       render();
-    });
+    };
+    qs("#backBtn").addEventListener("click", goBackOne);
     qs("#restartBtn").addEventListener("click", openResetModal);
+    qs("#brandBackBtn")?.addEventListener("click", goBackOne);
     qs("#brandHomeBtn")?.addEventListener("click", goToStartKeepData);
     const binders = {
       1: bindDoor1, 2: bindDoor2, 3: bindDoor3, 4: bindDoor4, 5: bindDoor5,

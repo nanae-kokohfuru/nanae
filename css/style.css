@@ -23,6 +23,12 @@
   --gold-pale: #EAD3A0;
   --gold-shine: #F6D98A;
 
+  /* ---- シャンパンブロンズ（UI-REF-01のChotNANAPTロゴ／ゴールド文字から実測。
+     表紙・2ページ目・扉1のCTAとブランド装飾に限定使用。マスタード／キャメル系とは別系統） ---- */
+  --champagne-light: #F1E3CE;
+  --champagne: #E2C9A3;
+  --champagne-deep: #CDA876;
+
   /* ---- 深いローズ／ボルドー（せるこ番号・アクセント） ---- */
   --rose: #C4506A;
   --rose-deep: #9E2F4C;
@@ -588,8 +594,10 @@ img{ max-width: 100%; display:block; }
   line-height: 2;
 }
 .door1-brand .nav-row .btn--primary{
-  background: linear-gradient(135deg, var(--gold-deep), var(--mustard-deep) 55%, var(--camel));
-  box-shadow: 0 8px 22px rgba(107,69,25,0.32);
+  background: linear-gradient(135deg, var(--champagne-light), var(--champagne) 55%, var(--champagne-deep));
+  color: var(--ink);
+  box-shadow: 0 3px 10px rgba(180,150,110,0.22);
+  border: 1px solid rgba(205,168,118,0.5);
 }
 
 .step-desc{
@@ -929,20 +937,45 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 /* ================= ブランドページ（表紙／2ページ目）＝白カードを使わず、
    ページ背景の上に直接コンテンツを置くレイアウト。.card は使用しない ================= */
 
-.brand-page{ text-align: center; }
+.brand-page{
+  text-align: center;
+  position: relative;
+  overflow-x: hidden;
+}
+/* 表紙の光がページ全体に続いているように見せる、ごく淡い放射光 */
+.brand-page::before{
+  content: "";
+  position: absolute;
+  top: -40px; left: 50%;
+  width: 1400px; max-width: 260vw; height: 1000px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 45% at 50% 0%, rgba(226,201,163,0.45), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
 
-/* 表紙（UI-REF-01完成画像）：ページ幅いっぱいに広げず、上品な最大幅で中央配置 */
+/* 表紙（UI-REF-01完成画像）：ページ幅いっぱいに広げず、上品な最大幅で中央配置。
+   影を強く落とさず「一枚のビジュアルの一部」に見せる */
 .hero-cover{
   display: flex;
   justify-content: center;
-  margin: 0 0 56px;
+  margin: 0;
+  position: relative;
 }
 .hero-cover__img{
   width: 100%;
   max-width: 440px;
   display: block;
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 6px 24px rgba(160,120,80,0.18);
+}
+/* 表紙の下端の色をそのまま受け継ぎ、GOALへ自然に溶け込ませる帯 */
+.hero-cover__glow{
+  max-width: 440px;
+  height: 120px;
+  margin: -60px auto 0;
+  background: radial-gradient(ellipse 70% 100% at 50% 0%, rgba(224,201,178,0.85), rgba(224,201,178,0) 75%);
+  pointer-events: none;
 }
 
 .brand-section{
@@ -1012,25 +1045,43 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 .kit-intro__row-body{ font-size: 18px; color: var(--ink); font-weight: 600; }
 .kit-intro__hint{ text-align: center; margin-top: 16px; }
 
-.brand-goal__title{
-  font-family: var(--font-serif); font-weight: 800; font-size: 26px;
-  color: var(--gold-deep); margin-bottom: 18px;
+/* GOALは表紙と同じ「1枚のビジュアル」の続きとして、小さなキャプション→大きな一文→
+   支える本文、という表紙自身の組版リズムを踏襲する。枠・カード・白い箱は使わない */
+.brand-goal{
+  max-width: 640px;
+  margin: 0 auto 56px;
+  padding-top: 8px;
+  position: relative;
 }
-.brand-goal__title + .gold-line{ margin-bottom: 22px; }
-.brand-goal__body{ font-size: 19px; color: var(--ink); line-height: 2.15; white-space: pre-line; }
+.brand-goal__eyebrow{
+  font-size: 14px;
+  letter-spacing: 0.16em;
+  color: var(--champagne-deep);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.brand-goal__statement{
+  font-family: var(--font-serif); font-weight: 800; font-size: 30px;
+  color: var(--ink); line-height: 1.55; margin-bottom: 22px;
+}
+.brand-goal .gold-line{ margin-bottom: 26px; }
+.brand-goal__body{ font-size: 18px; color: var(--ink-soft); line-height: 2.15; white-space: pre-line; }
 
 .brand-cta{ text-align: center; }
 .brand-cta .restart-row{ margin-top: 16px; }
 
-/* ブロンズシャンパンゴールドのCTA（表紙・2ページ目・扉1限定。既存 .btn--primary は変更しない） */
+/* シャンパンブロンズのCTA（表紙・2ページ目・扉1限定。既存 .btn--primary は変更しない）。
+   UI-REF-01実測色ベース。淡いグラデーション・濃い影は使わない・文字は深いブラウン */
 .btn--gold-cta{
-  background: linear-gradient(135deg, var(--gold-deep), var(--mustard-deep) 55%, var(--camel));
-  color: #fff;
-  box-shadow: 0 8px 22px rgba(107,69,25,0.32);
+  background: linear-gradient(135deg, var(--champagne-light), var(--champagne) 55%, var(--champagne-deep));
+  color: var(--ink);
+  box-shadow: 0 3px 10px rgba(180,150,110,0.22);
+  border: 1px solid rgba(205,168,118,0.5);
   width: 100%;
 }
 
 .brand-nav{ text-align: center; margin-top: 40px; }
+.brand-nav__sep{ color: var(--ink-faint); font-size: 13px; margin: 0 6px; }
 .brand-nav__link{
   background: none; border: none; cursor: pointer;
   font-size: 13px; color: var(--ink-faint); text-decoration: underline;
