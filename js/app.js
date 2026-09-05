@@ -240,6 +240,15 @@
     }[c]));
   }
   function nl2br(str) { return esc(str).replace(/\n/g, "<br>"); }
+  // MOBILE-POLISH-02｜nl2brと同じ見た目だが、各行を.mobile-lineでラップする。
+  // モバイル幅ではtext-wrap:balanceが<br>直後の行まで均等化できないため、
+  // 動的生成テキスト（チョッピー総評など）でも孤立行を防げるようにする。
+  // PC版ではmobile-lineはdisplay:inlineのままなので見た目は完全に同一
+  function nl2brBalanced(str) {
+    return str.split("\n\n").map((para) =>
+      para.split("\n").map((line) => `<span class="mobile-line">${esc(line)}</span>`).join('<br class="mobile-line-br">')
+    ).join('<br class="mobile-line-br"><br>');
+  }
 
   let toastTimer = null;
   function showToast(msg, duration) {
@@ -806,7 +815,7 @@
       n: 1, badge: "せるこ・2", title: "推したい！助けたい！ひとりを見つける",
       brandClass: "door1-brand",
       bodyHtml: `
-        <p class="step-desc">商品は、みんなのためにつくろうとするとぼやけます<br>まずは、たったひとり<br><br>細かいペルソナ設定はまだいりません<br>今は、その人の顔や毎日が少し浮かべばOK</p>
+        <p class="step-desc"><span class="mobile-line">商品は、みんなのためにつくろうとするとぼやけます</span><br class="mobile-line-br"><span class="mobile-line">まずは、たったひとり</span><br class="mobile-line-br"><br><span class="mobile-line">細かいペルソナ設定はまだいりません</span><br class="mobile-line-br"><span class="mobile-line">今は、その人の顔や毎日が少し浮かべばOK</span></p>
 
         <p class="step-question">まず　誰を思い浮かべる？</p>
         <div class="choice-grid">${whoCards}</div>
@@ -921,7 +930,7 @@
   --------------------------------------------------------- */
   function renderDoor3() {
     const passionHint = state.d10_passion
-      ? `<p class="hint" style="margin-top:-4px;">以前ご記入いただいた「それでも届けたい思い」：${esc(state.d10_passion)}<br>よければ参考にしてみてください（この内容をそのまま書き直す必要はありません）</p>`
+      ? `<p class="hint" style="margin-top:-4px;"><span class="mobile-line">以前ご記入いただいた「それでも届けたい思い」：${esc(state.d10_passion)}</span><br class="mobile-line-br"><span class="mobile-line">よければ参考にしてみてください（この内容をそのまま書き直す必要はありません）</span></p>`
       : "";
     return doorShell({
       n: 3, badge: "せるこ・4", title: "私が届ける理由",
@@ -1331,7 +1340,7 @@ ${who}の
       brandClass: "door1-brand",
       bodyHtml: `
         <img class="door-inline-img" src="assets/img02.webp" alt="市場を見る・お財布の行き先" loading="lazy">
-        <p class="step-desc">競合と比べて落ち込む時間ではありません<br>社会科見学のつもりで、気軽に見てみよう</p>
+        <p class="step-desc"><span class="mobile-line">競合と比べて落ち込む時間ではありません</span><br class="mobile-line-br"><span class="mobile-line">社会科見学のつもりで、気軽に見てみよう</span></p>
 
         <div class="field">
           <label class="field__label">あなたが届けたい人は、今どんなことにお金を使っていそう？</label>
@@ -2198,7 +2207,7 @@ ${who}の
     const already = (state.deck.optionalPages || []).map((p) => p.label);
     const suggestions = (OPTIONAL_PAGE_SUGGESTIONS[choice] || []).filter((s) => !already.includes(s));
     if (choice === "new") {
-      return `<div class="studio-suggest"><p class="studio-suggest__title">${esc(SELF1_LABEL_SHORT[choice])}のあなたへ</p><p class="hint" style="margin:0;">まずは基本版のまま、最初のひとりへ届けることを優先してみよう<br>必要になったら、いつでもオプションページを追加できます</p></div>`;
+      return `<div class="studio-suggest"><p class="studio-suggest__title">${esc(SELF1_LABEL_SHORT[choice])}のあなたへ</p><p class="hint" style="margin:0;"><span class="mobile-line">まずは基本版のまま、最初のひとりへ届けることを優先してみよう</span><br class="mobile-line-br"><span class="mobile-line">必要になったら、いつでもオプションページを追加できます</span></p></div>`;
     }
     if (!suggestions.length) return "";
     return `
@@ -2309,7 +2318,7 @@ ${who}の
       <div style="padding:18px 22px 26px;">
         <div class="canva-guide" style="margin-top:0;">
           <p class="canva-guide__title">ここで、ご提案書の「中身」が完成です💌</p>
-          <p class="hint" style="margin-top:0;">PDFで保存したら、最後はCanvaへ<br>写真・色・フォント・世界観をのせて<br>あなたらしい「私のご提案書」に仕上げてね</p>
+          <p class="hint" style="margin-top:0;"><span class="mobile-line">PDFで保存したら、最後はCanvaへ</span><br class="mobile-line-br"><span class="mobile-line">写真・色・フォント・世界観をのせて</span><br class="mobile-line-br"><span class="mobile-line">あなたらしい「私のご提案書」に仕上げてね</span></p>
           <p class="hint" style="margin-top:8px;">① PDFで保存 → ② Canvaにアップロード → ③ 自分らしく整える → 完成！</p>
           <p class="hint" style="margin-top:8px;">※Canvaを使わず、このままPDFで使用してもOK</p>
         </div>
@@ -2654,9 +2663,9 @@ ${who}の
       ${analysis.map((a) => `
         <div class="chotty-item">
           <p class="chotty-item__label">${esc(a.label)}</p>
-          <p class="chotty-item__body">${nl2br(a.body)}</p>
+          <p class="chotty-item__body">${nl2brBalanced(a.body)}</p>
         </div>`).join("")}
-      <p class="hint">※ 市場調査は行っていません<br>今回の回答から見える仮説として読んでね</p>
+      <p class="hint"><span class="mobile-line">※ 市場調査は行っていません</span><br class="mobile-line-br"><span class="mobile-line">今回の回答から見える仮説として読んでね</span></p>
     </div>
 
     ${renderLastDoorCard()}
@@ -2730,7 +2739,7 @@ ${who}の
 
       <div class="gift-group">
         <p class="gift-group__title">🎬 必見・ここすた</p>
-        <p class="hint" style="margin-top:0;">全部見なければいけない宿題ではありません<br>今のあなたに必要なものから、選んで見てね</p>
+        <p class="hint" style="margin-top:0;"><span class="mobile-line">全部見なければいけない宿題ではありません</span><br class="mobile-line-br"><span class="mobile-line">今のあなたに必要なものから、選んで見てね</span></p>
         ${GIFT_KOKOSUTA_GROUPS.map((grp) => `
           <p class="gift-group__sub">${esc(grp.name)}</p>
           <div class="gift-cards">
@@ -2740,23 +2749,23 @@ ${who}の
 
       <div class="gift-love">
         <p class="gift-love__title">私は、みんなと約束したから</p>
-        <p class="gift-love__body">ここらぼで一緒に過ごすこの期間<br>「みんなで次元上昇しよう」と約束した<br><br>だからこの期間は<br>私が持っている経験も、考え方も、失敗も、うまくいったことも<br>出し惜しみしないと決めています<br><br>「ここから先は有料だから」と止めるのではなく<br>今ここにいるみんなが、一歩でも現実を動かせるように<br>私にできることは、できるだけ全部渡したい<br><br>それが、私なりの約束の守り方です</p>
-        <p class="gift-love__body">今回渡す、参考ご提案書・ここすた・セールスや商品設計の内容には<br>通常は有料で提供してきた内容、有料講座の中で扱ってきた内容も含まれています<br>「こんな高いものを無料であげている」と言いたいわけではなく<br>約束したから、今できることを渡したい<br>そんな気持ちで届けています</p>
+        <p class="gift-love__body"><span class="mobile-line">ここらぼで一緒に過ごすこの期間</span><br class="mobile-line-br"><span class="mobile-line">「みんなで次元上昇しよう」と約束した</span><br class="mobile-line-br"><br><span class="mobile-line">だからこの期間は</span><br class="mobile-line-br"><span class="mobile-line">私が持っている経験も、考え方も、失敗も、うまくいったことも</span><br class="mobile-line-br"><span class="mobile-line">出し惜しみしないと決めています</span><br class="mobile-line-br"><br><span class="mobile-line">「ここから先は有料だから」と止めるのではなく</span><br class="mobile-line-br"><span class="mobile-line">今ここにいるみんなが、一歩でも現実を動かせるように</span><br class="mobile-line-br"><span class="mobile-line">私にできることは、できるだけ全部渡したい</span><br class="mobile-line-br"><br><span class="mobile-line">それが、私なりの約束の守り方です</span></p>
+        <p class="gift-love__body"><span class="mobile-line">今回渡す、参考ご提案書・ここすた・セールスや商品設計の内容には</span><br class="mobile-line-br"><span class="mobile-line">通常は有料で提供してきた内容、有料講座の中で扱ってきた内容も含まれています</span><br class="mobile-line-br"><span class="mobile-line">「こんな高いものを無料であげている」と言いたいわけではなく</span><br class="mobile-line-br"><span class="mobile-line">約束したから、今できることを渡したい</span><br class="mobile-line-br"><span class="mobile-line">そんな気持ちで届けています</span></p>
       </div>
 
       <div class="gift-proof">
         <p class="gift-proof__title">このキットの根拠</p>
-        <p class="gift-proof__body">このキットは「AIなら簡単に商品が作れる」「AIなら一瞬」という価値ではありません<br>一般論をAIでまとめた教材でもありません<br><br>実際の販売、実際のお客様、実際の個別相談、実際のご提案書、実際の受講生の反応から磨いてきた<br>ここらぼ独自の実践知を、質問と順番に落としたものです</p>
-        <p class="gift-proof__body">これまで約6年間<br>30万〜80万円の高単価サービスで600名以上、10万円以下の低単価サービスで800名以上にご成約いただいてきました<br>1対1〜10名の少人数セールスでご成約率約8割、1対50名以上の大型セミナーセールスでご成約率約6割<br><br>これは、たまたまではありません<br>お客様がなぜ申し込んだのか、何が決め手だったのか、どこで欲しいと思ったのかを振り返り続け、受講生の成果も見ながら「やっぱりここだな」というポイントを何度も検証してきました<br>だからこそ、再現性の確信があります<br><br>「ななえさんだからできた」ではなく<br>大切なポイントを押さえれば他の人も使えるように、経験を問い・順番・型へ落としました</p>
-        <p class="gift-proof__body">ご提案書も、AIで一瞬で作ったものではありません<br>この6年間で、ご提案書だけでも20回以上、実際に作り直してきました<br>AIがない時代から、考える→作る→お客様へ届ける→反応を見る→また作り直す、を繰り返してきました<br><br>その経験を、みんなが少しでも最短ルートで夢を叶えるために渡しています<br>「ラクして稼ぐ」ではなく、試行錯誤を減らすための地図として使ってください</p>
+        <p class="gift-proof__body"><span class="mobile-line">このキットは「AIなら簡単に商品が作れる」「AIなら一瞬」という価値ではありません</span><br class="mobile-line-br"><span class="mobile-line">一般論をAIでまとめた教材でもありません</span><br class="mobile-line-br"><br><span class="mobile-line">実際の販売、実際のお客様、実際の個別相談、実際のご提案書、実際の受講生の反応から磨いてきた</span><br class="mobile-line-br"><span class="mobile-line">ここらぼ独自の実践知を、質問と順番に落としたものです</span></p>
+        <p class="gift-proof__body"><span class="mobile-line">これまで約6年間</span><br class="mobile-line-br"><span class="mobile-line">30万〜80万円の高単価サービスで600名以上、10万円以下の低単価サービスで800名以上にご成約いただいてきました</span><br class="mobile-line-br"><span class="mobile-line">1対1〜10名の少人数セールスでご成約率約8割、1対50名以上の大型セミナーセールスでご成約率約6割</span><br class="mobile-line-br"><br><span class="mobile-line">これは、たまたまではありません</span><br class="mobile-line-br"><span class="mobile-line">お客様がなぜ申し込んだのか、何が決め手だったのか、どこで欲しいと思ったのかを振り返り続け、受講生の成果も見ながら「やっぱりここだな」というポイントを何度も検証してきました</span><br class="mobile-line-br"><span class="mobile-line">だからこそ、再現性の確信があります</span><br class="mobile-line-br"><br><span class="mobile-line">「ななえさんだからできた」ではなく</span><br class="mobile-line-br"><span class="mobile-line">大切なポイントを押さえれば他の人も使えるように、経験を問い・順番・型へ落としました</span></p>
+        <p class="gift-proof__body"><span class="mobile-line">ご提案書も、AIで一瞬で作ったものではありません</span><br class="mobile-line-br"><span class="mobile-line">この6年間で、ご提案書だけでも20回以上、実際に作り直してきました</span><br class="mobile-line-br"><span class="mobile-line">AIがない時代から、考える→作る→お客様へ届ける→反応を見る→また作り直す、を繰り返してきました</span><br class="mobile-line-br"><br><span class="mobile-line">その経験を、みんなが少しでも最短ルートで夢を叶えるために渡しています</span><br class="mobile-line-br"><span class="mobile-line">「ラクして稼ぐ」ではなく、試行錯誤を減らすための地図として使ってください</span></p>
       </div>
 
       <p class="gift-shout">でも<br>もらって止めんなよ〜🤣</p>
-      <p class="gift-love__body" style="text-align:center;">学んで終わり、保存して終わり、スクショして満足ではなく<br>使って、届けて、失敗して、また磨いて<br>ここから、現実を動かしてね<br><br>受け取った愛は、次の誰かに届けて完成です💌</p>
+      <p class="gift-love__body" style="text-align:center;"><span class="mobile-line">学んで終わり、保存して終わり、スクショして満足ではなく</span><br class="mobile-line-br"><span class="mobile-line">使って、届けて、失敗して、また磨いて</span><br class="mobile-line-br"><span class="mobile-line">ここから、現実を動かしてね</span><br class="mobile-line-br"><br><span class="mobile-line">受け取った愛は、次の誰かに届けて完成です💌</span></p>
 
       <div class="gift-rights">
         <p class="gift-rights__title">大切なお願い</p>
-        <p class="gift-rights__body">本キット・参考ご提案書・ここすた動画・その他付属教材の著作権は、株式会社ここふる・ここらぼに帰属します<br>ここらぼメンバーの学びのための参考教材として提供しています<br><br>転載・複製・転写・再配布・販売・第三者への共有は禁止です<br><br>参考にしながら、自分自身の商品・ご提案書を作るために使用してください<br>参考資料自体を、自分の教材として配布することはできません</p>
+        <p class="gift-rights__body"><span class="mobile-line">本キット・参考ご提案書・ここすた動画・その他付属教材の著作権は、株式会社ここふる・ここらぼに帰属します</span><br class="mobile-line-br"><span class="mobile-line">ここらぼメンバーの学びのための参考教材として提供しています</span><br class="mobile-line-br"><br><span class="mobile-line">転載・複製・転写・再配布・販売・第三者への共有は禁止です</span><br class="mobile-line-br"><br><span class="mobile-line">参考にしながら、自分自身の商品・ご提案書を作るために使用してください</span><br class="mobile-line-br"><span class="mobile-line">参考資料自体を、自分の教材として配布することはできません</span></p>
       </div>
     </div>`;
   }
@@ -2799,7 +2808,7 @@ ${who}の
 
       <div class="market-test">
         <p class="market-test__title">3人ミニ市場テスト（任意）</p>
-        <p class="hint" style="margin-top:0;margin-bottom:12px;">これをやらないと終われない、という宿題ではありません<br>気が向いたら、軽い実験として使ってみてね</p>
+        <p class="hint" style="margin-top:0;margin-bottom:12px;"><span class="mobile-line">これをやらないと終われない、という宿題ではありません</span><br class="mobile-line-br"><span class="mobile-line">気が向いたら、軽い実験として使ってみてね</span></p>
         ${[0, 1, 2].map((i) => `
           <div class="market-test__row">
             <label class="checklist-item">

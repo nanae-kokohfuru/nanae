@@ -2279,7 +2279,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   .result-banner__title, .result-banner__body, .result-banner__final, .result-banner__note,
   .mission-box__title, .market-test__title, .gift-section__eyebrow, .gift-group__title,
   .gift-group__sub, .gift-love__title, .gift-proof__title, .gift-rights__title,
-  .chotty-item__label, .chotty-card__intro .step-desc,
+  .chotty-item__label, .chotty-card__intro .step-desc, .chotty-item__body,
   .sheet__title, .sheet__name, .sheet__title-note, .sheet__eyebrow,
   .canva-guide__title, .studio-suggest__title,
   .last-door-card > .eyebrow, .last-door-card > .step-desc,
@@ -2288,7 +2288,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   .kit-intro__step-body, .kit-intro__row-body, .warn-msg,
   .studio__topbar-title, .studio-thumb__label,
   .btn--gold-cta, .btn--gold-cta-lg, .btn--primary, .btn--ghost,
-  .price-preset-btn, .studio-mode-switch__btn, .template-switch__btn{
+  .price-preset-btn, .studio-mode-switch__btn, .template-switch__btn,
+  .step-desc, .field__label, .hint,
+  .gift-love__body, .gift-proof__body, .gift-rights__body{
     text-wrap: balance;
   }
 
