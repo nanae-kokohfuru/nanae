@@ -2268,6 +2268,41 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   .hero__title{ font-size: 34px; }
 }
 
+/* MOBILE-POLISH-01｜320〜430px向け：日本語見出し・CTA・短いコピーの不自然な折り返し
+   （1〜2文字だけ次行に落ちる／助詞や「→」だけ孤立する）だけを是正する。
+   HTML・PC版（480px超）には一切影響しない。text-wrap:balance は既に1行に収まる
+   テキストには何の効果もないため、対象を広めに指定しても安全 */
+@media (max-width: 480px){
+  .step-title, .step-question, .brand-goal__body, .brand-intro, .brand-title2,
+  .celebrate__bang, .celebrate__pct, .celebrate__body, .celebrate__next,
+  .celebrate__ritual-label, .celebrate__ritual-quote, .celebrate__ritual-sub,
+  .result-banner__title, .result-banner__body, .result-banner__final, .result-banner__note,
+  .mission-box__title, .market-test__title, .gift-section__eyebrow, .gift-group__title,
+  .gift-group__sub, .gift-love__title, .gift-proof__title, .gift-rights__title,
+  .chotty-item__label, .chotty-card__intro .step-desc,
+  .sheet__title, .sheet__name, .sheet__title-note, .sheet__eyebrow,
+  .canva-guide__title, .studio-suggest__title,
+  .last-door-card > .eyebrow, .last-door-card > .step-desc,
+  .checklist-card > .step-title, .deck-intro .step-title, .deck-intro > .step-desc,
+  .choice-card__text, .choice-card__sub, .persona-note,
+  .kit-intro__step-body, .kit-intro__row-body, .warn-msg,
+  .studio__topbar-title, .studio-thumb__label,
+  .btn--gold-cta, .btn--gold-cta-lg, .btn--primary, .btn--ghost,
+  .price-preset-btn, .studio-mode-switch__btn, .template-switch__btn{
+    text-wrap: balance;
+  }
+
+  /* text-wrap:balance は<br>で区切られた2つ目以降のかたまりまでは均等化しない
+     ブラウザ側の制約があるため、崩れが実測された一部の見出し級コピー（表紙GOAL文・
+     10の扉全部OPEN演出）だけ、各行を.mobile-lineでラップして個別に均等化する。
+     spanはデフォルトdisplay:inlineのままなのでPC版（このメディアクエリの外）には
+     一切影響しない */
+  .mobile-line{ display: block; text-wrap: balance; }
+  /* .mobile-lineがdisplay:blockになる分、直後の<br>は二重改行になるため非表示にする
+     （<br>自体はPC版の行区切りに必要なのでHTMLからは削除しない） */
+  .mobile-line-br{ display: none; }
+}
+
 @media (max-width: 360px){
   .app-main{ padding: 18px 12px 70px; }
   .card{ padding: 24px 18px; }

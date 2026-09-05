@@ -459,7 +459,7 @@
       <section class="brand-goal">
         <p class="brand-goal__eyebrow">このキットのGOAL💌</p>
         <div class="gold-line"></div>
-        <p class="brand-goal__body">あなたの中に眠っていた「やってみたい」<br>その想いを、<span class="brand-goal__emph">届く・売れる・巡る商品へ</span><br>あなたに最短ルートで次元上昇してほしい<br>そんな想いを込めた<br>ここらぼからのスペシャルギフトです</p>
+        <p class="brand-goal__body"><span class="mobile-line">あなたの中に眠っていた「やってみたい」</span><br class="mobile-line-br"><span class="mobile-line">その想いを、</span><span class="brand-goal__emph mobile-line">届く・売れる・巡る商品へ</span><br class="mobile-line-br"><span class="mobile-line">あなたに最短ルートで次元上昇してほしい</span><br class="mobile-line-br"><span class="mobile-line">そんな想いを込めた</span><br class="mobile-line-br"><span class="mobile-line">ここらぼからのスペシャルギフトです</span></p>
       </section>
 
       <section class="brand-section brand-cta">
@@ -2509,16 +2509,16 @@ ${who}の
       <p class="celebrate__pct">10の扉　全部OPEN！！</p>
       <div class="gold-line" style="margin:18px auto;"></div>
       <p class="celebrate__body">ここまで来たあなたへ</p>
-      <p class="celebrate__body celebrate__body--emph">10の扉は<br>全部OPENしました</p>
-      <p class="celebrate__body">でも<br>魂商品はここで完成ではありません</p>
-      <p class="celebrate__body">ここから<br>誰かに届けて<br>反応をもらって<br>少しずつ育てていきます</p>
-      <p class="celebrate__body celebrate__body--emph">まずは<br>あなたの「はじめの一品」を<br>カタチにしてみよう</p>
-      <p class="celebrate__next">ここからさらに<br>お客様との個別相談で使える<br>ご提案書の叩き台に<br>シンカさせます</p>
+      <p class="celebrate__body celebrate__body--emph"><span class="mobile-line">10の扉は</span><br class="mobile-line-br"><span class="mobile-line">全部OPENしました</span></p>
+      <p class="celebrate__body"><span class="mobile-line">でも</span><br class="mobile-line-br"><span class="mobile-line">魂商品はここで完成ではありません</span></p>
+      <p class="celebrate__body"><span class="mobile-line">ここから</span><br class="mobile-line-br"><span class="mobile-line">誰かに届けて</span><br class="mobile-line-br"><span class="mobile-line">反応をもらって</span><br class="mobile-line-br"><span class="mobile-line">少しずつ育てていきます</span></p>
+      <p class="celebrate__body celebrate__body--emph"><span class="mobile-line">まずは</span><br class="mobile-line-br"><span class="mobile-line">あなたの「はじめの一品」を</span><br class="mobile-line-br"><span class="mobile-line">カタチにしてみよう</span></p>
+      <p class="celebrate__next"><span class="mobile-line">ここからさらに</span><br class="mobile-line-br"><span class="mobile-line">お客様との個別相談で使える</span><br class="mobile-line-br"><span class="mobile-line">ご提案書の叩き台に</span><br class="mobile-line-br"><span class="mobile-line">シンカさせます</span></p>
 
       <div class="celebrate__ritual">
-        <p class="celebrate__ritual-label">まずはここまでできたら<br>これを声に出してみよう！</p>
-        <p class="celebrate__ritual-quote">『私の物語が<br>いったん魂商品になったーーー！<br>めっちゃうれしい〜！』</p>
-        <p class="celebrate__ritual-sub">まずひとりに<br>届けてみる💌</p>
+        <p class="celebrate__ritual-label"><span class="mobile-line">まずはここまでできたら</span><br class="mobile-line-br"><span class="mobile-line">これを声に出してみよう！</span></p>
+        <p class="celebrate__ritual-quote"><span class="mobile-line">『私の物語が</span><br class="mobile-line-br"><span class="mobile-line">いったん魂商品になったーーー！</span><br class="mobile-line-br"><span class="mobile-line">めっちゃうれしい〜！』</span></p>
+        <p class="celebrate__ritual-sub"><span class="mobile-line">まずひとりに</span><br class="mobile-line-br"><span class="mobile-line">届けてみる💌</span></p>
       </div>
 
       <div class="nav-row" style="margin-top:26px;">
@@ -2564,13 +2564,7 @@ ${who}の
     <div class="result-banner">
       <div class="result-banner__emoji">🎉</div>
       <h1 class="result-banner__title">はい、ひとまずカタチになった！！！</h1>
-      <div class="result-banner__body">まだ70点でも大丈夫
-
-商品は、机の上で100点にするものではありません
-
-ここから人に届けて、話して、喜ばれて、失敗して、直して、また届ける
-
-そうやって、あなたの商品は育っていきます</div>
+      <div class="result-banner__body"><span class="mobile-line">まだ70点でも大丈夫</span><br class="mobile-line-br"><br><span class="mobile-line">商品は、机の上で100点にするものではありません</span><br class="mobile-line-br"><br><span class="mobile-line">ここから人に届けて、話して、喜ばれて、失敗して、直して、また届ける</span><br class="mobile-line-br"><br><span class="mobile-line">そうやって、あなたの商品は育っていきます</span></div>
       <p class="result-banner__final">まず、ひとりに届けよう</p>
       <p class="result-banner__note">勇気noteで愛プットしてくださいね☺️</p>
     </div>
