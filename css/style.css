@@ -531,7 +531,8 @@ img{ max-width: 100%; display:block; }
 .chotty-item{ margin-bottom:18px; }
 .chotty-item:last-child{ margin-bottom:0; }
 .chotty-item__label{ font-size:15px; font-weight:800; color: var(--mauve-deep); margin-bottom:7px; text-align:center; }
-.chotty-item__body{ font-size:15.5px; color: var(--ink); line-height:1.85; white-space:pre-line; }
+.chotty-item__body{ font-size:15.5px; color: var(--ink); line-height:1.85; white-space:pre-line; text-align:center; }
+.chotty-card > .hint{ text-align:center; }
 
 /* ================= 扉ヘッダー ================= */
 
@@ -1423,7 +1424,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   font-family: var(--font-serif); font-weight: 800; font-size: 15.5px;
   color: var(--gold-deep); margin-bottom: 10px; text-align:center;
 }
-.mission-box__body{ font-size: 14px; color: var(--ink); line-height: 1.85; }
+.mission-box__body{ font-size: 14px; color: var(--ink); line-height: 1.85; text-align:center; }
 
 .market-test{
   margin-top: 20px;
@@ -1456,6 +1457,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--gold-deep); margin-bottom: 8px; text-align:center;
 }
 .gift-group__sub{ font-size: 14.5px; font-weight: 800; color: var(--ink); margin: 16px 0 8px; text-align:center; }
+.gift-group > .hint{ text-align:center; }
 .gift-cards{ display:grid; grid-template-columns: 1fr; gap: 10px; }
 @media (min-width: 640px){ .gift-cards{ grid-template-columns: 1fr 1fr; } }
 .gift-card{
@@ -1486,7 +1488,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   color: var(--bordeaux); margin-bottom: 10px; text-align:center;
 }
 .gift-love__body, .gift-proof__body, .gift-rights__body{
-  font-size: 15px; line-height: 1.9; color: var(--ink-soft); margin-bottom: 14px;
+  font-size: 15px; line-height: 1.9; color: var(--ink-soft); margin-bottom: 14px; text-align:center;
 }
 .gift-shout{
   font-family: var(--font-serif); font-weight: 800; font-size: 22px;
@@ -1503,7 +1505,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   border: 1px dashed var(--line);
 }
 .canva-guide__title{ font-weight: 800; font-size: 15px; color: var(--ink); margin-bottom: 10px; text-align:center; }
-.canva-guide__list{ margin: 0 0 8px; padding-left: 20px; font-size: 14.5px; color: var(--ink-soft); line-height: 2; }
+.canva-guide__list{ margin: 0 0 8px; padding-left: 0; list-style-position: inside; text-align:center; font-size: 14.5px; color: var(--ink-soft); line-height: 2; }
 .canva-guide > .hint{ text-align:center; }
 
 .persona-title{
@@ -1680,6 +1682,9 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   line-height: 1.85;
   white-space: pre-line;
 }
+
+#sheetCapture .sheet__label{ justify-content:center; }
+#sheetCapture .sheet__value{ text-align:center; }
 
 .sheet__grid{
   display:grid;
@@ -2000,6 +2005,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
 }
 .checklist-card > .eyebrow{ display:flex; width:fit-content; margin:0 auto 14px; }
 .checklist-card > .step-title{ text-align:center; }
+.checklist-card > .hint{ text-align:center; }
 
 .checklist-item{
   display:flex;
@@ -2142,6 +2148,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   border: 1px dashed var(--gold);
 }
 .studio-suggest__title{ font-size: 14px; font-weight: 800; color: var(--gold-deep); margin-bottom: 8px; text-align:center; }
+.studio-suggest > .hint{ text-align:center; }
 .studio-suggest__chips{ display:flex; flex-wrap:wrap; gap: 8px; }
 .studio-suggest__chip{
   border: 1.5px solid var(--gold); background: #fff; border-radius: 999px;
@@ -2208,6 +2215,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   overflow: auto;
 }
 .studio__canvas .a4-shell{ width: 100%; max-width: 900px; }
+.studio__canvas > .hint{ text-align:center; }
 
 .studio__edit{
   border-left: 1px solid var(--line-soft);
@@ -2216,7 +2224,7 @@ textarea::placeholder, input::placeholder{ color: var(--ink-faint); }
   max-height: calc(100vh - 64px);
 }
 
-.studio__edit-title{ font-family: var(--font-serif); font-weight:800; font-size:16px; color: var(--bordeaux); margin-bottom:14px; text-align:center; }
+.studio__edit-title{ font-family: var(--font-serif); font-weight:800; font-size:16px; color: var(--bordeaux); margin-bottom:14px; }
 
 .deck-edit-panel--studio{ background:none; border:none; padding:0; margin:0; }
 
