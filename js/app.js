@@ -2707,7 +2707,7 @@ ${who}の
     {
       name: "届ける・売る", items: [
         { title: "ご提案書の作り方 前半", url: "https://vimeo.com/1042972841/b214da2b1f?share=copy" },
-        { title: "ご提案書の作り方 後半", url: "https://vimeo.com/1042973667/fb5acd94a2b1f?share=copy" },
+        { title: "ご提案書の作り方 後半", url: "https://vimeo.com/1042973667/fb5acd94a2?fl=ls&fe=ec&share" },
         { title: "個別相談【売る場所】の作り方", url: "https://vimeo.com/1042971390/72aa16bfea?share=copy" },
         { title: "お金が廻るには？", url: "https://vimeo.com/1042955986/338f231876?share=copy" },
         { title: "起業家の生命線！情報デザイン攻略〜⭐️ 前半", url: "https://vimeo.com/1042975673/bc91bc8e90?share=copy" },
