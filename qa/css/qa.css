@@ -1,0 +1,424 @@
+/* ============================================================
+   ここらぼ Q&A辞典（テスト版） — スタイルシート
+   カラー・フォント・角丸・影は ../css/style.css の CSS変数をそのまま流用。
+   「困った時に開く、小さな魔法のQ&A図鑑」を目指し、
+   検索データベースっぽさが出ないよう、丸み・余白・遊び心を優先する。
+   ============================================================ */
+
+.qa-page{
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 40px 18px 90px;
+}
+
+@media (min-width: 720px){
+  .qa-page{ padding: 64px 24px 110px; }
+}
+
+/* ================= トップ ヒーロー ================= */
+
+.qa-hero{
+  text-align: center;
+  margin-bottom: 34px;
+}
+
+.qa-hero__mascot{
+  width: 120px;
+  height: auto;
+  margin: 0 auto 6px;
+  filter: drop-shadow(0 8px 16px rgba(94,20,32,0.16));
+  animation: qaFloat 4.5s ease-in-out infinite;
+}
+
+@keyframes qaFloat{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(-7px); }
+}
+
+.qa-hero__eyebrow{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--gold-deep);
+  background: var(--gold-pale);
+  padding: 5px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.qa-hero__title{
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 34px;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.qa-hero__sub{
+  font-family: var(--font-serif);
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--gold-deep);
+  margin-top: 6px;
+  letter-spacing: 0.06em;
+}
+
+.qa-hero__copy{
+  font-size: 14.5px;
+  line-height: 1.85;
+  color: var(--ink-soft);
+  margin-top: 16px;
+}
+
+/* ================= 検索窓 ================= */
+
+.qa-search{
+  position: relative;
+  margin-top: 26px;
+}
+
+.qa-search__icon{
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.qa-search__input{
+  width: 100%;
+  appearance: none;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  border-radius: 999px;
+  padding: 15px 20px 15px 44px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.qa-search__input::placeholder{ color: var(--ink-faint); }
+
+.qa-search__input:focus{
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(199,150,84,0.18);
+}
+
+.qa-search__hint{
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 9px;
+}
+
+/* ================= ジャンル ================= */
+
+.qa-genres{ margin-top: 30px; }
+
+.qa-genres__row{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  justify-content: center;
+}
+
+.qa-chip{
+  appearance: none;
+  cursor: pointer;
+  border: 1.5px solid var(--line);
+  background: var(--card);
+  color: var(--ink-soft);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform .12s, box-shadow .2s, background .2s, color .2s, border-color .2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.qa-chip:not(:disabled):active{ transform: scale(0.96); }
+
+.qa-chip--active{
+  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(94,20,32,0.3);
+}
+
+.qa-chip--soon{
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.qa-chip__soon{
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-faint);
+  background: var(--line-soft);
+  border-radius: 999px;
+  padding: 2px 7px;
+}
+
+/* ================= 絞り込みバー ================= */
+
+.qa-filterbar[hidden]{ display: none; }
+
+.qa-filterbar{
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--card-soft);
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 9px 8px 9px 18px;
+}
+
+.qa-filterbar__text{
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.qa-filterbar__reset{
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: #fff;
+  color: var(--gold-deep);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--gold-pale);
+  white-space: nowrap;
+}
+
+/* ================= Q&A一覧 ================= */
+
+.qa-list{
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.qa-card{
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 24px 22px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line-soft);
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp 0.4s ease both;
+}
+
+.qa-card::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gold-pale), var(--mauve), var(--gold));
+}
+
+.qa-card--open{ box-shadow: var(--shadow-lg); }
+
+.qa-card__tag{
+  display: inline-flex;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gold-deep);
+  background: var(--gold-pale);
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.qa-card__title{
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 19.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.qa-card__asker{
+  font-size: 12.5px;
+  color: var(--rose-deep);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.qa-card__teaser{
+  position: relative;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  background: var(--card-soft);
+  border-radius: 14px;
+  padding: 13px 16px;
+  margin-bottom: 18px;
+}
+
+.qa-card__cta{
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: none;
+  color: var(--bordeaux);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 14.5px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap .15s;
+}
+
+.qa-card__cta:hover{ gap: 10px; }
+
+.qa-card__close{
+  appearance: none;
+  border: 1.5px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  color: var(--ink-faint);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 12.5px;
+  padding: 9px 18px;
+  border-radius: 999px;
+  margin-top: 6px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---- 回答セクション（固定フォーマット） ---- */
+
+.qa-section{ margin-top: 20px; }
+
+.qa-section__label{
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 14.5px;
+  color: var(--bordeaux);
+  margin-bottom: 9px;
+}
+
+.qa-section__line{
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.qa-section--question .qa-section__label{ color: var(--ink-faint); font-family: inherit; font-weight: 700; }
+
+.qa-callout{
+  position: relative;
+  border-radius: 14px;
+  padding: 14px 16px 14px 38px;
+  font-size: 14px;
+  line-height: 1.85;
+  margin-top: 10px;
+}
+
+.qa-callout--shift{
+  background: var(--rose-pale);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.qa-callout__icon{
+  position: absolute;
+  left: 14px;
+  top: 15px;
+  color: var(--rose-deep);
+  font-size: 13px;
+}
+
+.qa-points{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.qa-points li{
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+.qa-points li::before{
+  content: "✦";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  color: var(--gold);
+  font-size: 12px;
+}
+
+.qa-callout--action{
+  padding-left: 16px;
+  background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(94,20,32,0.28);
+}
+
+.qa-callout__label{
+  font-family: var(--font-serif);
+  font-weight: 800;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: #fff;
+}
+
+.qa-callout__line{
+  font-size: 14.5px;
+  line-height: 1.85;
+  font-weight: 600;
+}
+
+/* ================= 空状態 / フッター ================= */
+
+.qa-empty{
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14.5px;
+  line-height: 1.9;
+  color: var(--ink-faint);
+}
+
+.qa-footer{
+  text-align: center;
+  padding: 20px 0 40px;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}

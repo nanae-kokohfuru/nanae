@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ここらぼ Q&A｜みんなの次元上昇Q&A（テスト版）</title>
+<meta name="description" content="困った時に開く、小さな魔法のQ&A図鑑。みんなの質問から、今日のヒントをひとつ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="css/qa.css">
+</head>
+<body>
+
+<main class="qa-page" id="qaApp">
+
+  <!-- ================= トップ ================= -->
+  <section class="qa-hero">
+    <img class="qa-hero__mascot" src="../assets/mascot-trio-study.png" alt="" aria-hidden="true">
+    <p class="qa-hero__eyebrow">ここらぼ会員限定<span class="sparkle"></span></p>
+    <h1 class="qa-hero__title">ここらぼ Q&amp;A</h1>
+    <p class="qa-hero__sub">みんなの次元上昇Q&amp;A</p>
+    <p class="qa-hero__copy">それ、私も聞きたかった。<br>みんなの質問から、今日のヒントをひとつ。</p>
+
+    <div class="qa-search">
+      <span class="qa-search__icon" aria-hidden="true">🔍</span>
+      <input
+        type="search"
+        id="qaSearchInput"
+        class="qa-search__input"
+        placeholder="気になる言葉で探す 🔍"
+        aria-label="Q&Aをキーワードで探す"
+        autocomplete="off"
+      >
+    </div>
+    <p class="qa-search__hint">例：ポンコツ、商品づくり、時間がない…</p>
+  </section>
+
+  <!-- ================= ジャンル ================= -->
+  <section class="qa-genres" aria-label="ジャンルで探す">
+    <div class="qa-genres__row" id="qaGenreRow"></div>
+  </section>
+
+  <!-- ================= 現在の絞り込み状態 ================= -->
+  <div class="qa-filterbar" id="qaFilterBar" hidden>
+    <p class="qa-filterbar__text" id="qaFilterText"></p>
+    <button type="button" class="qa-filterbar__reset" id="qaResetBtn">全部見る ✕</button>
+  </div>
+
+  <!-- ================= Q&A一覧 ================= -->
+  <section class="qa-list" id="qaList" aria-live="polite"></section>
+
+  <p class="qa-empty" id="qaEmpty" hidden>
+    見つかりませんでした。<br>キーワードを変えるか、「全部見る」からどうぞ🌙
+  </p>
+
+</main>
+
+<footer class="qa-footer">
+  <p>© ここらぼ｜Q&amp;A辞典（テスト版）</p>
+</footer>
+
+<script src="js/qa-data.js"></script>
+<script src="js/qa-app.js"></script>
+</body>
+</html>
