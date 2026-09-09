@@ -9,6 +9,9 @@
   const genreLabelMap = Object.fromEntries(QA_GENRES.map((g) => [g.id, g.label]));
   const genresWithData = new Set(QA_DATA.map((q) => q.genre));
 
+  // ななえ母ちゃんキャラクター画像（回答エリアに小さく登場）
+  const CHARACTER_IMG_SRC = "../assets/nanae-mama.png";
+
   const state = {
     query: "",
     genre: null,   // 選択中のジャンルID（null = すべて）
@@ -34,15 +37,22 @@
     return `${item.askerName}${area}からの質問💌`;
   }
 
+  // カード一覧の短い一言＝質問要約の最後の1行を使う
+  function teaserOf(item) {
+    return item.questionSummary[item.questionSummary.length - 1];
+  }
+
   function matchesQuery(item, q) {
     if (!q) return true;
     const haystack = [
       item.title,
       genreLabelMap[item.genre],
-      item.teaser,
       item.askerName,
       item.askerArea,
-      ...item.question,
+      ...item.questionSummary,
+      ...item.letter,
+      ...item.levelUp,
+      ...item.action,
     ].join(" ").toLowerCase();
     return haystack.includes(q.toLowerCase());
   }
@@ -88,7 +98,7 @@
       <p class="qa-card__tag">${escapeHtml(genreLabelMap[item.genre])}</p>
       <h2 class="qa-card__title">${escapeHtml(item.title)}</h2>
       <p class="qa-card__asker">${escapeHtml(askerLine(item))}</p>
-      <p class="qa-card__teaser">${escapeHtml(item.teaser)}</p>
+      <p class="qa-card__teaser">${escapeHtml(teaserOf(item))}</p>
       <button type="button" class="qa-card__cta" data-action="open" data-id="${item.id}">
         回答を見る <span aria-hidden="true">→</span>
       </button>
@@ -103,27 +113,29 @@
 
       <div class="qa-section qa-section--question">
         <p class="qa-section__label">こんなご相談</p>
-        ${item.question.map((line) => `<p class="qa-section__line">${escapeHtml(line)}</p>`).join("")}
+        ${item.questionSummary.map((line) => `<p class="qa-section__line">${escapeHtml(line)}</p>`).join("")}
       </div>
 
-      <div class="qa-section qa-section--seruko">
-        <p class="qa-section__label">👀 せるこ視点</p>
-        <p class="qa-section__line">${escapeHtml(item.approval)}</p>
-        <p class="qa-callout qa-callout--shift">
-          <span class="qa-callout__icon" aria-hidden="true">✦</span>${escapeHtml(item.shift)}
-        </p>
-      </div>
+      <div class="qa-answer">
+        <div class="qa-character-row">
+          <img class="qa-character-row__img" src="${CHARACTER_IMG_SRC}" alt="ななえ母ちゃん">
+          <p class="qa-bubble">${escapeHtml(item.characterBubble)}</p>
+        </div>
 
-      <div class="qa-section qa-section--points">
-        <p class="qa-section__label">🚀 次元上昇ポイント</p>
-        <ul class="qa-points">
-          ${item.points.map((p) => `<li>${escapeHtml(p)}</li>`).join("")}
-        </ul>
-      </div>
+        <div class="qa-section qa-section--letter">
+          <p class="qa-section__label qa-section__label--letter">💌 チョッピーからのラブレター</p>
+          ${item.letter.map((line) => `<p class="qa-section__line">${escapeHtml(line)}</p>`).join("")}
+        </div>
 
-      <div class="qa-callout qa-callout--action">
-        <p class="qa-callout__label">👣 今日の一歩</p>
-        <p class="qa-callout__line">${escapeHtml(item.action)}</p>
+        <div class="qa-section qa-section--levelup">
+          <p class="qa-section__label">🚀 次元上昇ポイント</p>
+          ${item.levelUp.map((line) => `<p class="qa-section__line">${escapeHtml(line)}</p>`).join("")}
+        </div>
+
+        <div class="qa-callout qa-callout--action">
+          <p class="qa-callout__label">👣 今日の一歩</p>
+          ${item.action.map((line) => `<p class="qa-callout__line">${escapeHtml(line)}</p>`).join("")}
+        </div>
       </div>
 
       <button type="button" class="qa-card__close" data-action="close" data-id="${item.id}">

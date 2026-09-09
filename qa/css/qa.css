@@ -329,64 +329,66 @@
 
 .qa-section__line{
   font-size: 14.5px;
-  line-height: 1.9;
+  line-height: 1.85;
   color: var(--ink);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .qa-section--question .qa-section__label{ color: var(--ink-faint); font-family: inherit; font-weight: 700; }
 
+/* 回答エリア全体｜質問カードの白地から、ごくうっすら温度感を変えて
+   「ここから先はななえ母ちゃん＆チョッピーからの返事」と伝える */
+.qa-answer{
+  margin-top: 18px;
+  background: linear-gradient(180deg, var(--card-soft), #fff 65%);
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  padding: 18px 18px 6px;
+}
+
+.qa-answer .qa-section:first-of-type{ margin-top: 0; }
+
+/* ---- ななえ母ちゃん＋吹き出し ---- */
+
+.qa-character-row{
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.qa-character-row__img{
+  flex: none;
+  width: 46px;
+  height: auto;
+  filter: drop-shadow(0 3px 8px rgba(94,20,32,0.18));
+}
+
+.qa-bubble{
+  position: relative;
+  background: #fff;
+  border: 1.5px solid var(--gold-pale);
+  border-radius: 15px 15px 15px 4px;
+  padding: 9px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  box-shadow: var(--shadow-sm);
+}
+
+.qa-section__label--letter{ font-size: 15.5px; }
+
 .qa-callout{
   position: relative;
   border-radius: 14px;
-  padding: 14px 16px 14px 38px;
+  padding: 14px 16px;
   font-size: 14px;
   line-height: 1.85;
-  margin-top: 10px;
-}
-
-.qa-callout--shift{
-  background: var(--rose-pale);
-  color: var(--ink);
-  font-weight: 600;
-}
-
-.qa-callout__icon{
-  position: absolute;
-  left: 14px;
-  top: 15px;
-  color: var(--rose-deep);
-  font-size: 13px;
-}
-
-.qa-points{
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.qa-points li{
-  position: relative;
-  padding-left: 22px;
-  font-size: 14.5px;
-  line-height: 1.8;
-  color: var(--ink);
-}
-
-.qa-points li::before{
-  content: "✦";
-  position: absolute;
-  left: 0;
-  top: 1px;
-  color: var(--gold);
-  font-size: 12px;
+  margin: 16px 0 12px;
 }
 
 .qa-callout--action{
-  padding-left: 16px;
   background: linear-gradient(135deg, var(--rose-deep), var(--bordeaux));
   color: #fff;
   box-shadow: 0 10px 24px rgba(94,20,32,0.28);
@@ -402,9 +404,12 @@
 
 .qa-callout__line{
   font-size: 14.5px;
-  line-height: 1.85;
+  line-height: 1.8;
   font-weight: 600;
+  margin-bottom: 4px;
 }
+
+.qa-callout__line:last-child{ margin-bottom: 0; }
 
 /* ================= 空状態 / フッター ================= */
 
