@@ -19,6 +19,7 @@ const QA_GENRES = [
   { id: "self",    label: "自分のこと" },
   { id: "time",    label: "時間・手放し" },
   { id: "family",  label: "家族・人間関係" },
+  { id: "miracleKit", label: "ミラクルAIキット操作方法" },
 ];
 
 // Q&A本体データ（第1便：5問）
