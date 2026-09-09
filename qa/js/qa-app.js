@@ -88,9 +88,9 @@
     filterBar.hidden = !hasFilter;
     if (!hasFilter) return;
     const parts = [];
-    if (state.genre) parts.push(`「${genreLabelMap[state.genre]}」`);
-    if (state.query.trim()) parts.push(`「${escapeHtml(state.query.trim())}」`);
-    filterText.textContent = `${parts.join("×")} で絞り込み中`;
+    if (state.genre) parts.push(genreLabelMap[state.genre]);
+    if (state.query.trim()) parts.push(state.query.trim());
+    filterText.textContent = `${parts.join("・")} で絞り込み中`;
   }
 
   function renderCollapsed(item) {
