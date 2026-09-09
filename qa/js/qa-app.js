@@ -12,6 +12,13 @@
   // ななえ母ちゃんキャラクター画像（回答エリアに小さく登場）
   const CHARACTER_IMG_SRC = "../assets/nanae-mama.png";
 
+  // 1枚の絵をQ&Aごとに少しずつ向き・傾きを変えて使い回すためのポーズ差分
+  const CHARACTER_POSES = ["a", "b", "c", "d", "e"];
+  function characterPoseOf(item) {
+    const index = QA_DATA.indexOf(item);
+    return CHARACTER_POSES[index % CHARACTER_POSES.length];
+  }
+
   const state = {
     query: "",
     genre: null,   // 選択中のジャンルID（null = すべて）
@@ -118,7 +125,7 @@
 
       <div class="qa-answer">
         <div class="qa-character-row">
-          <img class="qa-character-row__img" src="${CHARACTER_IMG_SRC}" alt="ななえ母ちゃん">
+          <img class="qa-character-row__img qa-character-row__img--${characterPoseOf(item)}" src="${CHARACTER_IMG_SRC}" alt="ななえ母ちゃん">
           <p class="qa-bubble">${escapeHtml(item.characterBubble)}</p>
         </div>
 

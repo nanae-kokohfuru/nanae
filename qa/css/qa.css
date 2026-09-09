@@ -359,10 +359,20 @@
 
 .qa-character-row__img{
   flex: none;
-  width: 46px;
+  width: 40px;
   height: auto;
-  filter: drop-shadow(0 3px 8px rgba(94,20,32,0.18));
+  filter: drop-shadow(0 3px 7px rgba(94,20,32,0.18));
+  transform-origin: 50% 100%;
 }
+
+/* ななえ母ちゃんは1枚の絵を使い回すぶん、Q&Aごとに向き・傾き・大きさを
+   ごく少しだけ変えて「その場でちょこちょこリアクションしている」感を出す。
+   どれも控えめな差にとどめ、別キャラに見えるほどは変えない */
+.qa-character-row__img--a{ transform: rotate(-4deg); }
+.qa-character-row__img--b{ transform: scaleX(-1); }
+.qa-character-row__img--c{ transform: rotate(6deg) scale(1.05); }
+.qa-character-row__img--d{ transform: scaleX(-1) rotate(-5deg); }
+.qa-character-row__img--e{ transform: rotate(8deg); }
 
 .qa-bubble{
   position: relative;
