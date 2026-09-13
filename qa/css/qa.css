@@ -49,6 +49,14 @@
   margin-bottom: 14px;
 }
 
+.qa-hero__logo{
+  display: block;
+  width: 52%;
+  max-width: 180px;
+  height: auto;
+  margin: 0 auto 10px;
+}
+
 .qa-hero__title{
   font-family: var(--font-serif);
   font-weight: 800;
@@ -58,15 +66,6 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-}
-
-.qa-hero__sub{
-  font-family: var(--font-serif);
-  font-size: 15.5px;
-  font-weight: 700;
-  color: var(--gold-deep);
-  margin-top: 6px;
-  letter-spacing: 0.06em;
 }
 
 .qa-hero__copy{
