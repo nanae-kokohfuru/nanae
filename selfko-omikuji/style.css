@@ -46,11 +46,40 @@ body {
   height: auto;
   display: block;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  filter: blur(0);
+  transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.omikuji__img.is-shuffling {
+  opacity: 0.55;
+  filter: blur(4px);
+  transition: opacity 0.18s ease, filter 0.18s ease;
 }
 
 .omikuji__img.is-visible {
   opacity: 1;
+}
+
+@keyframes omikuji-shake {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  20% { transform: rotate(-1.4deg) translateY(-2px); }
+  40% { transform: rotate(1.4deg) translateY(2px); }
+  60% { transform: rotate(-1deg) translateY(-1px); }
+  80% { transform: rotate(1deg) translateY(1px); }
+}
+
+.omikuji.is-shuffling {
+  animation: omikuji-shake 0.32s ease-in-out infinite;
+}
+
+@keyframes omikuji-pop {
+  0% { transform: scale(0.9); }
+  55% { transform: scale(1.035); }
+  100% { transform: scale(1); }
+}
+
+.omikuji.is-popping {
+  animation: omikuji-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .redraw {
@@ -71,4 +100,9 @@ body {
 .redraw:hover,
 .redraw:active {
   opacity: 1;
+}
+
+.redraw:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
