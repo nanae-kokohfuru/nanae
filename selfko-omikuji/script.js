@@ -15,17 +15,29 @@
   const wrapper = document.getElementById("omikuji");
   const img = document.getElementById("resultImg");
   const redrawBtn = document.getElementById("redrawBtn");
+  const fireworkLeft = document.getElementById("fireworkLeft");
+  const fireworkRight = document.getElementById("fireworkRight");
   let currentKey = null;
   let audioCtx = null;
 
-  // CSSの .omikuji.is-shaking / .is-popping のアニメーション時間と合わせている
-  const SHAKE_MS = 1600;
-  const POP_MS = 320;
-  const LINGER_MS = 260; // ポンと出た後、少し余韻を残してからボタンを戻す
+  // CSSの各アニメーション時間と合わせている
+  const SHAKE_MS = 1650; // 箱がガタガタ揺れる時間
+  const PAUSE_MS = 500; // 揺れが止まった後の「ため」
+  const REVEAL_MS = 650; // 結果カードが3D回転しながらポンと出る時間
+  const FIREWORK_LEAD_MS = 150; // reveal終了よりこれだけ早く花火を上げる(着地と同時に見せるため)
+  const BUTTON_ENABLE_EXTRA_MS = 350; // 着地後、少し余韻を残してからボタンを戻す
 
   function pickRandom(excludeKey) {
     const pool = excludeKey ? KEYS.filter((k) => k !== excludeKey) : KEYS;
     return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function triggerFireworks() {
+    [fireworkLeft, fireworkRight].forEach((el) => {
+      el.classList.remove("is-active");
+      void el.offsetWidth; // reflow でアニメーションを再始動させる
+      el.classList.add("is-active");
+    });
   }
 
   function playNoiseTick(ctx, t, freq, gainPeak) {
@@ -51,8 +63,8 @@
 
   // クリックという「ユーザー操作の瞬間」に同期して発音を予約することで、
   // スマホブラウザの自動再生制限に引っかからないようにしている。
-  // 揺れの強まりに合わせた「カラカラ…」と、止まった直後の「ポン」を鳴らす。
-  function scheduleDrawSounds(shakeSeconds) {
+  // 揺れの強まりに合わせた「カラカラ…」と、着地の瞬間の「ポン」を鳴らす。
+  function scheduleDrawSounds() {
     try {
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
@@ -60,6 +72,7 @@
       if (audioCtx.state === "suspended") audioCtx.resume();
 
       const now = audioCtx.currentTime;
+      const shakeSeconds = SHAKE_MS / 1000;
       const fractions = [
         0.12, 0.22, 0.32, 0.41, 0.49, 0.56, 0.63, 0.69, 0.745, 0.79, 0.83,
         0.865, 0.895, 0.92,
@@ -74,7 +87,8 @@
         );
       });
 
-      const t0 = now + shakeSeconds;
+      // 「ため」を挟んで、結果カードが着地する瞬間に合わせて「ポン」
+      const t0 = now + (SHAKE_MS + PAUSE_MS + REVEAL_MS * 0.88) / 1000;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = "sine";
@@ -92,10 +106,11 @@
   }
 
   function runDraw(finalKey) {
-    wrapper.classList.remove("is-popping");
+    wrapper.classList.remove("is-shaking");
+    img.classList.remove("is-revealing");
     redrawBtn.disabled = true;
 
-    // まず箱の絵(添付画像そのもの)を表示し、左右にガタガタッと振る
+    // 1) 箱の絵(添付画像そのもの)を表示し、左右にガタガタッと振る
     img.classList.remove("is-visible");
     img.src = BOX_SRC;
     requestAnimationFrame(() => {
@@ -104,25 +119,30 @@
     });
 
     window.setTimeout(() => {
+      // 2) 完全に止まる。ここでは何も出さず、一呼吸だけ「ため」を作る
       wrapper.classList.remove("is-shaking");
-      // ピタッと止まった直後に結果を1枚だけくるっとポンと出す
-      img.classList.remove("is-visible");
-      img.src = RESULTS[finalKey];
-      currentKey = finalKey;
-      requestAnimationFrame(() => {
-        img.classList.add("is-visible");
-        wrapper.classList.add("is-popping");
-      });
+
       window.setTimeout(() => {
-        redrawBtn.disabled = false;
-      }, POP_MS + LINGER_MS);
+        // 3) 結果画像に差し替え、3D回転しながらゆっくり現れて正面でポンと着地
+        img.src = RESULTS[finalKey];
+        currentKey = finalKey;
+        requestAnimationFrame(() => {
+          img.classList.add("is-revealing");
+        });
+
+        window.setTimeout(triggerFireworks, REVEAL_MS - FIREWORK_LEAD_MS);
+
+        window.setTimeout(() => {
+          redrawBtn.disabled = false;
+        }, REVEAL_MS + BUTTON_ENABLE_EXTRA_MS);
+      }, PAUSE_MS);
     }, SHAKE_MS);
   }
 
   runDraw(pickRandom());
 
   redrawBtn.addEventListener("click", () => {
-    scheduleDrawSounds(SHAKE_MS / 1000);
+    scheduleDrawSounds();
     runDraw(pickRandom(currentKey));
   });
 })();
