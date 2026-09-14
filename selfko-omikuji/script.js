@@ -21,10 +21,14 @@
   let audioCtx = null;
 
   // CSSの各アニメーション時間と合わせている
-  const SHAKE_MS = 1650; // 箱がガタガタ揺れる時間
-  const PAUSE_MS = 500; // 揺れが止まった後の「ため」
-  const REVEAL_MS = 650; // 結果カードが3D回転しながらポンと出る時間
-  const FIREWORK_LEAD_MS = 150; // reveal終了よりこれだけ早く花火を上げる(着地と同時に見せるため)
+  const SHAKE_MS = 1700; // 箱がガタガタ揺れる時間
+  const PAUSE_MS = 700; // 揺れが止まった後の「ため」
+  const SPIN_MS = 2190; // ドラムロール(5周・だんだん減速)の時間。omikuji-spin と同じ値
+  const LAND_MS = 300; // 正面で止まってポンと着地する時間
+  // 最終ラップ(66.67%〜100%)の裏向き区間(そのラップの25%〜75%)の中央あたりで
+  // こっそり箱→結果画像に差し替える。1460ms + 730ms*0.5 ≈ 1825ms
+  const SWAP_DELAY_MS = 1800;
+  const FIREWORK_LEAD_MS = 150; // 着地よりこれだけ早く花火を上げる(着地と同時に見せるため)
   const BUTTON_ENABLE_EXTRA_MS = 350; // 着地後、少し余韻を残してからボタンを戻す
 
   function pickRandom(excludeKey) {
@@ -87,8 +91,9 @@
         );
       });
 
-      // 「ため」を挟んで、結果カードが着地する瞬間に合わせて「ポン」
-      const t0 = now + (SHAKE_MS + PAUSE_MS + REVEAL_MS * 0.88) / 1000;
+      // 揺れ→ため→回転を経て、着地する瞬間に合わせて「ポン」
+      const t0 =
+        now + (SHAKE_MS + PAUSE_MS + SPIN_MS + LAND_MS * 0.55) / 1000;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
       osc.type = "sine";
@@ -107,7 +112,7 @@
 
   function runDraw(finalKey) {
     wrapper.classList.remove("is-shaking");
-    img.classList.remove("is-revealing");
+    img.classList.remove("is-spinning", "is-landing");
     redrawBtn.disabled = true;
 
     // 1) 箱の絵(添付画像そのもの)を表示し、左右にガタガタッと振る
@@ -123,18 +128,30 @@
       wrapper.classList.remove("is-shaking");
 
       window.setTimeout(() => {
-        // 3) 結果画像に差し替え、3D回転しながらゆっくり現れて正面でポンと着地
-        img.src = RESULTS[finalKey];
-        currentKey = finalKey;
+        // 3) 箱の絵のまま、だんだん減速しながら5周くるくる回転を始める
         requestAnimationFrame(() => {
-          img.classList.add("is-revealing");
+          img.classList.add("is-spinning");
         });
 
-        window.setTimeout(triggerFireworks, REVEAL_MS - FIREWORK_LEAD_MS);
+        // 最終ラップの「裏を向いていて見えない」区間のうちに、こっそり結果へ差し替える
+        window.setTimeout(() => {
+          img.src = RESULTS[finalKey];
+          currentKey = finalKey;
+        }, SWAP_DELAY_MS);
 
         window.setTimeout(() => {
-          redrawBtn.disabled = false;
-        }, REVEAL_MS + BUTTON_ENABLE_EXTRA_MS);
+          // 4) 正面でピタッと止まり、少し拡大してポンと着地
+          img.classList.remove("is-spinning");
+          requestAnimationFrame(() => {
+            img.classList.add("is-landing");
+          });
+
+          window.setTimeout(triggerFireworks, LAND_MS - FIREWORK_LEAD_MS);
+
+          window.setTimeout(() => {
+            redrawBtn.disabled = false;
+          }, LAND_MS + BUTTON_ENABLE_EXTRA_MS);
+        }, SPIN_MS);
       }, PAUSE_MS);
     }, SHAKE_MS);
   }
