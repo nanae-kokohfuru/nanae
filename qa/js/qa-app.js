@@ -65,11 +65,12 @@
   }
 
   function getFilteredData() {
+    // QA_DATAへの追加順＝末尾が最新のため、新しい質問が先頭に来るよう反転して表示する
     return QA_DATA.filter((item) => {
       if (state.genre && item.genre !== state.genre) return false;
       if (!matchesQuery(item, state.query.trim())) return false;
       return true;
-    });
+    }).reverse();
   }
 
   function renderGenres() {
