@@ -41,7 +41,7 @@
 
   function askerLine(item) {
     const area = item.askerArea ? `｜${item.askerArea}` : "";
-    return `${item.askerName}${area}からの質問💌`;
+    return `${item.askerName}からの質問${area}`;
   }
 
   // カード一覧の短い一言＝質問要約の最後の1行を使う
@@ -57,6 +57,7 @@
       item.askerName,
       item.askerArea,
       ...item.questionSummary,
+      ...(item.hookLine || []),
       ...item.letter,
       ...item.levelUp,
       ...item.action,
@@ -125,10 +126,16 @@
       </div>
 
       <div class="qa-answer">
+        ${item.characterBubble ? `
         <div class="qa-character-row">
           <img class="qa-character-row__img qa-character-row__img--${characterPoseOf(item)}" src="${CHARACTER_IMG_SRC}" alt="ななえ母ちゃん">
           <p class="qa-bubble">${escapeHtml(item.characterBubble)}</p>
         </div>
+        ` : `
+        <div class="qa-card__teaser qa-hookline">
+          ${item.hookLine.map((line) => `<p class="qa-section__line">${escapeHtml(line)}</p>`).join("")}
+        </div>
+        `}
 
         <div class="qa-section qa-section--letter">
           <p class="qa-section__label qa-section__label--letter">💌 チョッピーからのラブレター</p>
