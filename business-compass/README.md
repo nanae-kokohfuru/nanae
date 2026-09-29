@@ -37,3 +37,9 @@ TOP COVER → 情報のお取り扱い（必須同意）→ 10章一覧 → 章�
 
 - `window.BusinessCompass.exportData()` が章ごとに整理された回答データを返します（最終画面の「回答データを書き出す」と同じ JSON）。PDF 生成・AI 分析・「1枚の経営羅針盤」生成はこのデータを入力にできます
 - 最終画面の「印刷・PDFで保存」は印刷用 CSS でカルテのみを出力します
+
+## 現時点で確定している仕様（仮確定）
+
+- 章扉の写真：CURRENT・ROUTE（コンパス）、STORY・FUTURE（本と舟）。ABOUT YOU・VALUE・CUSTOMER・SERVICE・NUMBER・KEY POINT は写真なしの無地ウォルナット
+- 重要な問い（Deep Bordeaux）と各章扉の一言は、`content.js` に書かれている現在の文言で仮確定
+- 情報のお取り扱いの本文（`consent.items`）は仮文章のまま。正式文面が決まり次第差し替え
