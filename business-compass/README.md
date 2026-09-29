@@ -21,6 +21,7 @@ TOP COVER → 情報のお取り扱い（必須同意）→ 10章一覧 → 章�
 | `js/fields.js` | 入力形式（text / textarea / number / url / single / multi / scale / group / timeline / route）の描画・判定・カルテ用要約 |
 | `js/store.js` | 保存処理。localStorage アダプタを `BCStore.use(adapter)` で DB 用に差し替え可能 |
 | `js/app.js` | 画面遷移と各画面の組み立て |
+| `analysis.html` / `js/analysis.js` / `css/analysis.css` | ななえ専用・裏カルテ（PRIVATE ANALYSIS） |
 | `css/style.css` | デザイン（カラーはファイル冒頭の CSS 変数） |
 | `assets/` | 写真 |
 
@@ -53,6 +54,36 @@ TOP COVER → 情報のお取り扱い（必須同意）→ 10章一覧 → 章�
 
 商品など他の回答を参照する選択は、書き出し時に商品名へ変換されます。
 Q39（好きなもの・場所）は1件ずつのデータなので、後から画像を足す場合は各項目に `image` を追加できます。
+
+## ななえ専用・裏カルテ（PRIVATE ANALYSIS）
+
+`analysis.html` を直接開きます（例：`https://…/business-compass/analysis.html`）。
+クライアント側の画面からはリンクしておらず、検索エンジンにも載らない設定（noindex）です。本格的な認証はまだありません。
+
+- 本人の83問の回答は**読むだけ**。書き換えません
+  - 同じ端末で回答した場合はそのまま参照
+  - 別の端末で回答した場合は、本人が書き出した回答ファイル（JSON）を「回答ファイルを読み込む」で参照
+- ななえの分析は `localStorage` の `business-compass:analysis:v1` に自動保存（本人の回答 `business-compass:v2` とは別）
+- 構成：最上部（名前・屋号・事業形態・事業年数・セッション日／Q83・Q69）→ 01 ASSETS → 02 UNTAPPED VALUE → 03 BOTTLENECK → 04 BUSINESS STRUCTURE → 05 POTENTIAL → 06 KEY LEVER → 07 PRIORITY → SESSION NOTE / NEXT COMPASS
+- 各セクションの「SOURCE｜本人の回答を見る」で、関連する本人の回答を開閉して確認
+- AI による診断・採点・提案・自動生成は行いません
+
+保存データ：
+
+```
+consultant_analysis: {
+  assets: { skill, knowledge, experience, proof, human_value, customer_asset, business_asset, other },
+  untapped_value: { skill, knowledge, experience, product, price, communication, continuity, customer_experience, other, biggest },
+  bottleneck: { areas: [], areas_note, primary, primary_note, why },
+  business_structure: {
+    body_dependency | owner_dependency | continuity | knowledge_asset | decision_structure: { observation, risk, opportunity }
+  },
+  potential: { types: [], notes, unique },
+  key_lever: { lever, why, what_changes },
+  priority: { now: [], next: [], later: [], not_now: [] },
+  session_note, next_compass
+}
+```
 
 ## 今後の拡張ポイント
 
