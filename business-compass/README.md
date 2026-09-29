@@ -62,6 +62,7 @@ Q39（好きなもの・場所）は1件ずつのデータなので、後から�
 ## 現時点の仕様メモ
 
 - 章扉の写真：CURRENT・ROUTE（コンパス）、STORY・FUTURE（本と舟）。ABOUT YOU・VALUE・CUSTOMER・SERVICE・NUMBER・KEY POINT は写真なしの無地ウォルナット
-- Deep Bordeaux の重要な問い：Q70（KEY POINT）・Q82・Q83（FUTURE）
+- Deep Bordeaux の重要な問い：Q70（KEY POINT）・Q82（FUTURE の最後の重要な問い）
+- Q83（最後の質問）は通常の明るい画面。「LAST QUESTION」の表示つき。「旅を終える」でカルテ完了へ
 - 各章扉の一言は仮確定の文言のまま
 - 情報のお取り扱いの本文（`consent.items`）は仮文章のまま。正式文面が決まり次第差し替え

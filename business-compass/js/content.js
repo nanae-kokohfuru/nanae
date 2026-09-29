@@ -608,7 +608,7 @@ window.BC_CONTENT = {
           placeholder: '例：年に2回は家族で旅行に行き、週末は仕事をしない' },
         { id: 'future_1y.ideal_day', type: 'textarea', feature: true, label: '1年後に生きていたい毎日',
           title: '売上も、\n時間も、\n家族も、\n一度ぜんぶわがままに\n叶えていいとしたら。\n\n1年後、\nあなたはどんな毎日を\n生きていたいですか？', rows: 5 },
-        { id: 'session_goal.today', type: 'textarea', feature: true, eyebrow: 'LAST QUESTION', label: 'セッションで整理されていたら最高なこと',
+        { id: 'session_goal.today', type: 'textarea', eyebrow: 'LAST QUESTION', label: 'セッションで整理されていたら最高なこと',
           title: '今日、ななえと話し終わったとき、\n何が整理されていたら\n最高ですか？', rows: 4 }
       ]
     }
