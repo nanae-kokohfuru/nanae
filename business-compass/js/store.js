@@ -8,11 +8,17 @@
    ===================================================================== */
 
 (function () {
-  var KEY = 'business-compass:v1';
+  var KEY = 'business-compass:v2';
 
   var localAdapter = {
     load: function () {
-      try { return JSON.parse(window.localStorage.getItem(KEY)); } catch (e) { return null; }
+      try {
+        var saved = JSON.parse(window.localStorage.getItem(KEY));
+        if (saved) return saved;
+        /* 旧プロトタイプ（v1）の同意だけは引き継ぐ。回答は質問が変わったため引き継がない */
+        var old = JSON.parse(window.localStorage.getItem('business-compass:v1'));
+        return old && old.consent ? { consent: old.consent } : null;
+      } catch (e) { return null; }
     },
     save: function (state) {
       try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 保存できない環境でも動作は続ける */ }
