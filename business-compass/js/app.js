@@ -172,45 +172,48 @@
      ================================================================ */
   function consentScreen() {
     var c = C.consent;
-    var s = screenShell('consent', 'ivory', c.title);
+    var s = screenShell('consent', 'ivory', c.title.replace(/\n/g, ''));
+    var hasOptional = !!c.optional;
     var cta = goldButton(c.cta, function () {
       if (!req.checked) return;
-      S.setConsent({ required: true, optional: opt.checked, agreedAt: new Date().toISOString() });
+      S.setConsent({ required: true, optional: hasOptional ? opt.checked : false, agreedAt: new Date().toISOString() });
       go('index');
     });
     var req = el('input', { type: 'checkbox', class: 'check__input', id: 'consent-required', onchange: sync });
-    var opt = el('input', { type: 'checkbox', class: 'check__input', id: 'consent-optional', onchange: sync });
+    var opt = hasOptional ? el('input', { type: 'checkbox', class: 'check__input', id: 'consent-optional', onchange: sync }) : null;
     req.checked = !!S.state.consent.required;
-    opt.checked = !!S.state.consent.optional;
+    if (opt) opt.checked = !!S.state.consent.optional;
     function sync() {
       cta.disabled = !req.checked;
       cta.setAttribute('aria-describedby', req.checked ? '' : 'consent-note');
     }
     sync();
 
-    s.appendChild(el('div', { class: 'page' },
+    /* items（アコーディオン）と optional（任意チェック）は、content.js にあるときだけ表示 */
+    var items = c.items || [];
+    s.appendChild(el('div', { class: 'page page--consent' },
       el('header', { class: 'page__head' },
         el('p', { class: 'eyebrow', text: c.eyebrow }),
         heading('h1', c.title, 'page__title'),
-        el('div', { class: 'page__lead' }, c.intro.map(function (t) { return el('p', { text: t }); }))
+        el('div', { class: 'page__lead consent__body' }, c.intro.map(function (t) { return el('p', {}, lines(t)); }))
       ),
-      el('div', { class: 'accordion' }, c.items.map(function (item) {
+      items.length ? el('div', { class: 'accordion' }, items.map(function (item) {
         return el('details', { class: 'accordion__item' },
           el('summary', { class: 'accordion__summary' },
             el('span', { class: 'accordion__no', text: item.no }),
             el('span', { class: 'accordion__title', text: item.title }),
             el('span', { class: 'accordion__mark', 'aria-hidden': 'true' })),
           el('div', { class: 'accordion__body' }, el('p', { text: item.body })));
-      })),
+      })) : null,
       el('div', { class: 'consent__checks' },
         el('label', { class: 'check', for: 'consent-required' }, req, el('span', { class: 'check__box', 'aria-hidden': 'true' }),
-          el('span', { class: 'check__text' }, el('span', { class: 'badge', text: '必須' }), c.required)),
-        el('label', { class: 'check', for: 'consent-optional' }, opt, el('span', { class: 'check__box', 'aria-hidden': 'true' }),
-          el('span', { class: 'check__text' }, el('span', { class: 'badge badge--quiet', text: '任意' }), c.optional))
+          el('span', { class: 'check__text' }, hasOptional ? el('span', { class: 'badge', text: '必須' }) : null, c.required)),
+        hasOptional ? el('label', { class: 'check', for: 'consent-optional' }, opt, el('span', { class: 'check__box', 'aria-hidden': 'true' }),
+          el('span', { class: 'check__text' }, el('span', { class: 'badge badge--quiet', text: '任意' }), c.optional)) : null
       ),
       el('div', { class: 'page__actions' },
         cta,
-        el('p', { class: 'field__note', id: 'consent-note', text: '必須の項目にチェックを入れると進めます。' }))
+        el('p', { class: 'field__note', id: 'consent-note', text: c.note || 'チェックを入れると進めます。' }))
     ));
     return s;
   }

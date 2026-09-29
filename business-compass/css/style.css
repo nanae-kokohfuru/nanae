@@ -272,6 +272,13 @@ img { display: block; max-width: 100%; }
 .accordion__item[open] .accordion__mark::after { transform: rotate(0); }
 .accordion__body { padding: 0 28px 26px 56px; font-size: 13.5px; line-height: 2.1; color: var(--ink-soft); }
 
+/* 同意画面の本文：詰め込まず、1段落ずつ静かに読めるように */
+.consent__body { max-width: 34em; font-size: 14.5px; line-height: 2.2; word-break: auto-phrase; }
+.page--consent .btn-gold__label { white-space: nowrap; letter-spacing: .08em; }
+.consent__body p + p { margin-top: 1.3em; }
+.consent__body p:last-child { margin-top: 2em; font-family: var(--mincho); font-size: 16px; letter-spacing: .08em; color: var(--ink); }
+.page--consent .consent__checks { margin-top: 0; padding-top: 36px; border-top: 1px solid var(--line); }
+
 /* チェック */
 .consent__checks { margin-top: 48px; display: grid; gap: 20px; }
 .check { position: relative; display: grid; grid-template-columns: 22px 1fr; gap: 16px; cursor: pointer; }
