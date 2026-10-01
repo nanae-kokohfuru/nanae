@@ -246,7 +246,9 @@
       list,
       el('div', { class: 'page__actions page__actions--split' },
         goldButton(started ? 'つづきから' : '最初の章からはじめる', function () { go(started ? resumeTarget() : journey[0]); }),
-        started ? el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, 'YOUR BUSINESS COMPASS を見る') : null)
+        started ? el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, 'YOUR BUSINESS COMPASS を見る') : null,
+        /* 回答は消さずに表紙へ戻る */
+        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('cover'); } }, '← 表紙に戻る'))
     ));
     return s;
   }
