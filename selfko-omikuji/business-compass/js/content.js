@@ -62,11 +62,11 @@ window.BC_CONTENT = {
     story:    { src: 'assets/chapters/03_story.jpg', thumb: 'assets/chapters/thumbs/03_story.jpg', position: '50% 60%', alt: '開いた本の上を進む小さな舟' },
     value:    { src: 'assets/chapters/04_value.jpg', thumb: 'assets/chapters/thumbs/04_value.jpg', position: '40% 50%', alt: '割れた岩の中で輝くダイヤモンド' },
     customer: { src: 'assets/chapters/05_customer.jpg', thumb: 'assets/chapters/thumbs/05_customer.jpg', position: '50% 50%', alt: 'やわらかな光の中で手を取り合う二人' },
-    service:  { src: 'assets/chapters/06_service.jpg', thumb: 'assets/chapters/thumbs/06_service.jpg', pending: true, position: '50% 50%', alt: 'リボンのかかった贈り物を手渡す手' },
-    route:    { src: 'assets/chapters/07_route.jpg', thumb: 'assets/chapters/thumbs/07_route.jpg', pending: true, position: '50% 50%', alt: '吊り橋の両側から手を伸ばし合う二人' },
-    number:   { src: 'assets/chapters/08_money.jpg', thumb: 'assets/chapters/thumbs/08_money.jpg', pending: true, position: '60% 50%', alt: '紙幣と金の延べ棒' },
-    keypoint: { src: 'assets/chapters/09_key.jpg', thumb: 'assets/chapters/thumbs/09_key.jpg', pending: true, position: '40% 50%', alt: '山道の裂け目の手前で立ち止まる旅人' },
-    future:   { src: 'assets/chapters/10_future.jpg', thumb: 'assets/chapters/thumbs/10_future.jpg', pending: true, position: '40% 50%', alt: '開いた鳥かごから夕日の空へ飛び立つ鳥' },
+    service:  { src: 'assets/chapters/06_service.jpg', thumb: 'assets/chapters/thumbs/06_service.jpg', position: '50% 50%', alt: 'リボンのかかった贈り物を手渡す手' },
+    route:    { src: 'assets/chapters/07_route.jpg', thumb: 'assets/chapters/thumbs/07_route.jpg', position: '50% 50%', alt: '吊り橋の両側から手を伸ばし合う二人' },
+    number:   { src: 'assets/chapters/08_money.jpg', thumb: 'assets/chapters/thumbs/08_money.jpg', position: '60% 50%', alt: '紙幣と金の延べ棒' },
+    keypoint: { src: 'assets/chapters/09_key.jpg', thumb: 'assets/chapters/thumbs/09_key.jpg', position: '40% 50%', alt: '山道の裂け目の手前で立ち止まる旅人' },
+    future:   { src: 'assets/chapters/10_future.jpg', thumb: 'assets/chapters/thumbs/10_future.jpg', position: '40% 50%', alt: '開いた鳥かごから夕日の空へ飛び立つ鳥' },
     final:    { src: 'assets/book-voyage.jpg', position: '50% 20%', alt: '' }
   },
 
