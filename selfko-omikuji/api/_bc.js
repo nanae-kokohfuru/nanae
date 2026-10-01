@@ -9,11 +9,40 @@
 
 const crypto = require('crypto');
 
-/* Upstash の接続情報が入っている環境変数の「名前」（値ではありません）。
-   ★本番反映前に、Vercel の nanae プロジェクト → Settings → Environment Variables に
-     実際に表示されている名前と一致しているか確認すること。 */
-const STORAGE_URL_VAR = 'KV_REST_API_URL';     /* ★要確認 */
-const STORAGE_TOKEN_VAR = 'KV_REST_API_TOKEN'; /* ★要確認 */
+/* Upstash の接続情報が入っている環境変数の「名前」の候補（値ではありません）。
+   Vercel の Upstash 連携は、設定や時期によって作る名前が違うため、
+   上から順に探して、URL とトークンが「同じ組」でそろっている最初のものを使います。
+   ・UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN … Upstash 連携の標準名
+   ・KV_REST_API_URL / KV_REST_API_TOKEN               … 旧 Vercel KV 互換名（連携が併せて作ることがあります）
+   ・接続時に接頭辞を付けた場合（例：STORAGE_KV_REST_API_URL）も、同じ接頭辞の組で拾います。
+   読み取り専用トークン（KV_REST_API_READ_ONLY_TOKEN）は保存できないため使いません。 */
+const STORAGE_VAR_PAIRS = [
+  ['UPSTASH_REDIS_REST_URL', 'UPSTASH_REDIS_REST_TOKEN'],
+  ['KV_REST_API_URL', 'KV_REST_API_TOKEN']
+];
+
+/* 見つかった組の「名前」だけを覚えておく（値は保持しない・外へ出さない） */
+let resolvedVars = null;
+
+function findStorageVars() {
+  if (resolvedVars) return resolvedVars;
+  const env = process.env;
+  const has = (name) => typeof env[name] === 'string' && env[name].trim() !== '';
+  /* 1) 接頭辞なしの標準名 */
+  for (const [u, t] of STORAGE_VAR_PAIRS) {
+    if (has(u) && has(t)) return (resolvedVars = { url: u, token: t });
+  }
+  /* 2) 接頭辞つき（例：STORAGE_KV_REST_API_URL と STORAGE_KV_REST_API_TOKEN） */
+  const names = Object.keys(env).sort();
+  for (const [u, t] of STORAGE_VAR_PAIRS) {
+    for (const name of names) {
+      if (name === u || !name.endsWith('_' + u)) continue;
+      const prefix = name.slice(0, name.length - u.length);
+      if (has(name) && has(prefix + t)) return (resolvedVars = { url: name, token: prefix + t });
+    }
+  }
+  return null;
+}
 
 const KEY_RECORD = 'bc:r:';      /* 回答者ごとの回答（JSON） */
 const KEY_INDEX = 'bc:index';    /* 回答者一覧（最終更新順） */
@@ -26,10 +55,18 @@ function httpError(status, code) {
 }
 
 function storageConfig() {
-  const url = process.env[STORAGE_URL_VAR];
-  const token = process.env[STORAGE_TOKEN_VAR];
-  if (!url || !token) throw httpError(503, 'storage_not_configured');
-  return { url: url.replace(/\/+$/, ''), token };
+  const vars = findStorageVars();
+  if (!vars) throw httpError(503, 'storage_not_configured');
+  const url = process.env[vars.url].trim().replace(/\/+$/, '');
+  const token = process.env[vars.token].trim();
+  if (!/^https:\/\//.test(url)) throw httpError(503, 'storage_not_configured');
+  return { url, token };
+}
+
+/* 接続確認用：使っている環境変数の「名前」だけを返す（値は返さない） */
+function storageVarNames() {
+  const vars = findStorageVars();
+  return vars ? { url: vars.url, token: vars.token } : null;
 }
 
 /* Upstash REST API：1つのコマンド */
@@ -112,6 +149,6 @@ async function rateLimit(name, req, max, windowSec) {
 }
 
 module.exports = {
-  STORAGE_URL_VAR, STORAGE_TOKEN_VAR, KEY_RECORD, KEY_INDEX,
+  STORAGE_VAR_PAIRS, storageVarNames, KEY_RECORD, KEY_INDEX,
   httpError, redis, pipeline, send, readJson, sha256, safeEqual, randomId, clientIp, rateLimit
 };

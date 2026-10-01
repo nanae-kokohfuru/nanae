@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
 
     if (action === 'status') {
       const pong = await bc.redis(['PING']);
-      return bc.send(res, 200, { ok: true, storage: pong === 'PONG', invite: !!process.env.BC_INVITE_CODE });
+      return bc.send(res, 200, { ok: true, storage: pong === 'PONG', storageVars: bc.storageVarNames(), invite: !!process.env.BC_INVITE_CODE });
     }
 
     if (action === 'list' && req.method === 'GET') {
