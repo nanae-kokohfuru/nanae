@@ -2,8 +2,16 @@
 
 「事業の現在地を知り、次の景色へ。」
 
-ビルド不要の静的サイトです。`business-compass/index.html` をブラウザで開くか、
-このフォルダを静的サーバーで配信すると動きます（例：`npx http-server business-compass`）。
+ビルド不要の静的サイトです。このフォルダの `index.html` をブラウザで開くか、
+このフォルダを静的サーバーで配信すると動きます（例：`npx http-server selfko-omikuji/business-compass`）。
+
+## 公開URLと置き場所
+
+- クライアント用：`https://nanae.vercel.app/business-compass/`
+- 裏カルテ：`https://nanae.vercel.app/business-compass/analysis.html`
+
+Vercel の nanae プロジェクトは `selfko-omikuji/` フォルダをサイトのトップ（`/`）として配信しています。
+そのため BUSINESS COMPASS は `selfko-omikuji/business-compass/` に置いています（リポジトリ直下に置くと配信されず 404 になります）。
 
 ## MONITOR VERSION v1
 
