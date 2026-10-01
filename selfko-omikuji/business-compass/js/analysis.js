@@ -308,7 +308,9 @@
       r.readAsText(f);
     } });
     var label = snap
-      ? '読み込んだ回答ファイル：' + snap.file + (snap.exportedAt ? '（' + new Date(snap.exportedAt).toLocaleDateString('ja-JP') + ' 書き出し）' : '')
+      ? (snap.source === 'cloud'
+        ? '送信された回答：' + (snap.name || '名前未入力') + (snap.exportedAt ? '（最終更新 ' + fmt(snap.exportedAt) + '）' : '')
+        : '読み込んだ回答ファイル：' + snap.file + (snap.exportedAt ? '（' + new Date(snap.exportedAt).toLocaleDateString('ja-JP') + ' 書き出し）' : ''))
       : 'この端末に保存されている本人の回答';
     return el('div', { class: 'an-srcbar' },
       el('p', { class: 'an-srcbar__label' }, el('span', { class: 'an-srcbar__en', text: 'CLIENT DATA' }), label),
@@ -317,6 +319,124 @@
         snap ? el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () {
           doc.client_snapshot = null; save(true); setTimeout(function () { location.reload(); }, 50);
         } }, 'この端末の回答に戻す') : null));
+  }
+
+  function fmt(iso) {
+    if (!iso) return '—';
+    var d = new Date(iso);
+    if (isNaN(d)) return '—';
+    return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  /* ---------- 送信された回答（サーバー）：合言葉 → 回答者一覧 → 読み込み／削除 ---------- */
+  var PASS_KEY = 'business-compass:admin-pass'; /* このタブを閉じるまでだけ覚える（sessionStorage） */
+  function getPass() { try { return sessionStorage.getItem(PASS_KEY) || ''; } catch (e) { return ''; } }
+  function setPass(v) { try { if (v) sessionStorage.setItem(PASS_KEY, v); else sessionStorage.removeItem(PASS_KEY); } catch (e) {} }
+  function adminApi(method, query, body) {
+    var headers = { 'X-BC-Passphrase': getPass() };
+    if (body) headers['Content-Type'] = 'application/json';
+    return fetch('/api/bc-admin' + (query || ''), { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, body: j }; }); },
+        function () { return { status: 0, body: {} }; });
+  }
+  function adminError(r) {
+    if (r.status === 401) return '合言葉が違います';
+    if (r.status === 429) return '合言葉を何度も間違えたため　しばらく受け付けません　15分ほど待ってからお試しください';
+    if (r.status === 503) return '保存先の設定が見つかりません　Vercel の環境変数を確認してください';
+    if (r.status === 0) return '通信できませんでした　通信状況をご確認ください';
+    return 'うまく読み込めませんでした（' + r.status + '）';
+  }
+
+  function cloudPanel() {
+    var box = el('div', { class: 'an-cloud' });
+    var msg = el('p', { class: 'an-cloud__msg', role: 'status', 'aria-live': 'polite' });
+
+    function drawLogin(text) {
+      box.innerHTML = '';
+      var id = 'an-pass';
+      var input = el('input', { type: 'password', id: id, class: 'an-cloud__pass', autocomplete: 'current-password', placeholder: '合言葉' });
+      var form = el('form', { class: 'an-cloud__login', onsubmit: function (e) {
+        e.preventDefault();
+        if (!input.value) return;
+        setPass(input.value);
+        drawList();
+      } },
+        el('label', { class: 'an-cloud__label', for: id }, el('span', { class: 'an-srcbar__en', text: 'RESPONDENTS' }), '送信された回答を見るには　合言葉を入力してください'),
+        el('div', { class: 'an-cloud__row' }, input, el('button', { type: 'submit', class: 'btn-line an-cloud__go' }, '回答者一覧を表示')));
+      box.appendChild(form);
+      msg.textContent = text || '';
+      box.appendChild(msg);
+    }
+
+    function drawList() {
+      box.innerHTML = '';
+      msg.textContent = '読み込み中…';
+      box.appendChild(msg);
+      adminApi('GET', '?action=list').then(function (r) {
+        if (r.status !== 200) { if (r.status === 401) setPass(''); drawLogin(adminError(r)); return; }
+        var list = r.body.respondents || [];
+        box.innerHTML = '';
+        var current = doc.client_snapshot && doc.client_snapshot.source === 'cloud' ? doc.client_snapshot.id : null;
+        var head = el('div', { class: 'an-cloud__head' },
+          el('p', { class: 'an-cloud__label' }, el('span', { class: 'an-srcbar__en', text: 'RESPONDENTS' }), '回答者一覧　' + list.length + '人'),
+          el('div', { class: 'an-cloud__tools' },
+            el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: drawList }, '最新にする'),
+            el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { setPass(''); drawLogin('合言葉を消しました'); } }, '閉じる')));
+        box.appendChild(head);
+        if (!list.length) { box.appendChild(el('p', { class: 'an-cloud__empty', text: 'まだ送信された回答はありません' })); return; }
+        var table = el('table', { class: 'an-cloud__table' },
+          el('thead', {}, el('tr', {}, ['回答者', '状況', '送信日時', '最終更新', ''].map(function (h) { return el('th', { scope: 'col', text: h }); }))),
+          el('tbody', {}, list.map(function (p) {
+            var isCur = p.id === current;
+            return el('tr', { class: isCur ? 'is-current' : '' },
+              el('td', { class: 'an-cloud__name', 'data-label': '回答者' }, p.name || '（名前未入力）', isCur ? el('span', { class: 'an-cloud__now', text: '表示中' }) : null),
+              el('td', { 'data-label': '状況' }, el('span', { class: 'an-cloud__badge is-' + p.status, text: p.status === 'submitted' ? '送信済み' : '回答中' }),
+                el('span', { class: 'an-cloud__count', text: p.answered + ' / ' + (p.total || 80) })),
+              el('td', { 'data-label': '送信日時', text: fmt(p.submittedAt) }),
+              el('td', { 'data-label': '最終更新', text: fmt(p.updatedAt) }),
+              el('td', { class: 'an-cloud__actions' },
+                el('button', { type: 'button', class: 'btn-line an-cloud__load', onclick: function () { loadOne(p); } }, '読み込む'),
+                el('button', { type: 'button', class: 'text-btn text-btn--light an-cloud__del', onclick: function () { removeOne(p); } }, '削除')));
+          })));
+        box.appendChild(table);
+        box.appendChild(msg);
+        msg.textContent = '';
+      });
+    }
+
+    function loadOne(p) {
+      msg.textContent = (p.name || '回答者') + ' さんの回答を読み込んでいます…';
+      adminApi('GET', '?action=get&id=' + encodeURIComponent(p.id)).then(function (r) {
+        if (r.status !== 200) { msg.textContent = adminError(r); return; }
+        doc.client_snapshot = { raw: r.body.answers || {}, source: 'cloud', id: r.body.id, name: r.body.name,
+          file: (r.body.name || '回答者') + '（送信された回答）', exportedAt: r.body.updatedAt, submittedAt: r.body.submittedAt, loadedAt: new Date().toISOString() };
+        save(true);
+        setTimeout(function () { location.reload(); }, 50);
+      });
+    }
+
+    function removeOne(p) {
+      var who = p.name || '名前未入力の回答者';
+      if (!window.confirm(who + ' さんの回答をサーバーから削除しますか\n削除すると元に戻せません')) return;
+      var typed = window.prompt('確認のため「削除」と入力してください');
+      if (typed !== '削除') { msg.textContent = '削除を取りやめました'; return; }
+      adminApi('POST', '', { action: 'delete', id: p.id }).then(function (r) {
+        if (r.status !== 200) { msg.textContent = adminError(r); return; }
+        drawList();
+      });
+    }
+
+    if (getPass()) drawList(); else drawLogin();
+    return box;
+  }
+
+  /* 80問すべての回答（章ごと） */
+  function allAnswers() {
+    return source(C.chapters.map(function (ch) {
+      var ids = [];
+      ch.questions.forEach(function (st) { if (!st.interlude) (st.items || [st]).forEach(function (q) { ids.push(q.id); }); });
+      return { label: ch.no + ' ' + ch.en + '　' + ch.ja, ids: ids };
+    }), '80問すべての回答を見る');
   }
 
   function voice(label, en, id, strong) {
@@ -345,7 +465,7 @@
       el('div', { class: 'an-head__inner an-head__voices' },
         voice('本人が今日整理したいこと', 'CLIENT’S AGENDA', 'session_goal.today', false),
         voice('本人が感じている最大の急所', 'SELF-PERCEIVED', 'self_perceived_bottleneck.key_one', true)),
-      el('div', { class: 'an-head__inner' }, sourceBar()));
+      el('div', { class: 'an-head__inner' }, sourceBar(), cloudPanel()));
 
     var nav = el('nav', { class: 'an-nav', 'aria-label': '裏カルテの目次' },
       el('div', { class: 'an-nav__inner' },
@@ -497,7 +617,7 @@
 
     root.appendChild(header);
     root.appendChild(nav);
-    root.appendChild(el('main', { class: 'an-main' }, assets, untapped, bottleneck, structure, potential, keylever, priority, note, backup));
+    root.appendChild(el('main', { class: 'an-main' }, el('div', { class: 'an-all' }, allAnswers()), assets, untapped, bottleneck, structure, potential, keylever, priority, note, backup));
 
     /* ナビ：いま見ているセクションを示す */
     var links = {};

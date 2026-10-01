@@ -102,6 +102,8 @@
     /* 以前の版で保存された、今はない画面の位置は目次に戻す（回答はそのまま） */
     if (!isValidCursor(cursor)) cursor = 'index';
     S.setCursor(cursor);
+    /* 招待リンクから開いた回答者は　画面を進めるたびに静かにサーバーへも途中保存する */
+    if (remoteOn() && S.state.consent.required && F.filled(S.answer('profile.name'))) window.BCRemote.schedule(remotePayload);
     var screen = render(cursor);
     if (!current || reduceMotion || opts.instant) { swap(screen); return; }
     leaving = true;
@@ -131,8 +133,15 @@
     go(next || 'final');
   }
 
+  function remoteOn() { return !!(window.BCRemote && window.BCRemote.enabled()); }
+  function remotePayload() {
+    S.flush();
+    return { answers: S.state.answers, consent: !!S.state.consent.required, consentAt: S.state.consent.agreedAt,
+      answered: totalAnswered(), total: TOTAL };
+  }
+
   function isValidCursor(cursor) {
-    if (['cover', 'consent', 'index', 'final'].indexOf(cursor) >= 0) return true;
+    if (['cover', 'consent', 'index', 'final', 'mine'].indexOf(cursor) >= 0) return true;
     if (cursor.indexOf('door:') === 0) return !!findChapter(cursor.slice(5));
     if (cursor.indexOf('q:') === 0) return !!steps[cursor.slice(2)];
     return false;
@@ -143,7 +152,8 @@
     if (cursor === 'cover') return coverScreen();
     if (cursor === 'consent') return consentScreen();
     if (cursor === 'index') return indexScreen();
-    if (cursor === 'final') return finalScreen();
+    if (cursor === 'final') return remoteOn() ? sendScreen() : finalScreen();
+    if (cursor === 'mine') return mineScreen();
     if (parts[0] === 'door' && findChapter(parts[1])) return doorScreen(findChapter(parts[1]));
     var sid = cursor.slice(2);
     if (parts[0] === 'q' && steps[sid]) return steps[sid].interlude ? interludeScreen(steps[sid]) : questionScreen(steps[sid]);
@@ -560,15 +570,7 @@
           el('p', { class: 'final__next' }, lines(
             '次のステップでは　このカルテをもとに\n「BUSINESS COMPASS — 1枚の経営羅針盤」を作成します')))),
 
-      el('div', { class: 'karte' }, C.chapters.map(function (ch) {
-        return el('section', { class: 'karte__chapter', 'aria-labelledby': 'karte-' + ch.id },
-          el('header', { class: 'karte__head' },
-            el('span', { class: 'karte__no', text: ch.no }),
-            el('h3', { class: 'karte__en', id: 'karte-' + ch.id }, ch.en, el('span', { class: 'karte__ja', text: ch.ja })),
-            el('button', { type: 'button', class: 'text-btn karte__edit', onclick: function () { go('q:' + ch.questions[0].id); },
-              'aria-label': ch.en + ' を見直す' }, '見直す')),
-          el('dl', { class: 'karte__list' }, karteEntries(ch)));
-      })),
+      karteNode(),
 
       el('div', { class: 'final__actions' },
         el('button', { type: 'button', class: 'btn-line', onclick: function () { window.print(); } }, '印刷・PDFで保存'),
@@ -577,6 +579,120 @@
         el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から')),
       copyright()
     ));
+    return s;
+  }
+
+  /* 80問の回答を章ごとのシートで並べる（最終画面と「私の回答を見る」で共用） */
+  function karteNode() {
+    return el('div', { class: 'karte' }, C.chapters.map(function (ch) {
+      return el('section', { class: 'karte__chapter', 'aria-labelledby': 'karte-' + ch.id },
+        el('header', { class: 'karte__head' },
+          el('span', { class: 'karte__no', text: ch.no }),
+          el('h3', { class: 'karte__en', id: 'karte-' + ch.id }, ch.en, el('span', { class: 'karte__ja', text: ch.ja })),
+          el('button', { type: 'button', class: 'text-btn karte__edit', onclick: function () { go('q:' + ch.questions[0].id); },
+            'aria-label': ch.en + ' を見直す' }, '見直す')),
+        el('dl', { class: 'karte__list' }, karteEntries(ch)));
+    }));
+  }
+
+  function finalHero(c) {
+    return el('div', { class: 'final__hero' },
+      el('div', { class: 'final__media' }, photo('final', 'photo--final'), el('div', { class: 'veil veil--final' })),
+      el('div', { class: 'final__heroInner' },
+        el('p', { class: 'eyebrow eyebrow--light', text: c.eyebrow }),
+        el('h1', { class: 'final__title', tabindex: '-1', 'data-focus': '' }, lines(c.title)),
+        el('div', { class: 'final__body' }, c.body.map(function (t) { return el('p', { text: t }); }))));
+  }
+
+  function formatDateTime(iso) {
+    var d = new Date(iso);
+    if (isNaN(d)) return '';
+    return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' +
+      String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  /* ================================================================
+     招待リンクから開いた回答者の最終画面：「回答をななえに送る」
+     ================================================================ */
+  function sendScreen() {
+    var c = C.final, t = C.send;
+    var s = screenShell('final', 'ivory', c.eyebrow);
+    s.appendChild(finalHero(c));
+
+    var status = el('p', { class: 'send__status', role: 'status', 'aria-live': 'polite' });
+    var btn = goldButton(t.button, doSend);
+    btn.classList.add('send__btn');
+    var label = btn.querySelector('.btn-gold__label');
+    var done = el('div', { class: 'send__done', hidden: true },
+      el('p', { class: 'send__done-title' }, el('span', { class: 'send__mark', 'aria-hidden': 'true' }), t.doneTitle),
+      el('p', { class: 'send__done-body' }, lines(t.doneBody)),
+      el('p', { class: 'send__done-at' }));
+    function showDone(at) {
+      done.hidden = false;
+      done.querySelector('.send__done-at').textContent = at ? t.sentAt + '　' + formatDateTime(at) : '';
+      label.textContent = t.resend;
+      hint.textContent = t.resendHint;
+    }
+    var hint = el('p', { class: 'send__hint', text: t.hint });
+
+    function doSend() {
+      if (btn.disabled) return;
+      btn.disabled = true;
+      btn.classList.add('is-sending');
+      done.hidden = true;
+      label.textContent = t.sending;
+      status.className = 'send__status';
+      status.textContent = t.sendingNote;
+      window.BCRemote.submit(remotePayload).then(function (r) {
+        btn.disabled = false;
+        btn.classList.remove('is-sending');
+        if (r.ok) {
+          status.textContent = '';
+          showDone(r.submittedAt);
+          done.focus && done.setAttribute('tabindex', '-1');
+          done.focus && done.focus({ preventScroll: false });
+        } else {
+          label.textContent = window.BCRemote.submittedAt() ? t.resend : t.button;
+          status.className = 'send__status is-error';
+          status.textContent = r.reason === 'invite' ? t.errorInvite : t.error;
+        }
+      });
+    }
+
+    s.appendChild(el('div', { class: 'page page--send' },
+      el('section', { class: 'send', 'aria-labelledby': 'send-title' },
+        el('p', { class: 'eyebrow', text: 'SEND' }),
+        el('h2', { class: 'send__title', id: 'send-title' }, lines(t.title)),
+        el('p', { class: 'send__count' }, '記入した問い　', el('strong', { text: String(totalAnswered()) }), ' / ' + TOTAL),
+        btn,
+        status,
+        hint,
+        done,
+        el('div', { class: 'send__links' },
+          el('button', { type: 'button', class: 'btn-line', onclick: function () { go('mine'); } }, t.mine),
+          el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'))),
+      copyright()));
+    if (window.BCRemote.submittedAt()) showDone(window.BCRemote.submittedAt());
+    return s;
+  }
+
+  /* ================================================================
+     私の回答を見る（80問を読みやすいシートで）
+     ================================================================ */
+  function mineScreen() {
+    var name = S.answer('profile.name');
+    var s = screenShell('mine', 'ivory', C.send.mineTitle);
+    s.appendChild(el('div', { class: 'page page--wide mine' },
+      el('header', { class: 'page__head' },
+        el('p', { class: 'eyebrow', text: 'MY ANSWERS' }),
+        heading('h1', C.send.mineTitle, 'page__title'),
+        el('p', { class: 'mine__meta' }, (name ? name + ' さん　' : '') + '記入した問い ' + totalAnswered() + ' / ' + TOTAL),
+        el('p', { class: 'page__lead', text: C.send.mineLead })),
+      karteNode(),
+      el('div', { class: 'final__actions' },
+        el('button', { type: 'button', class: 'btn-line', onclick: function () { go('final'); } }, '← 戻る'),
+        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ')),
+      copyright()));
     return s;
   }
 

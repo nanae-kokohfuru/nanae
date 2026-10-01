@@ -175,3 +175,38 @@
   .an-nav, .an-foot, .an-srcbar { display: none !important; }
   .an-sec__head { position: static; }
 }
+
+/* ---------- 送信された回答（回答者一覧） ---------- */
+.an-cloud { padding: 18px 0 26px; border-top: 1px solid var(--on-dark-line); }
+.an-cloud__label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; font-size: 12.5px; color: var(--on-dark-soft); }
+.an-cloud__row { display: flex; flex-wrap: wrap; gap: 10px 14px; margin-top: 12px; }
+.an-cloud__pass { flex: 1 1 240px; max-width: 360px; min-height: 44px; padding: 8px 14px; border: 1px solid var(--on-dark-line); border-radius: 4px; background: rgba(241, 235, 225, .06); color: var(--on-dark); font-size: 15px; letter-spacing: .08em; }
+.an-cloud__pass:focus { outline: none; border-color: var(--gold-soft); }
+.an-cloud__go, .an-cloud__load { color: var(--on-dark); border-color: var(--on-dark-line); }
+.an-cloud__go:hover, .an-cloud__load:hover { border-color: var(--gold-soft); background: rgba(199, 168, 122, .1); }
+.an-cloud__msg { min-height: 1.6em; margin-top: 10px; font-size: 12.5px; color: var(--gold-soft); }
+.an-cloud__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 20px; }
+.an-cloud__tools { display: flex; gap: 20px; }
+.an-cloud__empty { margin-top: 14px; font-size: 13px; color: var(--on-dark-soft); }
+.an-cloud__table { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 13px; }
+.an-cloud__table th { padding: 8px 10px 8px 0; text-align: left; font-size: 10.5px; font-weight: 500; letter-spacing: .2em; color: var(--gold-soft); border-bottom: 1px solid var(--on-dark-line); }
+.an-cloud__table td { padding: 12px 10px 12px 0; border-bottom: 1px solid var(--on-dark-line); vertical-align: middle; color: var(--on-dark); }
+.an-cloud__table tr.is-current td { background: rgba(74, 31, 34, .55); }
+.an-cloud__name { font-family: var(--mincho); font-size: 15px; letter-spacing: .04em; }
+.an-cloud__now { margin-left: 10px; font-family: var(--sans); font-size: 10px; letter-spacing: .2em; color: var(--gold-soft); }
+.an-cloud__badge { display: inline-block; padding: 1px 8px; margin-right: 8px; border: 1px solid var(--on-dark-line); border-radius: 2px; font-size: 11px; letter-spacing: .1em; }
+.an-cloud__badge.is-submitted { border-color: var(--gold-soft); color: var(--gold-soft); }
+.an-cloud__count { font-family: var(--en); font-size: 14px; color: var(--on-dark-soft); }
+.an-cloud__actions { white-space: nowrap; text-align: right; }
+.an-cloud__actions .btn-line { min-height: 36px; padding: 0 14px; margin-right: 14px; }
+.an-cloud__del { color: #E8B9A4; }
+.an-all { padding-top: 32px; }
+@media (max-width: 760px) {
+  .an-cloud__table thead { display: none; }
+  .an-cloud__table, .an-cloud__table tbody, .an-cloud__table tr, .an-cloud__table td { display: block; width: 100%; }
+  .an-cloud__table tr { padding: 10px 0; border-bottom: 1px solid var(--on-dark-line); }
+  .an-cloud__table td { padding: 3px 0; border: 0; }
+  .an-cloud__table td[data-label]::before { content: attr(data-label) '　'; font-size: 10.5px; letter-spacing: .14em; color: var(--gold-soft); }
+  .an-cloud__name::before { display: none; }
+  .an-cloud__actions { text-align: left; padding-top: 8px !important; }
+}
