@@ -141,7 +141,7 @@
   }
 
   function isValidCursor(cursor) {
-    if (['cover', 'consent', 'index', 'final', 'mine'].indexOf(cursor) >= 0) return true;
+    if (['cover', 'consent', 'index', 'final', 'compass', 'mine'].indexOf(cursor) >= 0) return true;
     if (cursor.indexOf('door:') === 0) return !!findChapter(cursor.slice(5));
     if (cursor.indexOf('q:') === 0) return !!steps[cursor.slice(2)];
     return false;
@@ -152,7 +152,8 @@
     if (cursor === 'cover') return coverScreen();
     if (cursor === 'consent') return consentScreen();
     if (cursor === 'index') return indexScreen();
-    if (cursor === 'final') return remoteOn() ? sendScreen() : finalScreen();
+    if (cursor === 'final') return finalScreen();
+    if (cursor === 'compass') return compassScreen();
     if (cursor === 'mine') return mineScreen();
     if (parts[0] === 'door' && findChapter(parts[1])) return doorScreen(findChapter(parts[1]));
     var sid = cursor.slice(2);
@@ -543,46 +544,289 @@
     return root;
   }
 
+  /* ================================================================
+     完了画面：花火 → おつかれさまでした〜 → 最後の2アクション
+     招待リンクから開いた人には「のむら ななえに送る」、
+     それ以外の人には「回答を手元に残す（印刷・回答データ）」を並べる
+     ================================================================ */
   function finalScreen() {
     var c = C.final;
-    var s = screenShell('final', 'ivory', c.eyebrow);
-    var answered = totalAnswered();
-    var total = allQuestions.length;
-    var name = S.answer('profile.name');
-    var brand = S.answer('profile.brand_names');
+    var invited = remoteOn();
+    var s = screenShell('final', 'ivory', c.title);
+    var sky = el('div', { class: 'fin__sky', 'aria-hidden': 'true' });
+    s.appendChild(sky);
+    if (!reduceMotion) startFireworks(sky);
 
-    s.appendChild(el('div', { class: 'final__hero' },
-      el('div', { class: 'final__media' }, photo('final', 'photo--final'), el('div', { class: 'veil veil--final' })),
-      el('div', { class: 'final__heroInner' },
-        el('p', { class: 'eyebrow eyebrow--light', text: c.eyebrow }),
-        el('h1', { class: 'final__title', tabindex: '-1', 'data-focus': '' }, lines(c.title)),
-        el('div', { class: 'final__body' }, c.body.map(function (t) { return el('p', { text: t }); })))));
-
-    s.appendChild(el('div', { class: 'page page--wide final__summary' },
-      el('div', { class: 'final__overview' },
-        el('div', { class: 'final__rose' }, compassRose()),
-        el('div', { class: 'final__meta' },
-          el('p', { class: 'eyebrow', text: 'KARTE' }),
-          el('h2', { class: 'final__name' }, name ? name + ' さん' : 'あなた', brand ? el('span', { text: brand }) : null),
-          el('dl', { class: 'final__stats' },
-            el('dt', { text: '記入した問い' }), el('dd', {}, el('strong', { text: String(answered) }), ' / ' + total),
-            el('dt', { text: '最終更新' }), el('dd', { text: S.state.updatedAt ? new Date(S.state.updatedAt).toLocaleDateString('ja-JP') : '—' })),
-          el('p', { class: 'final__next' }, lines(
-            '次のステップでは　このカルテをもとに\n「BUSINESS COMPASS — 1枚の経営羅針盤」を作成します')))),
-
-      karteNode(),
-
-      el('div', { class: 'final__actions' },
-        el('button', { type: 'button', class: 'btn-line', onclick: function () { window.print(); } }, '印刷・PDFで保存'),
-        el('button', { type: 'button', class: 'btn-line', onclick: downloadJSON }, '回答データを書き出す'),
+    s.appendChild(el('div', { class: 'fin' },
+      el('header', { class: 'fin__head' },
+        el('p', { class: 'fin__eyebrow', text: c.eyebrow }),
+        el('h1', { class: 'fin__title', tabindex: '-1', 'data-focus': '' }, c.title),
+        el('div', { class: 'fin__rule', 'aria-hidden': 'true' }, el('span', {})),
+        el('p', { class: 'fin__message' }, lines(c.message)),
+        el('p', { class: 'fin__congrats' },
+          el('span', { class: 'fin__spark', 'aria-hidden': 'true', text: '✦' }), c.congrats,
+          el('span', { class: 'fin__spark', 'aria-hidden': 'true', text: '✦' })),
+        el('p', { class: 'fin__count' }, c.count + '　', el('strong', { text: String(totalAnswered()) }), ' / ' + TOTAL)),
+      el('div', { class: 'fin__ctas' },
+        compassCta(c),
+        invited ? sendCta(c) : keepPanel(c)),
+      el('div', { class: 'fin__links' },
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'),
-        el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から')),
-      copyright()
-    ));
+        invited ? null : el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から')),
+      copyright()));
     return s;
   }
 
-  /* 80問の回答を章ごとのシートで並べる（最終画面と「私の回答を見る」で共用） */
+  function ctaArrow() {
+    return el('span', { class: 'cta__arrow', 'aria-hidden': 'true' }, el('span', { text: '→' }));
+  }
+
+  /* CTA①：ここまでの回答を整理した BUSINESS COMPASS 骨子を見る */
+  function compassCta(c) {
+    var t = c.compassCta;
+    return el('button', { type: 'button', class: 'cta cta--gold', onclick: function () { go('compass'); } },
+      el('span', { class: 'cta__icon' }, ctaIcon('book')),
+      el('span', { class: 'cta__text' },
+        el('span', { class: 'cta__pre', text: t.pre }),
+        el('span', { class: 'cta__mid', text: t.mid }),
+        el('span', { class: 'cta__brand', text: t.brand }),
+        el('span', { class: 'cta__main', text: t.post })),
+      ctaArrow());
+  }
+
+  /* CTA②：この回答を のむら ななえに送る（送信の仕組みは BCRemote のまま） */
+  function sendCta(c) {
+    var t = C.send, sc = c.sendCta;
+    var main = el('span', { class: 'cta__main', text: sc.main });
+    var btn = el('button', { type: 'button', class: 'cta cta--rose send__btn', onclick: doSend },
+      el('span', { class: 'cta__icon' }, ctaIcon('letter')),
+      el('span', { class: 'cta__text' },
+        el('span', { class: 'cta__pre', text: sc.pre }),
+        main,
+        el('span', { class: 'cta__orn', 'aria-hidden': 'true' }, el('span', {}))),
+      ctaArrow());
+    var status = el('p', { class: 'send__status', role: 'status', 'aria-live': 'polite' });
+    var hint = el('p', { class: 'send__hint', text: t.hint });
+    var done = el('div', { class: 'send__done', hidden: true, tabindex: '-1' },
+      el('p', { class: 'send__done-title' }, el('span', { class: 'send__mark', 'aria-hidden': 'true' }), t.doneTitle),
+      el('p', { class: 'send__done-body' }, lines(t.doneBody)),
+      el('p', { class: 'send__done-at' }));
+    function showDone(at) {
+      done.hidden = false;
+      done.querySelector('.send__done-at').textContent = at ? t.sentAt + '　' + formatDateTime(at) : '';
+      hint.textContent = t.resendHint;
+    }
+    function doSend() {
+      if (btn.disabled) return;
+      btn.disabled = true;
+      btn.classList.add('is-sending');
+      done.hidden = true;
+      main.textContent = t.sending;
+      status.className = 'send__status';
+      status.textContent = t.sendingNote;
+      window.BCRemote.submit(remotePayload).then(function (r) {
+        btn.disabled = false;
+        btn.classList.remove('is-sending');
+        main.textContent = sc.main;
+        if (r.ok) {
+          status.textContent = '';
+          showDone(r.submittedAt);
+          done.focus({ preventScroll: true });
+          done.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+        } else {
+          status.className = 'send__status is-error';
+          status.textContent = r.reason === 'invite' ? t.errorInvite : t.error;
+        }
+      });
+    }
+    if (window.BCRemote.submittedAt()) showDone(window.BCRemote.submittedAt());
+    return el('div', { class: 'fin__send' }, btn, status, hint, done);
+  }
+
+  /* 招待リンクなしで開いた人：回答を手元に残す（印刷・回答データの書き出し） */
+  function keepPanel(c) {
+    return el('div', { class: 'fin__keep' },
+      el('p', { class: 'fin__keep-title', text: c.keepTitle }),
+      el('p', { class: 'fin__keep-body', text: c.keepBody }),
+      el('div', { class: 'fin__keep-actions' },
+        el('button', { type: 'button', class: 'btn-line', onclick: function () {
+          go('compass', { instant: true });
+          setTimeout(function () { window.print(); }, 300);
+        } }, C.compass.print),
+        el('button', { type: 'button', class: 'btn-line', onclick: downloadJSON }, '回答データを書き出す')));
+  }
+
+  /* CTA の小さな線画（画像ファイルを使わない） */
+  function ctaIcon(kind) {
+    var NS = 'http://www.w3.org/2000/svg';
+    function svg(tag, attrs) {
+      var n = document.createElementNS(NS, tag);
+      Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+      return n;
+    }
+    var root = svg('svg', { viewBox: '0 0 80 80', class: 'cta__svg cta__svg--' + kind, 'aria-hidden': 'true', focusable: 'false' });
+    if (kind === 'book') {
+      var g = svg('g', { transform: 'rotate(-8 40 40)' });
+      g.appendChild(svg('rect', { x: 17, y: 12, width: 44, height: 56, rx: 2, class: 'ic-paper' }));
+      g.appendChild(svg('rect', { x: 21, y: 16, width: 36, height: 48, rx: 1, class: 'ic-frame' }));
+      g.appendChild(svg('circle', { cx: 39, cy: 33, r: 7.5, class: 'ic-frame' }));
+      g.appendChild(svg('path', { d: 'M39 25.5 L41 33 L39 40.5 L37 33 Z', class: 'ic-gold' }));
+      g.appendChild(svg('path', { d: 'M27 48 H51 M30 53 H48 M32 58 H46', class: 'ic-line' }));
+      root.appendChild(g);
+      root.appendChild(svg('path', { d: 'M6 62 C 18 52, 30 74, 44 64 S 66 58, 76 66', class: 'ic-ribbon' }));
+    } else {
+      root.appendChild(svg('path', { d: 'M5 54 C 20 46, 32 70, 50 62 S 70 58, 78 64', class: 'ic-ribbon' }));
+      var e = svg('g', { transform: 'rotate(-10 40 40)' });
+      e.appendChild(svg('rect', { x: 10, y: 22, width: 60, height: 40, rx: 2, class: 'ic-paper' }));
+      e.appendChild(svg('path', { d: 'M10 24 L40 46 L70 24', class: 'ic-frame' }));
+      e.appendChild(svg('path', { d: 'M10 62 L32 42 M70 62 L48 42', class: 'ic-line' }));
+      e.appendChild(svg('circle', { cx: 40, cy: 46, r: 7, class: 'ic-seal' }));
+      e.appendChild(svg('path', { d: 'M40 41.5 V50.5 M40 45 L37.4 43 M40 47.6 L42.6 45.6', class: 'ic-sealmark' }));
+      root.appendChild(e);
+    }
+    return root;
+  }
+
+  /* ---------- 花火（完了画面を開いたときに数発だけ打ち上げ、終わったら描画を止める） ---------- */
+  function startFireworks(host) {
+    var canvas = document.createElement('canvas');
+    canvas.className = 'fin__canvas';
+    host.appendChild(canvas);
+    var ctx = canvas.getContext && canvas.getContext('2d');
+    if (!ctx) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0;
+    function size() {
+      W = host.clientWidth || window.innerWidth;
+      H = host.clientHeight || 400;
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    /* シャンパンゴールド・アンティークゴールド・ごく淡いローズゴールド */
+    var COLORS = ['246,232,200', '236,210,152', '214,178,112', '240,208,192', '255,248,232'];
+    var PLAN = [
+      { t: 250, x: .30, y: .30, s: 1 },
+      { t: 1000, x: .72, y: .22, s: 1.05 },
+      { t: 1750, x: .50, y: .14, s: 1.25 },
+      { t: 2600, x: .16, y: .17, s: .78 },
+      { t: 3200, x: .86, y: .32, s: .82 }
+    ];
+    var DRAG = 0.0021, GRAVITY = 0.000055;
+    var rockets = [], sparks = [], flashes = [];
+    var clock = 0, last = 0, next = 0, raf = 0, stopped = false, attached = false, waiting = 0;
+
+    function launch(p) {
+      var tx = p.x * W, ty = p.y * H;
+      rockets.push({ x0: tx + (Math.random() - .5) * W * .06, y0: H * .9, tx: tx, ty: ty, age: 0,
+        dur: 950 + Math.random() * 250, s: p.s, trail: [] });
+    }
+    function burst(r) {
+      var small = W < 640;
+      var count = Math.round((small ? 56 : 80) * r.s);
+      var radius = Math.min(W * (small ? .25 : .17), 230) * r.s;
+      var main = COLORS[Math.floor(Math.random() * 3)];
+      for (var i = 0; i < count; i++) {
+        var a = (i / count) * Math.PI * 2 + Math.random() * .12;
+        var ring = Math.random() < .72;
+        var v = radius * DRAG * (ring ? .86 + Math.random() * .14 : .25 + Math.random() * .6);
+        sparks.push({ x: r.tx, y: r.ty, vx: Math.cos(a) * v, vy: Math.sin(a) * v, age: 0,
+          life: 1900 + Math.random() * 1300, w: ring ? 1.4 : 1.1,
+          c: Math.random() < .7 ? main : COLORS[Math.floor(Math.random() * COLORS.length)],
+          tw: Math.random() < .35 ? Math.random() * 6 : -1 });
+      }
+      flashes.push({ x: r.tx, y: r.ty, r: radius * .6, age: 0, life: 420 });
+    }
+    function frame(now) {
+      if (stopped) return;
+      /* 画面の切り替えが終わって表示されるまで待つ。表示後に画面を離れたら止める */
+      if (!canvas.isConnected) {
+        if (attached || ++waiting > 240) { stop(); return; }
+        raf = requestAnimationFrame(frame);
+        return;
+      }
+      if (!attached) { attached = true; size(); }
+      if (document.hidden) { raf = 0; return; }
+      var dt = last ? Math.min(now - last, 48) : 16;
+      last = now;
+      clock += dt;
+      while (next < PLAN.length && clock >= PLAN[next].t) launch(PLAN[next++]);
+
+      /* 前のコマを少しずつ消して、光の尾を残す */
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = 'rgba(0,0,0,' + (1 - Math.pow(.8, dt / 16.7)).toFixed(3) + ')';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.lineCap = 'round';
+
+      flashes = flashes.filter(function (f) {
+        f.age += dt;
+        var k = 1 - f.age / f.life;
+        if (k <= 0) return false;
+        var g = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
+        g.addColorStop(0, 'rgba(255,226,170,' + (.16 * k * k).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(255,226,170,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2); ctx.fill();
+        return true;
+      });
+
+      rockets = rockets.filter(function (r) {
+        r.age += dt;
+        var k = Math.min(r.age / r.dur, 1);
+        var e = 1 - Math.pow(1 - k, 3);
+        var x = r.x0 + (r.tx - r.x0) * e, y = r.y0 + (r.ty - r.y0) * e;
+        r.trail.push([x, y]);
+        if (r.trail.length > 10) r.trail.shift();
+        for (var i = 1; i < r.trail.length; i++) {
+          ctx.strokeStyle = 'rgba(246,226,186,' + (i / r.trail.length * .5).toFixed(3) + ')';
+          ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.moveTo(r.trail[i - 1][0], r.trail[i - 1][1]); ctx.lineTo(r.trail[i][0], r.trail[i][1]); ctx.stroke();
+        }
+        if (k >= 1) { burst(r); return false; }
+        return true;
+      });
+
+      var drag = Math.exp(-DRAG * dt);
+      sparks = sparks.filter(function (p) {
+        p.age += dt;
+        if (p.age >= p.life) return false;
+        var px = p.x, py = p.y;
+        p.vy += GRAVITY * dt;
+        p.vx *= drag; p.vy *= drag;
+        p.x += p.vx * dt; p.y += p.vy * dt;
+        var k = 1 - p.age / p.life;
+        var alpha = Math.pow(k, 1.5);
+        if (p.tw >= 0 && k < .55) alpha *= .45 + .55 * Math.abs(Math.sin(p.age * .012 + p.tw));
+        ctx.strokeStyle = 'rgba(' + p.c + ',' + alpha.toFixed(3) + ')';
+        ctx.lineWidth = p.w;
+        ctx.beginPath(); ctx.moveTo(px - (p.x - px) * 1.2, py - (p.y - py) * 1.2); ctx.lineTo(p.x, p.y); ctx.stroke();
+        return true;
+      });
+
+      if (next >= PLAN.length && !rockets.length && !sparks.length && !flashes.length) {
+        ctx.clearRect(0, 0, W, H);
+        host.classList.add('is-done');
+        stop();
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    }
+    function onVisible() {
+      if (!document.hidden && !raf && !stopped) { last = 0; raf = requestAnimationFrame(frame); }
+    }
+    function stop() {
+      stopped = true;
+      if (raf) cancelAnimationFrame(raf);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('resize', size);
+    }
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('resize', size);
+    raf = requestAnimationFrame(frame);
+  }
+
+  /* 80問の回答を章ごとのシートで並べる（「80問すべての回答を見る」） */
   function karteNode() {
     return el('div', { class: 'karte' }, C.chapters.map(function (ch) {
       return el('section', { class: 'karte__chapter', 'aria-labelledby': 'karte-' + ch.id },
@@ -595,15 +839,6 @@
     }));
   }
 
-  function finalHero(c) {
-    return el('div', { class: 'final__hero' },
-      el('div', { class: 'final__media' }, photo('final', 'photo--final'), el('div', { class: 'veil veil--final' })),
-      el('div', { class: 'final__heroInner' },
-        el('p', { class: 'eyebrow eyebrow--light', text: c.eyebrow }),
-        el('h1', { class: 'final__title', tabindex: '-1', 'data-focus': '' }, lines(c.title)),
-        el('div', { class: 'final__body' }, c.body.map(function (t) { return el('p', { text: t }); }))));
-  }
-
   function formatDateTime(iso) {
     var d = new Date(iso);
     if (isNaN(d)) return '';
@@ -612,72 +847,172 @@
   }
 
   /* ================================================================
-     招待リンクから開いた回答者の最終画面：「回答をななえに送る」
+     骨子シート：本人の回答を10章ごとに整理して見せる
+     ・AIによる解釈・要約・追加はしない。書かれた言葉をそのまま、まとまりごとに並べる
+     ・content.js の blocks に入っていない質問も「そのほか」に必ず出す（回答は隠れない）
      ================================================================ */
-  function sendScreen() {
-    var c = C.final, t = C.send;
-    var s = screenShell('final', 'ivory', c.eyebrow);
-    s.appendChild(finalHero(c));
+  function findQuestion(id) { return allQuestions.filter(function (q) { return q.id === id; })[0]; }
+  function summaryOf(q) { return q ? F.get(q.type).summarize(q, getter) : null; }
 
-    var status = el('p', { class: 'send__status', role: 'status', 'aria-live': 'polite' });
-    var btn = goldButton(t.button, doSend);
-    btn.classList.add('send__btn');
-    var label = btn.querySelector('.btn-gold__label');
-    var done = el('div', { class: 'send__done', hidden: true },
-      el('p', { class: 'send__done-title' }, el('span', { class: 'send__mark', 'aria-hidden': 'true' }), t.doneTitle),
-      el('p', { class: 'send__done-body' }, lines(t.doneBody)),
-      el('p', { class: 'send__done-at' }));
-    function showDone(at) {
-      done.hidden = false;
-      done.querySelector('.send__done-at').textContent = at ? t.sentAt + '　' + formatDateTime(at) : '';
-      label.textContent = t.resend;
-      hint.textContent = t.resendHint;
-    }
-    var hint = el('p', { class: 'send__hint', text: t.hint });
-
-    function doSend() {
-      if (btn.disabled) return;
-      btn.disabled = true;
-      btn.classList.add('is-sending');
-      done.hidden = true;
-      label.textContent = t.sending;
-      status.className = 'send__status';
-      status.textContent = t.sendingNote;
-      window.BCRemote.submit(remotePayload).then(function (r) {
-        btn.disabled = false;
-        btn.classList.remove('is-sending');
-        if (r.ok) {
-          status.textContent = '';
-          showDone(r.submittedAt);
-          done.focus && done.setAttribute('tabindex', '-1');
-          done.focus && done.focus({ preventScroll: false });
-        } else {
-          label.textContent = window.BCRemote.submittedAt() ? t.resend : t.button;
-          status.className = 'send__status is-error';
-          status.textContent = r.reason === 'invite' ? t.errorInvite : t.error;
-        }
-      });
-    }
-
-    s.appendChild(el('div', { class: 'page page--send' },
-      el('section', { class: 'send', 'aria-labelledby': 'send-title' },
-        el('p', { class: 'eyebrow', text: 'SEND' }),
-        el('h2', { class: 'send__title', id: 'send-title' }, lines(t.title)),
-        el('p', { class: 'send__count' }, '記入した問い　', el('strong', { text: String(totalAnswered()) }), ' / ' + TOTAL),
-        btn,
-        status,
-        hint,
-        done,
-        el('div', { class: 'send__links' },
-          el('button', { type: 'button', class: 'btn-line', onclick: function () { go('mine'); } }, t.mine),
+  function compassScreen() {
+    var c = C.compass;
+    var name = S.answer('profile.name');
+    var brand = S.answer('profile.brand_names');
+    var s = screenShell('compass', 'ivory', c.title);
+    s.appendChild(el('div', { class: 'page page--wide cmp' },
+      el('header', { class: 'cmp__head' },
+        el('p', { class: 'eyebrow', text: c.eyebrow }),
+        heading('h1', c.title, 'page__title cmp__title'),
+        el('p', { class: 'cmp__who' }, (F.filled(name) ? name + ' さん' : 'あなた'), F.filled(brand) ? el('span', { text: brand }) : null),
+        el('p', { class: 'page__lead cmp__lead', text: c.lead }),
+        el('p', { class: 'cmp__meta' }, C.final.count + '　', el('strong', { text: String(totalAnswered()) }), ' / ' + TOTAL,
+          S.state.updatedAt ? el('span', { text: '最終更新　' + formatDateTime(S.state.updatedAt) }) : null)),
+      el('section', { class: 'cmp__overview', 'aria-labelledby': 'cmp-overview' },
+        el('div', { class: 'cmp__rose' }, compassRose()),
+        el('div', { class: 'cmp__overview-body' },
+          el('h2', { class: 'cmp__overview-title', id: 'cmp-overview' }, el('span', { text: 'OVERVIEW' }), c.overview),
+          el('ol', { class: 'cmp__index' }, C.chapters.map(function (ch) {
+            return el('li', {}, el('button', { type: 'button', class: 'cmp__index-link', onclick: function () {
+              var target = document.getElementById('cmp-' + ch.id);
+              if (target) target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            } },
+              el('span', { class: 'cmp__index-no', text: ch.no }),
+              el('span', { class: 'cmp__index-name' }, el('span', { class: 'cmp__index-en', text: ch.en }), el('span', { class: 'cmp__index-ja', text: ch.ja })),
+              el('span', { class: 'cmp__index-val', text: headlineText(summaryOf(findQuestion(c.headline[ch.id]))) || '—' })));
+          })))),
+      C.chapters.map(compassChapter),
+      el('div', { class: 'cmp__foot' },
+        el('button', { type: 'button', class: 'cmp__all', onclick: function () { go('mine'); } },
+          el('span', { class: 'cmp__all-label', text: c.all }), el('span', { class: 'cmp__all-arrow', 'aria-hidden': 'true', text: '→' })),
+        el('div', { class: 'cmp__foot-links' },
+          el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, '← ' + c.back),
+          remoteOn() ? null : el('button', { type: 'button', class: 'text-btn', onclick: function () { window.print(); } }, c.print),
           el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'))),
       copyright()));
-    if (window.BCRemote.submittedAt()) showDone(window.BCRemote.submittedAt());
     return s;
   }
 
+  /* 全体像の行に出す、代表の回答（本人の言葉をそのまま） */
+  function headlineText(sum) {
+    if (!sum) return '';
+    if (sum.text) return sum.text.split('\n')[0];
+    if (sum.tags) return sum.tags.join('・');
+    if (sum.items) return sum.items.join('・');
+    if (sum.rows && sum.rows[0]) return sum.rows[0].text;
+    return '';
+  }
+
+  function compassChapter(ch) {
+    var blocks = (C.compass.blocks[ch.id] || []).map(function (b) {
+      return { title: b.title, products: b.products, qs: b.ids.map(findQuestion).filter(Boolean) };
+    });
+    var used = {};
+    blocks.forEach(function (b) { b.qs.forEach(function (q) { used[q.id] = true; }); });
+    var rest = ch.flat.filter(function (q) { return !used[q.id]; });
+    if (rest.length) blocks.push({ title: 'そのほか', qs: rest });
+    var n = answeredIn(ch);
+    var body = blocks.map(compassBlock).filter(Boolean);
+    return el('section', { class: 'cmp__chapter', id: 'cmp-' + ch.id, 'aria-labelledby': 'cmp-h-' + ch.id },
+      el('header', { class: 'cmp__ch-head' },
+        el('span', { class: 'cmp__ch-no', text: ch.no }),
+        el('div', { class: 'cmp__ch-names' },
+          el('h2', { class: 'cmp__ch-en', id: 'cmp-h-' + ch.id }, ch.en, el('span', { class: 'cmp__ch-ja', text: ch.ja })),
+          el('p', { class: 'cmp__ch-desc', text: ch.desc })),
+        el('div', { class: 'cmp__ch-side' },
+          el('span', { class: 'cmp__ch-count', text: n + ' / ' + ch.flat.length }),
+          el('button', { type: 'button', class: 'text-btn cmp__edit', onclick: function () { go('q:' + ch.questions[0].id); },
+            'aria-label': ch.en + ' を見直す' }, '見直す'))),
+      body.length ? body : el('p', { class: 'cmp__empty', text: C.compass.empty }));
+  }
+
+  /* 短い答え（ひとこと・選んだもの）は並べて、長い答え（文章・一覧・地図）は1行ずつ */
+  function entryKind(q, sum) {
+    if (q.feature) return 'feature';
+    var keys = Object.keys(sum).filter(function (k) { return sum[k] != null; });
+    if (keys.length === 1 && keys[0] === 'text') return q.type !== 'textarea' && sum.text.length <= 20 && sum.text.indexOf('\n') < 0 ? 'fact' : 'long';
+    if (keys.length === 1 && keys[0] === 'tags') return 'chips';
+    return 'long';
+  }
+
+  function compassBlock(b) {
+    var entries = b.qs.map(function (q) { return { q: q, sum: summaryOf(q) }; }).filter(function (e) { return e.sum; });
+    if (!entries.length) return null;
+    var out = [];
+    if (b.products) {
+      var p = productsNode(entries);
+      if (p) { out.push(p.node); entries = p.rest; }
+    }
+    var grid = null;
+    entries.forEach(function (e) {
+      var kind = entryKind(e.q, e.sum);
+      var label = el('p', { class: 'cmp__label', text: e.q.label || e.q.title.replace(/\n/g, '') });
+      if (kind === 'fact' || kind === 'chips') {
+        if (!grid) { grid = el('div', { class: 'cmp__facts' }); out.push(grid); }
+        grid.appendChild(el('div', { class: 'cmp__fact' + (kind === 'chips' ? ' cmp__fact--wide' : '') },
+          label, el('div', { class: 'cmp__value' }, summaryNode(e.sum))));
+        return;
+      }
+      grid = null;
+      out.push(el('div', { class: 'cmp__entry' + (kind === 'feature' ? ' cmp__entry--feature' : '') },
+        label, el('div', { class: 'cmp__body' }, summaryNode(e.sum))));
+    });
+    /* 2列に並べたとき　ひとつだけ余る短い答えは横幅いっぱいにして　空きマスを作らない */
+    out.forEach(function (node) {
+      if (!node.classList.contains('cmp__facts')) return;
+      var run = [];
+      Array.prototype.slice.call(node.children).concat([null]).forEach(function (cell) {
+        if (cell && !cell.classList.contains('cmp__fact--wide')) { run.push(cell); return; }
+        if (run.length % 2) run[run.length - 1].classList.add('cmp__fact--wide');
+        run = [];
+      });
+    });
+    return el('div', { class: 'cmp__block' },
+      el('h3', { class: 'cmp__block-title' }, el('span', { 'aria-hidden': 'true' }), b.title),
+      out);
+  }
+
+  /* 商品・サービス：1つずつカードにし、「中心」「育てたい」「見直したい」を印で添える
+     商品に結びつかない答え（「まだ決まっていない」など）は、ふつうの項目として残す */
+  function productsNode(entries) {
+    var listQ = findQuestion('products.list');
+    var items = (S.answer('products.list') || []).filter(F.filled);
+    var listSum = summaryOf(listQ);
+    if (!items.length || !listSum || !listSum.cards) return null;
+    var core = S.answer('products.core');
+    var grow = S.answer('products.grow') || [];
+    var reduce = S.answer('products.reduce') || [];
+    var ids = items.map(function (it) { return it._id; });
+    var nameLabel = listQ.fields[0].label;
+    var cards = items.map(function (it, i) {
+      var rows = (listSum.cards[i] || { rows: [] }).rows;
+      var nameRow = rows.filter(function (r) { return r.label === nameLabel; })[0];
+      var marks = [];
+      if (core === it._id) marks.push(['core', '中心']);
+      if (grow.indexOf(it._id) >= 0) marks.push(['grow', '育てたい']);
+      if (reduce.indexOf(it._id) >= 0) marks.push(['reduce', '見直したい']);
+      return el('li', { class: 'cmp__product' + (core === it._id ? ' is-core' : '') },
+        el('p', { class: 'cmp__product-name', text: nameRow ? nameRow.text : '（名称未記入）' }),
+        marks.length ? el('ul', { class: 'cmp__marks' }, marks.map(function (m) {
+          return el('li', { class: 'cmp__mark cmp__mark--' + m[0], text: m[1] });
+        })) : null,
+        rowsNode(rows.filter(function (r) { return r !== nameRow; })));
+    });
+    /* 商品カードに印として載らなかった答えは、そのまま項目として残す */
+    var rest = entries.filter(function (e) {
+      if (e.q.id === 'products.list') return false;
+      var v = S.answer(e.q.id);
+      var vals = Array.isArray(v) ? v : [v];
+      return vals.some(function (x) { return F.filled(x) && ids.indexOf(x) < 0; });
+    }).map(function (e) {
+      if (!Array.isArray(S.answer(e.q.id))) return e;
+      var left = (S.answer(e.q.id) || []).filter(function (x) { return ids.indexOf(x) < 0; });
+      return { q: e.q, sum: { tags: left } };
+    });
+    return { node: el('ol', { class: 'cmp__products' }, cards), rest: rest };
+  }
+
   /* ================================================================
-     私の回答を見る（80問を読みやすいシートで）
+     80問すべての回答を見る（質問ごとのシート）
      ================================================================ */
   function mineScreen() {
     var name = S.answer('profile.name');
@@ -690,7 +1025,8 @@
         el('p', { class: 'page__lead', text: C.send.mineLead })),
       karteNode(),
       el('div', { class: 'final__actions' },
-        el('button', { type: 'button', class: 'btn-line', onclick: function () { go('final'); } }, '← 戻る'),
+        el('button', { type: 'button', class: 'btn-line', onclick: function () { go('compass'); } }, '← 骨子へ戻る'),
+        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, '完了画面へ'),
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ')),
       copyright()));
     return s;

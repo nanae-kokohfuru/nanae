@@ -120,34 +120,111 @@ window.BC_CONTENT = {
     72: 'いよいよ最後の景色へ'
   },
 
+  /* ---------- 80問を完走したあとの完了画面 ---------- */
   final: {
     eyebrow: 'YOUR BUSINESS COMPASS',
-    title: 'ここまでの旅\nおつかれさまでした',
-    body: [
-      'あなたが書いたものは　正解でも評価でもありません',
-      'ここから一緒に\n事業の現在地と次に進む方向を整理していきます'
-    ]
+    title: 'おつかれさまでした〜',
+    message: 'あなたの事業の羅針盤が\nできました！',
+    congrats: 'おめでとうございます',
+    count: '記入した問い',
+    /* CTA① 本人の控え（骨子シートへ） */
+    compassCta: { pre: 'ここまでの回答を整理した', mid: 'あなたの事業の', brand: 'BUSINESS COMPASS', post: '骨子を見る' },
+    /* CTA② 招待リンクから開いた人だけ：回答を送る */
+    sendCta: { pre: 'この回答を', main: 'のむら ななえに送る' },
+    /* 招待リンクなしで開いた人：CTA② の代わりに記録の残し方 */
+    keepTitle: '回答を手元に残す',
+    keepBody: 'この端末に保存されています\n印刷・PDF　または回答データとして残せます'
+  },
+
+  /* ---------- 骨子シート（本人の回答を10章ごとに整理して見せる） ----------
+     AIによる解釈・要約はしません。書かれた言葉をそのまま、まとまりごとに並べます。
+     blocks の ids に入っていない質問も、章の最後に必ず表示されます（回答が隠れることはありません）。 */
+  compass: {
+    eyebrow: 'BUSINESS COMPASS',
+    title: 'あなたの事業の骨子',
+    lead: '80問の回答を　10のテーマに整理しました\nここにある言葉は　すべてあなたが書いたものです',
+    overview: '全体像',
+    empty: 'まだ記入がありません',
+    all: '80問すべての回答を見る',
+    back: '完了画面へ戻る',
+    print: '印刷・PDFで保存',
+    /* 全体像の行に添える、章ごとの代表の回答（本人の回答をそのまま表示） */
+    headline: {
+      about: 'profile.brand_names', current: 'business_current.form', story: 'life_story.origin',
+      value: 'skills.confident', customer: 'customer_current.segments', service: 'service_structure.continuous',
+      route: 'customer_route.main_source', number: 'financial_current.annual_2025',
+      keypoint: 'self_perceived_bottleneck.key_one', future: 'future_1y.annual_sales'
+    },
+    blocks: {
+      about: [
+        { title: 'プロフィール', ids: ['profile.name', 'profile.brand_names', 'profile.birthday', 'profile.residence', 'profile.family'] },
+        { title: '発信・つながり', ids: ['profile.contact', 'profile.other_links'] },
+        { title: '好きなこと', ids: ['profile.favorite_work', 'profile.hobbies'] }
+      ],
+      current: [
+        { title: '事業のかたち', ids: ['business_current.form', 'business_current.years', 'business_current.styles', 'business_structure.team'] },
+        { title: '商品・サービス', products: true, ids: ['products.list', 'products.core', 'products.grow', 'products.reduce'] }
+      ],
+      story: [
+        { title: '原点と続ける理由', ids: ['life_story.origin', 'life_story.reasons'] },
+        { title: '今につながる出来事', ids: ['life_story.timeline'] },
+        { title: '心に残っている経験', ids: ['life_story.proud', 'life_story.hardest', 'life_story.turning_point'] }
+      ],
+      value: [
+        { title: '持っている知識・経験', ids: ['qualifications.backgrounds', 'qualifications.certificates', 'knowledge.fields'] },
+        { title: '実際にできること', ids: ['skills.offerings', 'skills.confident', 'skills.insight'] },
+        { title: 'その力を支えている事実', ids: ['proof.types', 'proof.memorable_results', 'proof.accumulated'] },
+        { title: 'あなたと関わることで生まれるもの', ids: ['emotional_value.feelings', 'emotional_value.customer_words', 'personality_impression.traits'] },
+        { title: '好きな世界・感性', ids: ['visual_preference.style', 'visual_preference.references', 'emotional_value.takeaway'] }
+      ],
+      customer: [
+        { title: '今のお客様', ids: ['customer_current.segments', 'customer_problem.problems', 'customer_problem.tried', 'customer_desired_future.text'] },
+        { title: 'AFTER MAP　あなたが起こせる変化', ids: ['provider_possible_future.after_inner', 'provider_possible_future.after_physical',
+          'provider_possible_future.after_behavior', 'provider_possible_future.after_environment',
+          'provider_possible_future.after_social_reaction', 'provider_possible_future.after_day_in_life'] },
+        { title: 'これから力になりたい人', ids: ['customer_target.want_to_help', 'customer_target.not_fit'] }
+      ],
+      service: [
+        { title: '商品ごとの「一番」', ids: ['service_structure.rankings'] },
+        { title: '続いていく仕組み', ids: ['service_structure.continuous', 'service_structure.followups'] },
+        { title: 'これから作りたいもの', ids: ['service_structure.wish_products'] }
+      ],
+      route: [
+        { title: '出会い方・届け方', ids: ['customer_route.main_source', 'customer_route.booking_entry', 'customer_route.retention', 'customer_route.tools'] },
+        { title: '集客についての感覚', ids: ['customer_route.feelings'] }
+      ],
+      number: [
+        { title: '売上とお客様の数', ids: ['financial_current.annual_2025', 'financial_current.best_month', 'financial_current.monthly_customers', 'financial_current.recent_3months'] },
+        { title: 'お金についての感覚', ids: ['financial_current.feelings'] }
+      ],
+      keypoint: [
+        { title: '整理したい場所', ids: ['self_perceived_bottleneck.key_one', 'self_perceived_bottleneck.top3', 'self_perceived_bottleneck.areas'] },
+        { title: '一番うれしい変化', ids: ['self_perceived_bottleneck.wish'] }
+      ],
+      future: [
+        { title: '6ヶ月後', ids: ['future_6m.monthly_sales', 'future_6m.grow_product', 'future_6m.change', 'future_6m.feeling'] },
+        { title: '1年後', ids: ['future_1y.annual_sales', 'future_1y.business', 'future_1y.team', 'future_1y.time_focus', 'future_1y.customer_words', 'future_1y.life'] },
+        { title: '生きていたい毎日', ids: ['future_1y.ideal_day'] },
+        { title: 'セッションへ', ids: ['session_goal.today'] }
+      ]
+    }
   },
 
   copyright: '© kokofuru',
 
-  /* ---------- 回答をななえに送る（招待リンクから開いたときの最終画面） ---------- */
+  /* ---------- 回答をのむら ななえに送る（招待リンクから開いたときの完了画面） ---------- */
   send: {
-    title: '最後に\n回答をななえに送ってください',
-    button: '回答をななえに送る',
     sending: '送信中…',
     sendingNote: '送信しています　画面を閉じずにお待ちください',
     doneTitle: '送信しました',
     doneBody: 'ありがとうございました\nセッションでお会いできるのを楽しみにしています',
     sentAt: '送信日時',
-    resend: 'もう一度送る',
-    hint: 'ボタンを押すと　ここまでの回答がななえに届きます',
+    hint: 'ボタンを押すと　ここまでの回答が\nのむら ななえに届きます',
     resendHint: '回答を直したときは　もう一度送ってください\n同じ回答として新しい内容に置きかわります',
     error: '回答はこの端末に保存されています\n通信状況をご確認のうえ\nもう一度送信してください',
-    errorInvite: '回答はこの端末に保存されています\nななえから届いたリンクをもう一度開いてから\n送信してください',
-    mine: '私の回答を見る',
+    errorInvite: '回答はこの端末に保存されています\nのむら ななえから届いたリンクをもう一度開いてから\n送信してください',
     mineTitle: '私の回答',
-    mineLead: '答えた内容を　章ごとに並べています\n直したいところは「見直す」から変更できます'
+    mineLead: '80問の回答を　質問ごとに並べています\n直したいところは「見直す」から変更できます'
   },
 
   /* ---------- 章と質問 ---------- */
