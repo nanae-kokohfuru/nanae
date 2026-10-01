@@ -22,7 +22,17 @@
     C.chapters.forEach(function (ch) {
       ch.questions.forEach(function (st) {
         if (st.interlude) return;
-        (st.items || [st]).forEach(function (q) { n += 1; Q[q.id] = q; NO[q.id] = n; });
+        (st.items || [st]).forEach(function (q) {
+          n += 1; Q[q.id] = q; NO[q.id] = n;
+          /* 1問に統合された項目（saveAs）も、元のキーで参照できるようにする（同じQ番号） */
+          (q.fields || []).forEach(function (f) {
+            if (!f.saveAs) return;
+            var sub = f.type === 'choice'
+              ? { id: f.saveAs, type: f.multiple ? 'multi' : 'single', options: f.options, label: f.label.replace(/^[AB]｜/, ''), title: f.label, noOther: true }
+              : { id: f.saveAs, type: f.type, rows: f.rows, label: f.label.replace(/^[AB]｜/, ''), title: f.label };
+            Q[f.saveAs] = sub; NO[f.saveAs] = n;
+          });
+        });
       });
     });
   })();

@@ -62,6 +62,14 @@
 
   /* ---------- 選択肢の解決（固定／他の回答から動的に） ---------- */
   function norm(o) { return typeof o === 'string' ? { value: o, label: o } : o; }
+  /* 値 → 表示名（{ value, label } の一覧から引く。見つからなければ値そのもの） */
+  function labelFrom(list, value) {
+    var hit = (list || []).map(norm).filter(function (o) { return o.value === value; })[0];
+    return hit ? hit.label : value;
+  }
+  function withLabels(values, list) {
+    return (values || []).map(function (v) { return { value: v, label: labelFrom(list, v) }; });
+  }
 
   function dynamicOptions(src, get) {
     if (!src) return [];
@@ -72,10 +80,10 @@
     if (src.selected) {
       var v = get(src.selected);
       if ((!v || !v.length) && src.fallback) v = get(src.fallback);
-      return (v || []).filter(function (x) { return x !== OTHER || src.keepOther; }).map(norm);
+      return withLabels((v || []).filter(function (x) { return x !== OTHER || src.keepOther; }), src.labels);
     }
     if (src.routeTools) {
-      return ((get(src.routeTools) || {}).tools || []).map(norm);
+      return withLabels((get(src.routeTools) || {}).tools || [], src.labels);
     }
     return [];
   }
@@ -280,7 +288,7 @@
   /* 小さな選択（repeat / followups の中で使う） */
   function choice(def, key, ctx, opts) {
     var options = resolveOptions(def, ctx.get);
-    if (!options.length) return emptyNote(def) || el('p', { class: 'field__empty', text: '選択肢がまだありません。' });
+    if (!options.length) return emptyNote(def) || el('p', { class: 'field__empty', text: '選択肢がまだありません' });
     var order = options.map(function (o) { return o.value; });
     var t = tiles(options, {
       multiple: !!def.multiple, small: def.small !== false,
@@ -293,11 +301,26 @@
         if (def.multiple) ctx.set(key, toggleIn(ctx.get(key), o, on, def, order));
         else ctx.set(key, on ? o : '');
         t.refresh();
+        syncOther();
         if (opts && opts.onChange) opts.onChange();
       }
     });
+    /* 「その他」を選んだときだけ出る記入欄（保存キーは「キー.other」） */
+    var otherBox = null;
+    function syncOther() {
+      if (!def.otherText) return;
+      var v = ctx.get(key);
+      var show = def.multiple ? (v || []).indexOf(OTHER) >= 0 : v === OTHER;
+      if (show && !otherBox) {
+        otherBox = el('div', { class: 'choice__other is-shown' }, labeled({ type: 'text', label: 'その他の内容', placeholder: '自由にどうぞ' }, key + '.other', ctx));
+        wrap.appendChild(otherBox);
+      }
+      if (otherBox) otherBox.hidden = !show;
+    }
     var hasDyn = def.optionsFrom && !dynamicOptions(def.optionsFrom, ctx.get).length;
-    return el('div', { role: def.multiple ? 'group' : 'radiogroup', 'aria-labelledby': opts && opts.labelledby }, t, hasDyn ? emptyNote(def) : null);
+    var wrap = el('div', { role: def.multiple ? 'group' : 'radiogroup', 'aria-labelledby': opts && opts.labelledby }, t, hasDyn ? emptyNote(def) : null);
+    syncOther();
+    return wrap;
   }
 
   /* ---------- くり返し入力（商品・URL・言葉など） ---------- */
@@ -476,7 +499,7 @@
           if (s && s.cards) s.cards.forEach(function (c) {
             rows.push({ label: f.itemLabel || f.label, text: c.rows.map(function (r) { return r.text; }).join(' ／ ') });
           });
-          if (s && s.items) rows.push({ label: f.label, text: s.items.join('、') });
+          if (s && s.items) rows.push({ label: f.label, text: s.items.join('　') });
         }
       });
     });
@@ -538,17 +561,27 @@
   });
 
   /* 小さな入力をいくつか並べる（直近3ヶ月の売上など） */
+  /* saveAs があればその独立したキーに、なければ「質問ID.項目ID」に保存する */
+  function fieldKey(q, f) { return f.saveAs || q.id + '.' + f.id; }
+  function fieldValue(f, key, get) {
+    var v = partValue(f, get(key), get);
+    var other = get(key + '.other');
+    if (f.otherText && v != null && filled(other)) v = { selected: v, other: other };
+    return v;
+  }
   types.group = {
     render: function (q, ctx) {
       return el('div', { class: 'field field--group' + (q.inline ? ' field--inline' : ''), role: 'group', 'aria-labelledby': ctx.labelledby },
-        q.fields.map(function (f) { return labeled(f, q.id + '.' + f.id, ctx); }));
+        q.fields.map(function (f) { return labeled(f, fieldKey(q, f), ctx); }));
     },
     isAnswered: function (q, get) {
-      return q.fields.some(function (f) { return filled(get(q.id + '.' + f.id)); });
+      return q.fields.some(function (f) { return filled(get(fieldKey(q, f))); });
     },
     summarize: function (q, get) {
       var rows = q.fields.map(function (f) {
-        var v = formatValue(f, get(q.id + '.' + f.id), get);
+        var v = formatValue(f, get(fieldKey(q, f)), get);
+        var other = get(fieldKey(q, f) + '.other');
+        if (v && f.otherText && filled(other)) v += '（' + other + '）';
         return v ? { label: f.label, text: v } : null;
       }).filter(Boolean);
       return rows.length ? { rows: rows } : null;
@@ -556,10 +589,15 @@
     value: function (q, get) {
       var o = {};
       q.fields.forEach(function (f) {
-        var v = partValue(f, get(q.id + '.' + f.id), get);
+        var v = fieldValue(f, fieldKey(q, f), get);
         if (v != null) o[f.key || f.id] = v;
       });
       return clean(o);
+    },
+    /* 書き出し用：saveAs のある項目は、それぞれ独立したキーとして書き出す */
+    entries: function (q, get) {
+      if (!q.fields.some(function (f) { return f.saveAs; })) return null;
+      return q.fields.map(function (f) { return { key: fieldKey(q, f), value: fieldValue(f, fieldKey(q, f), get) }; });
     }
   };
 
@@ -785,12 +823,13 @@
       }
       var panel = el('div', { class: 'route__purposes', 'aria-live': 'polite' });
       var otherBox = el('div', {});
+      var toolValues = q.tools.map(function (o) { return norm(o).value; });
       var t = tiles(q.tools, {
         multiple: true,
         isOn: function (o) { return read().tools.indexOf(o) >= 0; },
         onToggle: function (o, on) {
           var v = read();
-          v.tools = toggleIn(v.tools, o, on, q, q.tools);
+          v.tools = toggleIn(v.tools, o, on, q, toolValues);
           ctx.set(q.id, v);
           t.refresh();
           drawPanel();
@@ -826,7 +865,7 @@
             }
           });
           rows.appendChild(el('li', { class: 'route__row' },
-            el('span', { class: 'route__tool', id: rowId, text: tool }),
+            el('span', { class: 'route__tool', id: rowId, text: labelFrom(q.tools, tool) }),
             el('div', { role: 'group', 'aria-labelledby': rowId }, chips)));
         });
         panel.appendChild(rows);
@@ -842,7 +881,7 @@
       if (!filled(v.tools)) return null;
       var other = get(q.id + '.other');
       return { route: v.tools.map(function (tool) {
-        return { tool: tool === OTHER && filled(other) ? 'その他（' + other + '）' : tool, purposes: (v.purposes || {})[tool] || [] };
+        return { tool: tool === OTHER && filled(other) ? 'その他（' + other + '）' : labelFrom(q.tools, tool), purposes: (v.purposes || {})[tool] || [] };
       }) };
     },
     value: function (q, get) {
@@ -850,7 +889,7 @@
       if (!filled(v.tools)) return null;
       var other = get(q.id + '.other');
       return v.tools.map(function (tool) {
-        var o = { tool: tool, purposes: (v.purposes || {})[tool] || [] };
+        var o = { tool: labelFrom(q.tools, tool), purposes: (v.purposes || {})[tool] || [] };
         if (tool === OTHER && filled(other)) o.detail = other;
         return o;
       });
@@ -948,7 +987,7 @@
   };
 
   window.BCFields = {
-    el: el, lines: lines, filled: filled, types: types, nav: nav,
+    el: el, lines: lines, filled: filled, types: types, nav: nav, fieldKey: fieldKey,
     get: function (type) {
       if (!types[type]) throw new Error('BUSINESS COMPASS: 未対応の入力形式 "' + type + '"');
       return types[type];
