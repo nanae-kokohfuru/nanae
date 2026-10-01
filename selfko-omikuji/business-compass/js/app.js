@@ -57,13 +57,26 @@
     return C.chapters.reduce(function (s, ch) { return s + answeredIn(ch); }, 0);
   }
   function pad(n) { return String(n).padStart(2, '0'); }
+  var TOTAL = allQuestions.length;
+  function rangeOf(ch) {
+    return 'Q' + pad(questionNo[ch.flat[0].id]) + '–Q' + pad(questionNo[ch.flat[ch.flat.length - 1].id]);
+  }
+  function copyright(extra) {
+    return el('p', { class: 'copyright' + (extra ? ' ' + extra : ''), text: C.copyright || '© kokofuru' });
+  }
 
   /* ---------- 共通パーツ ---------- */
   function photo(slot, extraClass) {
     var img = C.images[slot];
-    if (!img || !img.src) return null;
+    if (!img || !img.src || img.pending) return null;
     var node = el('img', { class: 'photo ' + (extraClass || ''), src: img.src, alt: img.alt || '', decoding: 'async' });
     node.style.objectPosition = img.position || '50% 50%';
+    /* 画像ファイルがまだ置かれていない場合は、静かな無地に切り替える */
+    node.addEventListener('error', function () {
+      var screen = node.closest('.screen');
+      if (screen && screen.classList.contains('screen--door')) screen.classList.add('screen--door-plain');
+      node.remove();
+    });
     return node;
   }
 
@@ -86,6 +99,8 @@
     if (leaving) return;
     /* 同意前は先へ進めない */
     if (!S.state.consent.required && cursor !== 'cover' && cursor !== 'consent') cursor = 'consent';
+    /* 以前の版で保存された、今はない画面の位置は目次に戻す（回答はそのまま） */
+    if (!isValidCursor(cursor)) cursor = 'index';
     S.setCursor(cursor);
     var screen = render(cursor);
     if (!current || reduceMotion || opts.instant) { swap(screen); return; }
@@ -114,6 +129,13 @@
     if (i < 0) return go('index');
     if (delta < 0 && i === 0) return go('index');
     go(next || 'final');
+  }
+
+  function isValidCursor(cursor) {
+    if (['cover', 'consent', 'index', 'final'].indexOf(cursor) >= 0) return true;
+    if (cursor.indexOf('door:') === 0) return !!findChapter(cursor.slice(5));
+    if (cursor.indexOf('q:') === 0) return !!steps[cursor.slice(2)];
+    return false;
   }
 
   function render(cursor) {
@@ -150,9 +172,10 @@
       el('div', { class: 'cover__body' }, c.body.map(function (t) { return el('p', { text: t }); })),
       el('div', { class: 'cover__actions' },
         goldButton(c.cta, function () { go(S.state.consent.required ? (hasProgress ? resumeTarget() : 'index') : 'consent'); }),
-        hasProgress ? el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { go('index'); } }, '章の一覧を見る') : null
+        hasProgress ? el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { go('index'); } }, '目次を見る') : null
       )
     ));
+    s.appendChild(copyright('copyright--cover'));
     return s;
   }
 
@@ -213,42 +236,60 @@
       ),
       el('div', { class: 'page__actions' },
         cta,
-        el('p', { class: 'field__note', id: 'consent-note', text: c.note || 'チェックを入れると進めます。' }))
+        el('p', { class: 'field__note', id: 'consent-note', text: c.note || 'チェックを入れると進めます' })),
+      copyright()
     ));
     return s;
   }
 
   /* ================================================================
-     10章一覧
+     目次（10章の全体像と現在地）
      ================================================================ */
+  function thumb(slot) {
+    var img = C.images[slot];
+    if (!img || !img.src || img.pending) return el('span', { class: 'chapters__thumb chapters__thumb--plain', 'aria-hidden': 'true' });
+    var node = el('img', { class: 'chapters__thumb', src: img.thumb || img.src, alt: '', decoding: 'async' });
+    node.style.objectPosition = img.position || '50% 50%';
+    node.addEventListener('error', function () {
+      node.replaceWith(el('span', { class: 'chapters__thumb chapters__thumb--plain', 'aria-hidden': 'true' }));
+    });
+    return node;
+  }
   function indexScreen() {
     var c = C.index;
-    var s = screenShell('index', 'ivory', c.title);
+    var s = screenShell('index', 'ivory', c.title.replace(/\n/g, ' '));
     var started = totalAnswered() > 0;
+    var here = started ? resumeTarget() : null;
+    var hereCh = here && here !== 'final' ? chapterOf[here.split(':')[1]] || findChapter(here.split(':')[1]) : null;
     var list = el('ol', { class: 'chapters' }, C.chapters.map(function (ch) {
       var done = answeredIn(ch), total = ch.flat.length;
-      var status = done === 0 ? '' : done >= total ? '記入済み' : done + ' / ' + total;
+      var state = done >= total ? 'done' : (hereCh === ch ? 'here' : (done > 0 ? 'partial' : 'todo'));
+      var status = state === 'done' ? '完了' : state === 'here' ? '現在地' : state === 'partial' ? done + ' / ' + total : '';
       return el('li', { class: 'chapters__item' },
-        el('button', { type: 'button', class: 'chapters__btn' + (done >= total ? ' is-done' : ''), onclick: function () { go('door:' + ch.id); } },
+        el('button', { type: 'button', class: 'chapters__btn is-' + state, onclick: function () { go('door:' + ch.id); },
+          'aria-label': ch.no + ' ' + ch.en + ' ' + ch.ja + (status ? ' ' + status : '') },
           el('span', { class: 'chapters__no', text: ch.no }),
+          thumb(ch.id),
           el('span', { class: 'chapters__names' },
             el('span', { class: 'chapters__en', text: ch.en }),
-            el('span', { class: 'chapters__ja', text: ch.ja })),
-          el('span', { class: 'chapters__status', text: status }),
+            el('span', { class: 'chapters__ja', text: ch.ja }),
+            el('span', { class: 'chapters__desc', text: ch.desc + '　' + rangeOf(ch) })),
+          el('span', { class: 'chapters__status' }, state === 'done' || state === 'here' ? el('span', { class: 'chapters__mark', 'aria-hidden': 'true' }) : null, status),
           el('span', { class: 'chapters__arrow', 'aria-hidden': 'true', text: '→' })));
     }));
     s.appendChild(el('div', { class: 'page page--wide' },
       el('header', { class: 'page__head page__head--split' },
         el('div', {},
           el('p', { class: 'eyebrow', text: c.eyebrow }),
-          heading('h1', c.title, 'page__title')),
-        el('p', { class: 'page__aside', text: c.body })),
+          heading('h1', c.title, 'page__title page__title--toc')),
+        el('div', { class: 'page__aside toc__lead' }, c.body.map(function (t) { return el('p', {}, lines(t)); }))),
       list,
       el('div', { class: 'page__actions page__actions--split' },
         goldButton(started ? 'つづきから' : '最初の章からはじめる', function () { go(started ? resumeTarget() : journey[0]); }),
         started ? el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, 'YOUR BUSINESS COMPASS を見る') : null,
         /* 回答は消さずに表紙へ戻る */
-        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('cover'); } }, '← 表紙に戻る'))
+        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('cover'); } }, '← 表紙に戻る')),
+      copyright()
     ));
     return s;
   }
@@ -257,18 +298,20 @@
      章扉
      ================================================================ */
   function doorScreen(ch) {
-    var s = screenShell('door', 'dark', ch.no + ' ' + ch.en + ' ' + ch.doorTitle);
+    var s = screenShell('door', 'dark', ch.no + ' ' + ch.en + ' ' + ch.ja);
     var img = photo(ch.id, 'photo--door');
     s.classList.toggle('screen--door-plain', !img);
     s.appendChild(el('div', { class: 'door__media' }, img, el('div', { class: 'veil veil--door' })));
     s.appendChild(el('div', { class: 'door__inner' },
       el('div', { class: 'door__meta' },
         el('span', { text: 'CHAPTER ' + ch.no + ' / ' + pad(C.chapters.length) }),
-        el('span', { text: ch.flat.length + ' QUESTIONS' })),
+        el('span', { text: rangeOf(ch) + ' · ' + ch.flat.length + ' QUESTIONS' })),
       el('p', { class: 'door__no', 'aria-hidden': 'true', text: ch.no }),
       el('h1', { class: 'door__en', tabindex: '-1', 'data-focus': '' }, ch.en,
-        el('span', { class: 'sr-only', text: ' ' + ch.doorTitle })),
-      el('p', { class: 'door__ja', 'aria-hidden': 'true', text: ch.doorTitle }),
+        el('span', { class: 'sr-only', text: ' ' + ch.ja })),
+      el('p', { class: 'door__meaning', 'aria-hidden': 'true', text: ch.en + ' = ' + ch.meaning }),
+      el('p', { class: 'door__ja', 'aria-hidden': 'true', text: ch.ja }),
+      el('p', { class: 'door__desc', text: ch.desc }),
       el('span', { class: 'rule rule--gold', 'aria-hidden': 'true' }),
       el('blockquote', { class: 'door__quote' }, el('p', {}, lines('「' + ch.quote + '」'))),
       ch.doorNote ? el('div', { class: 'door__note' }, ch.doorNote.map(function (t) { return el('p', { text: t }); })) : null,
@@ -276,7 +319,7 @@
         goldButton('この章をはじめる', function () { step(1); }),
         el('div', { class: 'door__links' },
           el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { step(-1); } }, '← 前へ'),
-          el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { go('index'); } }, '章の一覧')))
+          el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { go('index'); } }, '目次')))
     ));
     return s;
   }
@@ -290,20 +333,35 @@
     return 'ivory';
   }
 
-  function questionBar(ch, st, pos) {
-    var progress = Math.round((pos / (journey.length - 1)) * 1000) / 10;
+  /* 今の質問番号（間奏では、次に来る質問の1つ前として数える） */
+  function numberAt(st) {
+    if (!st.interlude) return questionNo[(st.items || [st])[0].id];
+    var i = journey.indexOf('q:' + st.id);
+    for (var j = i + 1; j < journey.length; j++) {
+      var nx = steps[journey[j].slice(2)];
+      if (nx && !nx.interlude) return questionNo[(nx.items || [nx])[0].id] - 1;
+    }
+    return TOTAL;
+  }
+  function questionBar(ch, st) {
+    var no = numberAt(st);
+    var pct = Math.round(no / TOTAL * 100);
     var where = [
-      el('span', { class: 'q-bar__count', text: ch.no + ' / ' + pad(C.chapters.length) }),
-      el('span', { class: 'q-bar__chapter', text: ch.en })
+      el('span', { class: 'q-bar__count', text: ch.no }),
+      el('span', { class: 'q-bar__chapter', text: ch.en }),
+      el('span', { class: 'q-bar__ja', text: ch.ja })
     ];
     if (st.variant === 'aftermap') where.push(el('span', { class: 'q-bar__map', text: 'AFTER MAP' }));
     return el('header', { class: 'q-bar' },
       el('div', { class: 'q-bar__row' },
         el('p', { class: 'q-bar__where' }, where),
-        el('button', { type: 'button', class: 'text-btn q-bar__index', onclick: function () { go('index'); } }, '章の一覧')),
+        el('p', { class: 'q-bar__progress' },
+          el('span', { class: 'q-bar__num' }, el('strong', { text: String(no) }), ' / ' + TOTAL),
+          el('span', { class: 'q-bar__pct', text: pct + '%' })),
+        el('button', { type: 'button', class: 'text-btn q-bar__index', onclick: function () { go('index'); } }, '目次')),
       el('div', { class: 'q-bar__line', role: 'progressbar', 'aria-label': '旅の進み具合',
-        'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.round(progress)) },
-        el('span', { class: 'q-bar__fill', style: 'transform:scaleX(' + progress / 100 + ')' })));
+        'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(pct), 'aria-valuetext': no + ' / ' + TOTAL + '問　' + pct + '%' },
+        el('span', { class: 'q-bar__fill', style: 'transform:scaleX(' + no / TOTAL + ')' })));
   }
 
   function sectionLabel(st) {
@@ -337,7 +395,9 @@
     var body;
     if (!grouped) {
       var q = st;
+      var milestone = (C.milestones || {})[questionNo[q.id]];
       body = el('div', { class: 'q' + (q.lead ? ' q--deep' : '') },
+        milestone ? el('p', { class: 'q__milestone', role: 'status' }, el('span', { class: 'q__milestone-pct', text: Math.round(questionNo[q.id] / TOTAL * 100) + '%' }), milestone) : null,
         q.lead ? el('p', { class: 'q__lead', text: q.lead }) : null,
         sectionLabel(q),
         el('p', { class: 'q__no', text: (q.eyebrow ? q.eyebrow + ' · ' : '') + (q.mapNo ? 'MAP ' + pad(q.mapNo) + ' · ' : '') + 'QUESTION ' + nos }),
@@ -373,7 +433,7 @@
     function next() {
       var missing = items.filter(function (q) { return q.required && !isAnswered(q); });
       if (missing.length) {
-        error.textContent = (grouped ? 'Q' + pad(questionNo[missing[0].id]) + ' ' : '') + 'この質問だけは、ご記入をお願いします。';
+        error.textContent = (grouped ? 'Q' + pad(questionNo[missing[0].id]) + ' ' : '') + 'この質問だけは　ご記入をお願いします';
         return;
       }
       S.flush();
@@ -388,7 +448,7 @@
       }
     });
 
-    s.appendChild(questionBar(ch, st, pos));
+    s.appendChild(questionBar(ch, st));
     s.appendChild(el('div', { class: 'q-wrap' }, body, nav));
     return s;
   }
@@ -397,14 +457,14 @@
     var ch = chapterOf[st.id];
     var s = screenShell('question screen--interlude' + (st.variant === 'aftermap' ? ' screen--aftermap' : ''), stepTone(st), st.eyebrow + ' ' + st.title);
     var pos = journey.indexOf('q:' + st.id);
-    s.appendChild(questionBar(ch, st, pos));
+    s.appendChild(questionBar(ch, st));
     s.appendChild(el('div', { class: 'q-wrap' },
       el('div', { class: 'q interlude' },
         el('p', { class: 'eyebrow', text: st.eyebrow }),
         el('h1', { class: 'interlude__title', tabindex: '-1', 'data-focus': '' }, lines(st.title)),
         el('p', { class: 'interlude__sub' }, lines(st.subtitle)),
         el('span', { class: 'rule rule--gold', 'aria-hidden': 'true' }),
-        el('div', { class: 'interlude__body' }, st.body.map(function (t) { return el('p', { text: t }); }))),
+        el('div', { class: 'interlude__body' }, st.body.map(function (t) { return el('p', {}, lines(t)); }))),
       el('nav', { class: 'q-nav', 'aria-label': '質問の移動' },
         el('button', { type: 'button', class: 'text-btn q-nav__back', onclick: function () { step(-1); } }, '← 前へ'),
         goldButton(st.cta || '次へ', function () { step(1); }))));
@@ -497,8 +557,8 @@
           el('dl', { class: 'final__stats' },
             el('dt', { text: '記入した問い' }), el('dd', {}, el('strong', { text: String(answered) }), ' / ' + total),
             el('dt', { text: '最終更新' }), el('dd', { text: S.state.updatedAt ? new Date(S.state.updatedAt).toLocaleDateString('ja-JP') : '—' })),
-          el('p', { class: 'final__next' },
-            '次のステップでは、このカルテをもとに「BUSINESS COMPASS — 1枚の経営羅針盤」を作成します。'))),
+          el('p', { class: 'final__next' }, lines(
+            '次のステップでは　このカルテをもとに\n「BUSINESS COMPASS — 1枚の経営羅針盤」を作成します')))),
 
       el('div', { class: 'karte' }, C.chapters.map(function (ch) {
         return el('section', { class: 'karte__chapter', 'aria-labelledby': 'karte-' + ch.id },
@@ -513,8 +573,9 @@
       el('div', { class: 'final__actions' },
         el('button', { type: 'button', class: 'btn-line', onclick: function () { window.print(); } }, '印刷・PDFで保存'),
         el('button', { type: 'button', class: 'btn-line', onclick: downloadJSON }, '回答データを書き出す'),
-        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '章の一覧へ'),
-        el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から'))
+        el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'),
+        el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から')),
+      copyright()
     ));
     return s;
   }
@@ -556,7 +617,9 @@
       ch.flat.forEach(function (q) {
         var t = F.get(q.type);
         var value = t.value(q, getter);
-        if (value != null) setPath(data, q.id, value);
+        var entries = t.entries ? t.entries(q, getter) : null;
+        if (entries) entries.forEach(function (e) { if (e.value != null) setPath(data, e.key, e.value); });
+        else if (value != null) setPath(data, q.id, value);
         var st = steps[stepOf[q.id]];
         var sec = st.section || q.section;
         questions.push({
@@ -571,6 +634,7 @@
     return {
       app: 'BUSINESS COMPASS',
       schema: 'business-compass.karte/2',
+      questionSet: '80',
       exportedAt: new Date().toISOString(),
       updatedAt: S.state.updatedAt,
       consent: S.state.consent,
@@ -591,7 +655,7 @@
   function confirmReset() {
     var dlg = document.getElementById('resetDialog');
     if (dlg && dlg.showModal) dlg.showModal();
-    else if (window.confirm('入力した内容をすべて消去しますか？')) doReset();
+    else if (window.confirm('入力した内容をすべて消去しますか')) doReset();
   }
   function doReset() { S.reset(); current = null; go('cover', { instant: true }); }
 
