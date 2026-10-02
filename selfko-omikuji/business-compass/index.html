@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BUSINESS COMPASS</title>
+<meta name="description" content="事業の現在地を知り 次の景色へ 自分自身から未来までを旅するように整理する経営のデジタルジャーナル">
+<meta name="theme-color" content="#F1EBE1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Shippori+Mincho:wght@400;500&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-tone="dark">
+
+<main id="stage" class="stage"></main>
+<p id="announcer" class="sr-only" aria-live="polite"></p>
+
+<dialog id="resetDialog" class="dialog" aria-labelledby="resetTitle">
+  <form method="dialog">
+    <p class="eyebrow">RESET</p>
+    <h2 id="resetTitle" class="dialog__title">入力した内容を<br>すべて消去しますか</h2>
+    <p class="dialog__body">この端末に保存されている回答と同意の記録が消去され<br>表紙に戻ります</p>
+    <div class="dialog__actions">
+      <button class="text-btn" value="cancel">やめておく</button>
+      <button class="btn-line" value="reset">消去する</button>
+    </div>
+  </form>
+</dialog>
+
+<noscript><p class="noscript">このページを表示するには JavaScript を有効にしてください</p></noscript>
+
+<script src="js/content.js"></script>
+<script src="js/store.js"></script>
+<script src="js/fields.js"></script>
+<script src="js/remote.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
