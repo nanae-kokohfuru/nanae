@@ -3,650 +3,585 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>シンクロセールス 個別相談マニュアル</title>
-<meta name="description" content="これがあれば安心｜個別相談の前・当日・後に「これだけやればいい」がひと目でわかる早見表とテンプレ集">
+<title>魔法のシンクロセールス 黄金の航海図</title>
+<meta name="description" content="これがあれば安心｜ご成約率50%超えの個別相談を、前・当日・後の一本道でまとめた黄金の航海図">
+<meta name="theme-color" content="#E9D6A6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#FBF3E8; --card:#FFFFFF; --card-soft:#FAF0E1;
-  --ink:#37211A; --ink-soft:#4A2E22; --ink-faint:#6B4A3A;
-  --gold:#C79654; --gold-deep:#6B4519; --gold-pale:#EAD3A0;
-  --rose:#C4506A; --rose-deep:#9E2F4C; --bordeaux:#5C1420; --rose-pale:#F4D9DF;
-  --green:#2F7A55; --green-pale:#DCEFE3;
-  --line:#E4CFAE;
-  --shadow:0 4px 16px rgba(70,40,30,.10);
+  --ivory:#FBF6EC; --pearl:#FFFDF8; --sand:#F1E4C8; --sand-deep:#E6D2A8;
+  --ink:#33241A; --ink-soft:#4A3626; --ink-faint:#6E5642;
+  --bronze:#6B4A1E; --bronze-deep:#4A3110; --gold:#B8904A; --gold-light:#E7CD8E; --champagne:#F4E6C4;
+  --sea:#6F8478; --sea-deep:#3F564E; --sea-pale:#E3EAE3;
+  --rose:#9E4A55; --rose-pale:#F6E4E2;
+  --ok:#4C7A5E;
+  --line:#E5D3AE;
+  --shadow:0 6px 24px rgba(90,64,24,.10);
+  --foil:linear-gradient(100deg,#5E3F14 0%,#9C7533 22%,#D9B865 38%,#F7E7B0 48%,#C9A052 58%,#8A6528 78%,#5E3F14 100%);
   --serif:"Shippori Mincho",serif;
+  --en:"Cormorant Garamond","Shippori Mincho",serif;
   --sans:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.85;font-weight:500}
-a{color:var(--rose-deep)}
-.wrap{max-width:640px;margin:0 auto;padding:0 16px 120px}
+html{scroll-behavior:smooth;scroll-padding-top:16px;-webkit-text-size-adjust:100%}
+body{background:var(--ivory);color:var(--ink);font-family:var(--sans);font-size:18px;line-height:1.9;font-weight:500}
+a{color:var(--bronze)}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px 110px}
+[hidden]{display:none!important}
 
-/* ===== ヒーロー ===== */
-.hero{text-align:center;padding:36px 4px 22px}
-.hero__eyebrow{display:inline-block;background:var(--gold-pale);color:var(--gold-deep);font-weight:700;font-size:15px;padding:4px 16px;border-radius:999px;letter-spacing:.08em}
-.hero__title{font-family:var(--serif);font-weight:800;font-size:30px;line-height:1.45;margin-top:14px;color:var(--bordeaux)}
-.hero__title small{display:block;font-size:19px;color:var(--rose-deep);margin-bottom:4px}
-.hero__lead{margin-top:14px;color:var(--ink-soft)}
+/* ================= ヒーロー：光る金色の海 ================= */
+.hero{position:relative;overflow:hidden;text-align:center;padding:64px 20px 120px;
+  background:
+    radial-gradient(60% 40% at 50% 100%, rgba(255,240,196,.95), transparent 70%),
+    linear-gradient(180deg,#B9C2AE 0%,#C9C9A6 22%,#DCCB96 48%,#E9D094 68%,#F2DFAE 86%,var(--ivory) 100%);}
+.bokeh{position:absolute;inset:0;pointer-events:none}
+.bokeh i{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,252,236,.95) 0%,rgba(255,244,205,.55) 40%,transparent 70%);animation:twinkle 5s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.35;transform:scale(.9)}50%{opacity:1;transform:scale(1.08)}}
+.hero__inner{position:relative;z-index:1}
+.hero__en{font-family:var(--en);font-style:italic;font-weight:500;font-size:17px;letter-spacing:.32em;color:var(--bronze);opacity:.9}
+.hero__line{width:64px;height:1px;background:var(--bronze);opacity:.5;margin:16px auto}
+.hero__pre{font-family:var(--serif);font-weight:600;font-size:18px;letter-spacing:.2em;color:var(--bronze-deep)}
+.hero__title{font-family:var(--serif);font-weight:800;line-height:1.35;margin-top:10px;
+  background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 1px 0 rgba(255,250,232,.9)) drop-shadow(0 6px 18px rgba(255,244,210,.8));
+  animation:foil 7s ease-in-out infinite}
+.hero__title .t1{display:block;font-size:22px;letter-spacing:.18em}
+.hero__title .t2{display:block;font-size:40px;letter-spacing:.06em}
+.hero__title .t3{display:block;font-size:25px;letter-spacing:.1em;margin-top:6px;white-space:nowrap}
+@keyframes foil{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
+.hero__lead{margin-top:22px;font-family:var(--serif);font-weight:600;font-size:18px;line-height:2;color:var(--bronze-deep)}
+.hero__lead b{font-size:24px;color:var(--rose)}
+.wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:70px;display:block}
 
-/* ===== 使い方 ===== */
-.howto{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:20px 18px;margin-top:8px}
-.howto h2{font-size:20px;color:var(--bordeaux);margin-bottom:8px}
-.howto ol{padding-left:1.4em}
-.howto li{margin:4px 0}
-
-/* ===== 目次ボタン ===== */
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 6px}
-.menu a{display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 12px;text-decoration:none;color:var(--ink);font-weight:700;font-size:17px;line-height:1.35;min-height:64px}
-.menu a:active{background:var(--card-soft)}
-.menu .ic{font-size:26px;flex:none}
-.menu .wide{grid-column:1/-1;background:var(--bordeaux);color:#fff;border-color:var(--bordeaux)}
-
-/* ===== 下部固定ナビ ===== */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom)}
-.tabbar a{flex:1;max-width:128px;text-align:center;text-decoration:none;color:var(--ink-soft);font-size:13px;font-weight:700;padding:8px 2px 9px;line-height:1.3}
-.tabbar a span{display:block;font-size:22px}
-.tabbar a.on{color:var(--rose-deep);background:var(--rose-pale)}
-
-/* ===== セクション ===== */
-.sec{margin-top:40px}
-.sec__head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
-.sec__no{flex:none;width:46px;height:46px;border-radius:50%;background:var(--rose-deep);color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}
-.sec__title{font-family:var(--serif);font-size:24px;line-height:1.4;color:var(--bordeaux)}
-.sec__title small{display:block;font-family:var(--sans);font-size:15px;color:var(--ink-faint);font-weight:700}
-
-.card{background:var(--card);border-radius:20px;box-shadow:var(--shadow);padding:20px 18px;margin-bottom:14px}
-.card h3{font-size:20px;line-height:1.5;color:var(--bordeaux);margin-bottom:10px;display:flex;gap:8px;align-items:flex-start}
-.card h3 .tag{flex:none;font-size:14px;background:var(--gold-pale);color:var(--gold-deep);border-radius:8px;padding:2px 8px;margin-top:3px}
-.card p+p{margin-top:8px}
-.note{background:var(--card-soft);border-left:5px solid var(--gold);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:17px}
-.warn{background:var(--rose-pale);border-left:5px solid var(--rose-deep);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:17px}
-.big{font-size:21px;font-weight:900;color:var(--bordeaux)}
+/* ================= 共通パーツ ================= */
+.card{background:var(--pearl);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:22px 18px;margin-bottom:14px}
+.card h3{font-family:var(--serif);font-size:21px;line-height:1.55;color:var(--bronze-deep);margin-bottom:10px}
+.card h4{font-size:18px;color:var(--bronze-deep);margin:14px 0 4px}
+.card p+p{margin-top:10px}
+.label{display:inline-block;font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--pearl);background:var(--sea-deep);border-radius:6px;padding:1px 10px;margin-bottom:6px}
+.label.gold{background:var(--gold)}
+.label.rose{background:var(--rose)}
+.note{background:var(--champagne);border-radius:14px;padding:14px 16px;margin-top:12px;font-size:17px}
+.secret-box{position:relative;background:linear-gradient(135deg,#FFF9EA,#F6E7C2);border:1px solid var(--gold-light);border-radius:16px;padding:16px 16px 14px;margin-top:12px;font-size:17px}
+.secret-box::before{content:"ここらぼ流の極意";display:inline-block;font-family:var(--serif);font-weight:800;font-size:15px;letter-spacing:.1em;color:var(--pearl);background:var(--foil);background-size:200% 100%;border-radius:999px;padding:2px 14px;margin-bottom:8px}
+.warn{background:var(--rose-pale);border-left:5px solid var(--rose);border-radius:12px;padding:14px 16px;margin-top:12px;font-size:17px}
+.warn b{color:var(--rose)}
 ul.dots{padding-left:1.2em}
-ul.dots li{margin:3px 0}
-.em{background:linear-gradient(transparent 60%,var(--gold-pale) 60%);font-weight:700}
+ul.dots li{margin:4px 0}
+.em{background:linear-gradient(transparent 62%,var(--gold-light) 62%);font-weight:700}
+.small{font-size:15px;color:var(--ink-faint)}
 
-/* 流れ図 */
+/* 資料・動画へのリンク */
+.res{display:flex;align-items:center;gap:10px;margin-top:12px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--gold-light);background:var(--pearl);text-decoration:none;color:var(--bronze-deep);font-weight:700;font-size:16px;line-height:1.5}
+.res::before{content:"";flex:none;width:34px;height:34px;border-radius:50%;background:var(--foil);background-size:200% 100%}
+.res.video::before{content:"▶";display:grid;place-items:center;color:#fff;font-size:13px}
+.res.doc::before{content:"✦";display:grid;place-items:center;color:#fff;font-size:15px}
+.res.soon{border-style:dashed;color:var(--ink-faint);background:transparent}
+.res.soon::after{content:"準備中";margin-left:auto;font-size:13px;background:var(--sand);border-radius:6px;padding:0 8px;flex:none}
+
+/* ================= 規約ゲート ================= */
+.gate{margin-top:-60px;position:relative;z-index:2}
+.gate .card{padding:26px 20px}
+.gate h2{font-family:var(--serif);font-size:24px;text-align:center;color:var(--bronze-deep);line-height:1.5}
+.gate h2 small{display:block;font-family:var(--en);font-style:italic;font-size:15px;letter-spacing:.28em;color:var(--gold)}
+.gate__msg{margin:14px 0 10px;font-size:17px}
+.terms{max-height:340px;overflow:auto;background:var(--ivory);border:1px solid var(--line);border-radius:14px;padding:16px 16px 6px;font-size:16px;line-height:1.85}
+.terms ol{padding-left:1.3em}
+.terms li{margin-bottom:10px}
+.terms li b{color:var(--bronze-deep)}
+.agree{display:flex;gap:12px;align-items:flex-start;margin:18px 0 6px;font-weight:700;cursor:pointer}
+.btn{display:block;width:100%;min-height:58px;border:0;border-radius:999px;font:inherit;font-weight:900;font-size:19px;letter-spacing:.08em;cursor:pointer;color:#fff;background:linear-gradient(100deg,#7A5826,#C9A052 45%,#E8CF8D 55%,#B48A40 70%,#7A5826);background-size:220% 100%;box-shadow:0 8px 22px rgba(122,88,38,.35);transition:background-position .6s,opacity .3s}
+.btn:hover{background-position:100% 0}
+.btn:disabled{opacity:.38;cursor:not-allowed;box-shadow:none}
+
+/* ================= 目次 ================= */
+.howto{text-align:center;margin:-56px 0 18px;position:relative;z-index:2}
+.howto p{display:inline-block;background:var(--pearl);border:1px solid var(--line);border-radius:999px;padding:8px 20px;font-weight:700;font-size:16px;white-space:nowrap;box-shadow:var(--shadow)}
+.toc{list-style:none;background:var(--pearl);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
+.toc li+li{border-top:1px solid #F0E4CB}
+.toc a{display:flex;align-items:center;gap:14px;padding:15px 16px;text-decoration:none;color:var(--ink);min-height:68px}
+.toc a:active{background:var(--champagne)}
+.toc .no{flex:none;font-family:var(--en);font-weight:600;font-size:30px;line-height:1;width:42px;text-align:center;background:var(--foil);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.toc .tt{flex:1;font-weight:700;font-size:17px;word-break:keep-all;overflow-wrap:anywhere;line-height:1.45}
+.toc .tt small{display:block;font-size:14px;font-weight:500;color:var(--ink-faint)}
+.toc .arr{flex:none;color:var(--gold);font-size:18px}
+
+/* ================= セクション見出し（金の帯） ================= */
+.sec{margin-top:52px}
+.band{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 18px 86px;margin-bottom:16px;min-height:96px;display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(105deg,#6E4E1E 0%,#A9823E 24%,#E2C47E 46%,#F8EBC0 54%,#D2AE62 66%,#8F6A2C 88%,#6E4E1E 100%);box-shadow:0 10px 26px rgba(110,78,30,.28)}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 48%,transparent 62%);background-size:250% 100%;animation:sheen 6s ease-in-out infinite}
+@keyframes sheen{0%{background-position:120% 0}60%,100%{background-position:-60% 0}}
+.band .no{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:56px;height:56px;border-radius:50%;border:1.5px solid rgba(255,250,230,.85);display:grid;place-items:center;font-family:var(--en);font-weight:600;font-size:28px;color:#FFFBEA;text-shadow:0 1px 4px rgba(60,40,10,.5)}
+.band h2{position:relative;z-index:1;font-family:var(--serif);font-weight:800;font-size:21px;word-break:keep-all;overflow-wrap:anywhere;line-height:1.45;color:#2E1D08;text-shadow:0 1px 0 rgba(255,248,225,.7)}
+.band p{position:relative;z-index:1;font-size:15px;font-weight:700;color:#3E2A10;line-height:1.5;margin-top:2px}
+.next{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;padding:14px 18px;border-radius:16px;background:var(--sea-pale);text-decoration:none;color:var(--sea-deep);font-weight:700;font-size:16px}
+.next b{font-family:var(--serif);font-size:18px}
+
+/* ================= 全体の流れ ================= */
 .flow{list-style:none;counter-reset:f}
-.flow li{position:relative;background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:14px 16px 14px 62px;margin-bottom:22px;font-weight:700}
-.flow li::before{counter-increment:f;content:counter(f);position:absolute;left:14px;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-weight:900}
-.flow li:not(:last-child)::after{content:"▼";position:absolute;left:50%;bottom:-21px;transform:translateX(-50%);color:var(--gold);font-size:14px}
-.flow li small{display:block;font-weight:500;font-size:16px;color:var(--ink-faint)}
-.flow li a{text-decoration:none}
+.flow>li{position:relative;background:var(--pearl);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px 16px 16px 64px;margin-bottom:24px}
+.flow>li::before{counter-increment:f;content:counter(f);position:absolute;left:14px;top:16px;width:36px;height:36px;border-radius:50%;background:var(--foil);background-size:200% 100%;color:#fff;display:grid;place-items:center;font-family:var(--en);font-weight:600;font-size:20px}
+.flow>li:not(:last-child)::after{content:"";position:absolute;left:50%;bottom:-19px;width:1.5px;height:14px;background:var(--gold)}
+.flow h3{font-family:var(--serif);font-size:20px;color:var(--bronze-deep);line-height:1.5}
+.flow p{font-size:16px;color:var(--ink-faint)}
+.ways{list-style:none;margin-top:10px}
+.ways li{background:var(--ivory);border-radius:12px;padding:10px 12px;margin-top:8px;font-size:16px;line-height:1.7}
+.ways li b{display:block;color:var(--bronze-deep);font-size:17px}
 
-/* 極意 */
-.secret{list-style:none;counter-reset:s}
-.secret li{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line)}
-.secret li:last-child{border-bottom:0}
-.secret li::before{counter-increment:s;content:counter(s);flex:none;width:32px;height:32px;border-radius:50%;background:var(--rose-pale);color:var(--rose-deep);font-weight:900;display:grid;place-items:center;margin-top:2px}
-.secret b{display:block;font-size:19px;color:var(--bordeaux)}
-.secret span{font-size:17px;color:var(--ink-soft)}
+/* ================= 7つの極意 ================= */
+.rate{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+.rate div{text-align:center;border-radius:16px;padding:12px 6px;background:var(--ivory)}
+.rate div.us{background:linear-gradient(135deg,#FFF6DD,#EED9A2)}
+.rate small{display:block;font-size:14px;font-weight:700;color:var(--ink-faint);line-height:1.5}
+.rate b{font-family:var(--en);font-weight:600;font-size:40px;line-height:1.2;color:var(--ink-faint)}
+.rate .us b{background:var(--foil);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.secrets{list-style:none;counter-reset:s}
+.secrets>li{background:var(--pearl);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:18px 18px;margin-bottom:12px}
+.secrets>li>h3{display:flex;gap:12px;align-items:center;font-family:var(--serif);font-size:20px;line-height:1.45;color:var(--bronze-deep);margin-bottom:8px}
+.secrets>li>h3::before{counter-increment:s;content:counter(s);flex:none;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold);color:var(--gold);display:grid;place-items:center;font-family:var(--en);font-weight:600;font-size:22px}
+.road{margin-top:12px;border-radius:14px;padding:12px 14px;background:var(--sea-pale)}
+.road b{display:block;color:var(--sea-deep);font-size:16px}
+.road ol{list-style:none;display:flex;flex-wrap:wrap;gap:6px 4px;margin-top:6px;font-size:15px;font-weight:700}
+.road ol li{background:var(--pearl);border-radius:8px;padding:2px 10px}
+.road ol li:not(:last-child)::after{content:" →";color:var(--gold)}
 
-/* チェックリスト */
-.progress{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:16px;font-weight:700;color:var(--ink-faint)}
-.progress__bar{flex:1;height:12px;background:var(--card-soft);border-radius:99px;overflow:hidden}
-.progress__bar i{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
-.progress.done{color:var(--green)}
-.ck{display:flex;gap:12px;align-items:flex-start;padding:12px 4px;border-bottom:1px solid #F2E6D4;cursor:pointer}
+/* ================= チェックリスト ================= */
+.progress{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:15px;font-weight:700;color:var(--ink-faint)}
+.progress__bar{flex:1;height:8px;background:var(--sand);border-radius:99px;overflow:hidden}
+.progress__bar i{display:block;height:100%;width:0;background:var(--foil);background-size:200% 100%;transition:width .3s}
+.progress.done{color:var(--ok)}
+.phase{font-family:var(--serif);font-weight:800;font-size:17px;color:var(--sea-deep);margin:18px 0 2px;padding-top:12px;border-top:1px dashed var(--line)}
+.phase:first-of-type{border-top:0;padding-top:0}
+.ck{display:flex;gap:12px;align-items:flex-start;padding:12px 2px;border-bottom:1px solid #F3E9D5;cursor:pointer}
 .ck:last-child{border-bottom:0}
-.ck input{flex:none;appearance:none;-webkit-appearance:none;width:30px;height:30px;border:2.5px solid var(--gold);border-radius:8px;background:#fff;margin-top:1px;display:grid;place-items:center;cursor:pointer}
-.ck input:checked{background:var(--green);border-color:var(--green)}
-.ck input:checked::after{content:"✓";color:#fff;font-weight:900;font-size:20px;line-height:1}
-.ck input:checked+span{color:var(--ink-faint);text-decoration:line-through;text-decoration-color:rgba(47,122,85,.6)}
-.ck span small{display:block;font-size:15px;color:var(--ink-faint);text-decoration:none}
-.ck .tlink{font-size:15px;font-weight:700;white-space:nowrap}
-.reset{display:block;margin:4px 0 0 auto;background:none;border:1px solid var(--line);border-radius:99px;padding:6px 14px;font:inherit;font-size:14px;color:var(--ink-faint);cursor:pointer}
+.ck input,.agree input{flex:none;appearance:none;-webkit-appearance:none;width:30px;height:30px;border:2px solid var(--gold);border-radius:50%;background:#fff;margin-top:1px;display:grid;place-items:center;cursor:pointer}
+.ck input:checked,.agree input:checked{background:var(--foil);background-size:200% 100%;border-color:var(--gold)}
+.ck input:checked::after,.agree input:checked::after{content:"✓";color:#fff;font-weight:900;font-size:18px;line-height:1}
+.ck input:checked+span{color:var(--ink-faint)}
+.ck span small{display:block;font-size:15px;color:var(--ink-faint)}
+.reset{display:block;margin:8px 0 0 auto;background:none;border:1px solid var(--line);border-radius:99px;padding:5px 14px;font:inherit;font-size:13px;color:var(--ink-faint);cursor:pointer}
 
-/* 当日タイムライン */
+/* ================= 当日 ================= */
 .tl{list-style:none}
-.tl>li{position:relative;padding:0 0 18px 26px;border-left:3px solid var(--gold-pale);margin-left:8px}
-.tl>li:last-child{border-left-color:transparent}
-.tl>li::before{content:"";position:absolute;left:-11px;top:4px;width:19px;height:19px;border-radius:50%;background:var(--gold);border:3px solid #fff;box-shadow:0 0 0 2px var(--gold)}
-.tl .time{display:inline-block;font-size:15px;font-weight:900;color:#fff;background:var(--rose-deep);border-radius:6px;padding:0 8px}
-.tl h4{font-size:20px;color:var(--bordeaux);margin:4px 0 2px}
-.tl .goal{font-size:16px;color:var(--ink-faint);font-weight:700}
-.say{background:var(--card-soft);border-radius:12px;padding:10px 14px;margin-top:8px;font-size:17px}
-.say::before{content:"💬 ";}
+.tl>li{position:relative;padding:0 0 20px 28px;border-left:1.5px solid var(--gold-light);margin-left:9px}
+.tl>li:last-child{border-left-color:transparent;padding-bottom:0}
+.tl>li::before{content:"";position:absolute;left:-10px;top:5px;width:18px;height:18px;border-radius:50%;background:var(--foil);background-size:200% 100%;border:3px solid var(--pearl);box-shadow:0 0 0 1.5px var(--gold)}
+.tl .time{display:inline-block;font-size:14px;font-weight:900;color:var(--sea-deep);background:var(--sea-pale);border-radius:6px;padding:0 8px}
+.tl h4{font-family:var(--serif);font-size:20px;color:var(--bronze-deep);margin:4px 0 2px}
+.tl .goal{font-size:15px;color:var(--ink-faint);font-weight:700;margin-bottom:4px}
 
-/* 反論 */
-details.qa{background:var(--card);border-radius:16px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
-details.qa summary{list-style:none;cursor:pointer;padding:16px 46px 16px 16px;font-weight:900;font-size:18px;position:relative;color:var(--bordeaux)}
-details.qa summary::-webkit-details-marker{display:none}
-details.qa summary::after{content:"＋";position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--gold)}
-details.qa[open] summary::after{content:"－"}
-details.qa .body{padding:0 16px 16px}
-
-/* 4ステップ */
+/* ================= 反論 ================= */
 .steps4{display:grid;gap:10px}
-.steps4 div{background:var(--card-soft);border-radius:14px;padding:12px 14px}
-.steps4 b{color:var(--rose-deep);font-size:19px}
+.steps4 div{background:var(--ivory);border-radius:14px;padding:12px 14px;font-size:17px}
+.steps4 b{font-family:var(--serif);color:var(--bronze-deep);font-size:19px}
+details.qa{background:var(--pearl);border:1px solid var(--line);border-radius:16px;margin-bottom:10px;overflow:hidden}
+details.qa summary{list-style:none;cursor:pointer;padding:16px 48px 16px 18px;font-weight:700;font-size:18px;position:relative;color:var(--bronze-deep)}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::after{content:"＋";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--gold)}
+details.qa[open] summary::after{content:"－"}
+details.qa .body{padding:0 18px 18px;font-size:17px}
+details.qa .body p+p{margin-top:8px}
 
-/* 表 */
+/* ================= 表・計算 ================= */
 .tbl{width:100%;border-collapse:collapse;font-size:17px}
 .tbl th,.tbl td{border-bottom:1px solid var(--line);padding:10px 6px;text-align:left;vertical-align:top}
-.tbl th{white-space:nowrap;color:var(--bordeaux);width:6.5em}
-
-/* 計算機 */
-.calc label{display:block;font-weight:700;margin-top:10px}
-.calc input{width:100%;font:inherit;font-size:22px;padding:10px 14px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.tbl th{white-space:nowrap;color:var(--bronze-deep);width:5.8em;font-family:var(--serif)}
+.must{list-style:none}
+.must li{position:relative;padding:8px 0 8px 32px;border-bottom:1px dashed var(--line)}
+.must li:last-child{border-bottom:0}
+.must li::before{content:"必";position:absolute;left:0;top:11px;width:22px;height:22px;border-radius:50%;background:var(--rose);color:#fff;font-size:12px;font-weight:900;display:grid;place-items:center}
+.must.opt li::before{content:"推";background:var(--sea)}
+.formula{text-align:center;font-family:var(--serif);font-weight:800;font-size:22px;line-height:1.6;color:var(--bronze-deep);padding:6px 0}
+.calc label{display:block;font-weight:700;margin-top:10px;font-size:16px}
+.calc input{width:100%;font:inherit;font-size:22px;padding:10px 14px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
 .calc .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.calc .out{margin-top:16px;background:var(--bordeaux);color:#fff;border-radius:16px;padding:16px}
-.calc .out div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.18)}
+.calc .out{margin-top:16px;border-radius:18px;padding:16px 18px;color:#FFF8E6;background:linear-gradient(135deg,#3F564E,#2E413B)}
+.calc .out div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,248,230,.18)}
 .calc .out div:last-child{border:0}
-.calc .out b{font-size:22px}
+.calc .out b{font-family:var(--en);font-size:28px;font-weight:600;color:var(--gold-light)}
 
-/* テンプレ */
-.tpl-index{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
-.tpl-index a{background:var(--card);border:1.5px solid var(--line);border-radius:99px;padding:6px 14px;font-size:15px;font-weight:700;text-decoration:none;color:var(--ink)}
-.tpl-group{font-size:19px;font-weight:900;color:var(--gold-deep);margin:24px 0 10px;padding-left:10px;border-left:6px solid var(--gold)}
-.tpl{background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
-.tpl h4{font-size:19px;color:var(--bordeaux);line-height:1.5}
-.tpl .when{font-size:15px;color:var(--ink-faint);font-weight:700;margin:2px 0 8px}
-.tpl pre{white-space:pre-wrap;word-break:break-word;font-family:var(--sans);font-size:17px;line-height:1.8;background:var(--card-soft);border-radius:12px;padding:14px;color:var(--ink)}
-.copy{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;min-height:52px;border:0;border-radius:14px;background:var(--rose-deep);color:#fff;font:inherit;font-weight:900;font-size:18px;cursor:pointer}
-.copy.ok{background:var(--green)}
-.hint{font-size:15px;color:var(--ink-faint);margin-top:6px}
+/* ================= テンプレ ================= */
+.tpl{margin-top:14px;border:1px solid var(--gold-light);border-radius:16px;overflow:hidden}
+.tpl h4{margin:0;padding:10px 14px;background:var(--champagne);font-size:16px;color:var(--bronze-deep)}
+.tpl pre{white-space:pre-wrap;word-break:break-word;font-family:var(--sans);font-size:16px;line-height:1.8;padding:14px;color:var(--ink);background:var(--pearl)}
+.copy{display:block;width:100%;min-height:52px;border:0;border-top:1px solid var(--gold-light);background:var(--pearl);color:var(--bronze);font:inherit;font-weight:900;font-size:17px;cursor:pointer}
+.copy.ok{background:var(--ok);color:#fff}
 
-.totop{display:block;text-align:right;font-size:15px;font-weight:700;margin-top:6px;text-decoration:none}
-footer{text-align:center;font-size:14px;color:var(--ink-faint);margin-top:50px}
+/* ================= 目次へ戻る ================= */
+.totoc{position:fixed;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:20;display:flex;align-items:center;gap:6px;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:900;font-size:16px;color:#fff;background:linear-gradient(100deg,#6E4E1E,#B48A40 50%,#7A5826);box-shadow:0 8px 20px rgba(80,56,20,.35)}
 
+footer{text-align:center;font-size:14px;color:var(--ink-faint);margin-top:56px}
+footer a{color:var(--ink-faint)}
+
+@media (min-width:720px){
+  .hero{padding:90px 24px 140px}
+  .hero__title .t2{font-size:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+}
 @media print{
-  .tabbar,.copy,.reset,.menu,.totop{display:none!important}
+  .totoc,.copy,.reset,.gate,.next{display:none!important}
+  #main{display:block!important}
   body{font-size:14px;background:#fff}
-  .card,.tpl,details.qa{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
-  details.qa .body{display:block}
+  .card,.secrets>li,.flow>li{box-shadow:none;break-inside:avoid}
 }
 </style>
 </head>
 <body>
-<div class="wrap" id="top">
 
 <header class="hero">
-  <span class="hero__eyebrow">ここらぼ 受講生専用</span>
-  <h1 class="hero__title"><small>これがあれば安心</small>シンクロセールス！<br>個別相談マニュアル</h1>
-  <p class="hero__lead">個別相談の<b>前・当日・後</b>に<br>「これだけやればいい」がひと目でわかる<br>早見表とテンプレ集です</p>
+  <div class="bokeh" aria-hidden="true">
+    <i style="width:90px;height:90px;left:6%;top:10%;animation-delay:0s"></i>
+    <i style="width:46px;height:46px;left:28%;top:24%;animation-delay:1.2s"></i>
+    <i style="width:120px;height:120px;left:66%;top:6%;animation-delay:.6s"></i>
+    <i style="width:34px;height:34px;left:82%;top:38%;animation-delay:2s"></i>
+    <i style="width:60px;height:60px;left:12%;top:56%;animation-delay:2.6s"></i>
+    <i style="width:28px;height:28px;left:46%;top:62%;animation-delay:.9s"></i>
+    <i style="width:74px;height:74px;left:74%;top:66%;animation-delay:1.7s"></i>
+    <i style="width:22px;height:22px;left:38%;top:8%;animation-delay:3s"></i>
+    <i style="width:40px;height:40px;left:90%;top:14%;animation-delay:3.6s"></i>
+    <i style="width:30px;height:30px;left:58%;top:40%;animation-delay:4.2s"></i>
+  </div>
+  <div class="hero__inner">
+    <p class="hero__en">Magic Synchro Sales</p>
+    <div class="hero__line"></div>
+    <p class="hero__pre">これがあれば安心</p>
+    <h1 class="hero__title">
+      <span class="t1">魔法の</span>
+      <span class="t2">シンクロセールス</span>
+      <span class="t3">個別相談 黄金の航海図</span>
+    </h1>
+    <p class="hero__lead">ご成約率 <b>50%</b> 超えを生み出してきた<br>ここらぼの個別相談のすべてを<br>この一冊に、ぎゅっと込めました</p>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,64 C240,112 480,16 720,56 C960,96 1200,28 1440,60 L1440,120 L0,120 Z" fill="#FBF6EC" opacity=".55"/>
+    <path d="M0,84 C260,48 520,116 780,80 C1040,44 1250,96 1440,78 L1440,120 L0,120 Z" fill="#FBF6EC"/>
+  </svg>
 </header>
 
-<section class="howto">
-  <h2>📱 使いかた</h2>
-  <ol>
-    <li>下の<b>ボタン</b>か、画面いちばん下の<b>メニュー</b>から、今やることを開く</li>
-    <li>終わったら <b>□ にチェック</b>（スマホに自動で保存されます）</li>
-    <li>送る文章は<b>テンプレ</b>の「コピー」ボタンで、そのまま貼りつけ</li>
-  </ol>
-  <p class="note">💡 ホーム画面に追加しておくと、必要な時にすぐ開けます<br><small>（iPhone：共有ボタン →「ホーム画面に追加」／Android：︙ →「ホーム画面に追加」）</small></p>
+<div class="wrap">
+
+<!-- ================= 取り扱い規約（同意してから本編へ） ================= -->
+<section class="gate" id="gate">
+  <div class="card">
+    <h2><small>Terms of Use</small>はじめに必ずお読みください</h2>
+    <p class="gate__msg">この航海図には、ここらぼがこれまでの実践で積み重ねてきた知恵を、惜しみなくすべて込めています。<br>お金や契約にかかわる大切な内容も含まれるため、下の取り扱い規約をお読みいただき、同意のうえでお進みください。</p>
+    <div class="terms" tabindex="0" aria-label="取り扱い規約">
+      <ol>
+        <li><b>著作権について</b><br>本資料（文章・構成・画像・動画・資料リンクを含む）の著作権は、株式会社kokofuruに帰属します。</li>
+        <li><b>ご利用の範囲</b><br>ご自身の事業のために読み、実践にお役立ていただくことは自由です。</li>
+        <li><b>禁止事項</b><br>無断での転載・複製・再配布・販売、ご自身の教材やサービスとしての流用、SNSなどへのスクリーンショット掲載は禁止します。</li>
+        <li><b>資料・動画リンクの取り扱い</b><br>本資料内の動画・資料リンクは、本資料をご利用の方のためのものです。URLの共有・転載はご遠慮ください。</li>
+        <li><b>契約・お金・法律の情報について</b><br>契約書・特定商取引法・税金などの記載は、一般的な情報と経験にもとづくもので、法的・税務的な助言ではありません。最終的な判断は、弁護士・税理士・税務署など専門家にご確認ください。</li>
+        <li><b>成果について</b><br>本資料は成果や売上を保証するものではありません。</li>
+        <li><b>販売・契約の責任</b><br>本資料を参考に行う販売・契約・お客さまとのやり取りの責任は、各事業者ご自身にあります。</li>
+        <li><b>内容の更新</b><br>内容は、より良いものにするため予告なく更新することがあります。</li>
+      </ol>
+    </div>
+    <label class="agree"><input type="checkbox" id="agreeCk"><span>上記の取り扱い規約を読み、同意します</span></label>
+    <button type="button" class="btn" id="agreeBtn" disabled>本編へすすむ</button>
+  </div>
 </section>
 
-<nav class="menu" aria-label="目次">
-  <a href="#flow"><span class="ic">🗺️</span>全体の流れ</a>
-  <a href="#mind"><span class="ic">💗</span>心がまえ<br>7つの極意</a>
-  <a href="#before"><span class="ic">📝</span>相談の前に<br>やること</a>
-  <a href="#day"><span class="ic">🎤</span>当日の<br>進め方</a>
-  <a href="#objection"><span class="ic">🤝</span>不安・反論<br>への答え方</a>
-  <a href="#after"><span class="ic">💌</span>相談の後に<br>やること</a>
-  <a href="#contract"><span class="ic">📄</span>契約書・<br>法律の注意</a>
-  <a href="#money"><span class="ic">🧮</span>売上の<br>計算</a>
-  <a href="#templates" class="wide"><span class="ic">📋</span>コピペで使える テンプレ一覧（24種）</a>
+<main id="main" hidden>
+
+<div class="howto"><p>✦ 下の目次から、今やることを開くだけ ✦</p></div>
+
+<nav aria-label="目次">
+  <ol class="toc" id="toc">
+    <li><a href="#s1"><span class="no">01</span><span class="tt">個別相談 前後の全体の流れ</span><span class="arr">›</span></a></li>
+    <li><a href="#s2"><span class="no">02</span><span class="tt">セールスの心構え<small>感謝されて自然と売れる 7つの極意</small></span><span class="arr">›</span></a></li>
+    <li><a href="#s3"><span class="no">03</span><span class="tt">個別相談までに<br>やることリスト</span><span class="arr">›</span></a></li>
+    <li><a href="#s4"><span class="no">04</span><span class="tt">個別相談 当日の進め方<small>ダイレクトレスポンスマーケティング</small></span><span class="arr">›</span></a></li>
+    <li><a href="#s5"><span class="no">05</span><span class="tt">不安・反論への答え方</span><span class="arr">›</span></a></li>
+    <li><a href="#s6"><span class="no">06</span><span class="tt">個別相談 終了後に<br>やることリスト</span><span class="arr">›</span></a></li>
+    <li><a href="#s7"><span class="no">07</span><span class="tt">契約書・法律・お金の注意</span><span class="arr">›</span></a></li>
+    <li><a href="#s8"><span class="no">08</span><span class="tt">売上の計算方法</span><span class="arr">›</span></a></li>
+  </ol>
 </nav>
 
-<!-- ============ 0 全体の流れ ============ -->
-<section class="sec" id="flow">
-  <div class="sec__head"><span class="sec__no">🗺️</span><h2 class="sec__title"><small>まずはここだけ見ればOK</small>全体の流れ</h2></div>
+<!-- ================= 01 全体の流れ ================= -->
+<section class="sec" id="s1">
+  <div class="band"><span class="no">01</span><h2>個別相談 前後の<br>全体の流れ</h2><p>まずはここで、航海の全体像をつかみましょう</p></div>
   <ol class="flow">
-    <li><a href="#before">声かけ・お申込み</a><small>モニター募集・告知 → 事前アンケート</small></li>
-    <li><a href="#before">準備と練習</a><small>提案書・台本・決済・契約書・Zoom</small></li>
-    <li><a href="#day">個別相談 当日（60〜90分）</a><small>オープニング → ヒアリング → 未来 → ご提案</small></li>
-    <li><a href="#after">相談後のフォロー</a><small>お礼 → 決済リンク → 翌日フォロー</small></li>
-    <li><a href="#after">ご成約・契約・決済</a><small>契約書 → 入金確認 → ウェルカム</small></li>
-    <li><a href="#after">講座スタート</a><small>グループ招待 → 事前課題 → 初回日程</small></li>
+    <li><h3>告知・お申込み</h3><p>個別相談を知ってもらう方法は3つ</p>
+      <ul class="ways">
+        <li><b>① リアル人脈に声をかける</b>身近な友人・知人、すでに信頼関係があるメンバーへ</li>
+        <li><b>② 所属コミュニティに食い込む</b>地域やオンラインのコミュニティで関係をつくる、チラシやDMを置かせてもらう</li>
+        <li><b>③ 自分のSNSで告知・募集する</b>認知の媒体で募集（ここらぼではInstagramを推進）</li>
+      </ul>
+      <p class="note">起業したばかりで発信が育っていないうちは、<span class="em">①②のリアル人脈・オフラインが有力</span>。発信が育ってきたら③のSNSが中心になっていきます。</p>
+    </li>
+    <li><h3>準備と練習</h3><p>ご提案書・決済・契約書・Zoom・印象ブランディング・通し練習</p></li>
+    <li><h3>個別相談 当日</h3><p>オープニング → ヒアリング → 未来の共有 → ご提案 → クロージング</p></li>
+    <li><h3>相談後のフォロー</h3><p>お礼のLINE → お申込み・決済のご案内</p></li>
+    <li><h3>ご成約・契約・決済</h3><p>契約書 → 入金確認 → ウェルカム案内</p></li>
+    <li><h3>サービススタート</h3><p>講座・セッション・プログラムなど</p></li>
   </ol>
-  <p class="note">ご成約率を決めるのは、当日のクロージングだけではありません。<br><span class="em">発信を見てもらった時から、スタートまでの「1本道」全体でどれだけ信頼を積めたか</span>で決まります。</p>
+  <a class="next" href="#s2"><span>次は</span><b>02 セールスの心構え →</b></a>
 </section>
 
-<!-- ============ 1 心がまえ ============ -->
-<section class="sec" id="mind">
-  <div class="sec__head"><span class="sec__no">1</span><h2 class="sec__title"><small>感謝されて自然と売れる</small>ご成約率50%超え・7つの極意</h2></div>
+<!-- ================= 02 心構え ================= -->
+<section class="sec" id="s2">
+  <div class="band"><span class="no">02</span><h2>セールスの心構え<br>感謝されて自然と売れる 7つの極意</h2><p>ご成約率50%超えの土台になる考え方</p></div>
+
   <div class="card">
-    <ol class="secret">
-      <li><div><b>1本道全体でクロージング</b><span>発信・DM・アンケート・当日・フォロー、すべてが信頼づくり。当日だけで決めようとしない。</span></div></li>
-      <li><div><b>相手の人生を幸せにするまでが集客</b><span>「売れたらゴール」ではなく「お客さまが変われたらゴール」。</span></div></li>
-      <li><div><b>セールスはプロポーズ</b><span>「一緒に叶えたい」と真剣に伝える場。お願いでも押し売りでもありません。</span></div></li>
-      <li><div><b>とことん相手目線・自分語り禁止</b><span>話す割合は <b>相手7：自分3</b>。私の実績より、相手の気持ちと未来の話を。</span></div></li>
-      <li><div><b>売らない！届ける！</b><span>本当に必要な人に、必要なものを。合わない人には無理にすすめない。</span></div></li>
-      <li><div><b>お金の話は誠実に</b><span>金額・支払い方法・総額・キャンセル条件は、はっきり・堂々と。濁すと不信になります。</span></div></li>
-      <li><div><b>反論処理ノートを作る</b><span>聞かれたこと・答えに困ったことを毎回メモ。次の相談で必ず活きます。</span></div></li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============ 2 前 ============ -->
-<section class="sec" id="before">
-  <div class="sec__head"><span class="sec__no">2</span><h2 class="sec__title"><small>個別相談の前に</small>これだけやればOK！</h2></div>
-
-  <div class="card checklist" data-key="before1">
-    <h3><span class="tag">STEP1</span>声かけ・お申込み</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>声をかける人を<b>5〜10人</b>書き出した<small>知人・友人・今のフォロワー</small></span></label>
-    <label class="ck"><input type="checkbox"><span>「モニター協力」前提の、軽い声かけを送った <a class="tlink" href="#t-dm">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>告知バナー・告知文を出した（SNS・LINE） <a class="tlink" href="#t-ad">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>申込フォーム（Googleフォーム）を作った <a class="tlink" href="#t-form">→項目</a></span></label>
-    <label class="ck"><input type="checkbox"><span>事前アンケートを送った<small>「今の悩み」「叶えたい未来」を聞く → 当日がスムーズに</small></span></label>
-    <label class="ck"><input type="checkbox"><span>日程を確定し、確定メッセージを送った <a class="tlink" href="#t-confirm">→テンプレ</a></span></label>
-  </div>
-
-  <div class="card checklist" data-key="before2">
-    <h3><span class="tag">STEP2</span>準備するもの</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>ご提案書（PDF または Canva）<small>悩み → 未来 → 道のり → サポート内容 → 金額 → 申込方法 の順</small></span></label>
-    <label class="ck"><input type="checkbox"><span>トーク台本 <a class="tlink" href="#day">→当日の進め方</a></span></label>
-    <label class="ck"><input type="checkbox"><span>決済方法を決めた<small>クレジットカード／銀行振込／分割（分割時の総額も出しておく）</small></span></label>
-    <label class="ck"><input type="checkbox"><span>決済リンク・振込先の案内文を用意した</span></label>
-    <label class="ck"><input type="checkbox"><span>契約書・受講規約を用意した <a class="tlink" href="#contract">→契約書</a></span></label>
-    <label class="ck"><input type="checkbox"><span>特定商取引法に基づく表記をネット上に出した<small>販売者名・住所・連絡先・価格・支払時期・返金条件など</small></span></label>
-    <label class="ck"><input type="checkbox"><span>相談用のZoomを作った<small>待合室ON／自分の表示名を確認</small></span></label>
-    <label class="ck"><input type="checkbox"><span>反論処理ノートを手元に置いた <a class="tlink" href="#objection">→答え方</a></span></label>
-  </div>
-
-  <div class="card checklist" data-key="before3">
-    <h3><span class="tag">STEP3</span>当日までの練習</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>Zoom操作を練習した<small>画面共有・録画・チャットでURLを送る</small></span></label>
-    <label class="ck"><input type="checkbox"><span>台本を声に出して<b>3回以上</b>通した</span></label>
-    <label class="ck"><input type="checkbox"><span>友人に相手役をお願いしてロープレした</span></label>
-    <label class="ck"><input type="checkbox"><span>よくある質問・反論の答えを読み上げ練習した</span></label>
-    <label class="ck"><input type="checkbox"><span>金額を<b>堂々と言う練習</b>をした（声が小さくならないように）</span></label>
-  </div>
-
-  <div class="card checklist" data-key="before4">
-    <h3><span class="tag">前日〜直前</span>最終チェック</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>前日にリマインドを送った <a class="tlink" href="#t-remind">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>相手のアンケートを読み返し、聞きたいことをメモした</span></label>
-    <label class="ck"><input type="checkbox"><span>スマホ・PCの通知をオフにした</span></label>
-    <label class="ck"><input type="checkbox"><span>顔が明るく映る（照明・背景・カメラが目の高さ）</span></label>
-    <label class="ck"><input type="checkbox"><span>提案書・決済リンク・申込フォームをすぐ開けるようにした</span></label>
-    <label class="ck"><input type="checkbox"><span>お水・メモ・ペンを用意した</span></label>
-    <label class="ck"><input type="checkbox"><span><b>10分前</b>にZoomに入り、音声とカメラを確認した</span></label>
-  </div>
-</section>
-
-<!-- ============ 3 当日 ============ -->
-<section class="sec" id="day">
-  <div class="sec__head"><span class="sec__no">3</span><h2 class="sec__title"><small>個別相談 当日（目安60〜90分）</small>当日の進め方</h2></div>
-  <div class="card">
-    <ol class="tl">
-      <li><span class="time">5分</span><h4>① オープニング</h4><p class="goal">ゴール：安心してもらう・時間の使い方を伝える</p>
-        <ul class="dots"><li>お礼と自己紹介（短く！）</li><li>今日の流れと終了時間を伝える</li><li>「合わなければ断ってOK」と最初に伝える</li><li>録画するなら必ず許可をとる</li></ul>
-        <p class="say">今日は〇〇さんのお話をたっぷり聞かせてください。最後に、もしお役に立てそうならサポートのご案内もしますが、無理におすすめすることはないので安心してくださいね。</p></li>
-      <li><span class="time">25〜30分</span><h4>② ヒアリング（いちばん大事）</h4><p class="goal">ゴール：相手が自分の本音に気づく</p>
-        <ul class="dots"><li><b>今</b>どんな状態？（悩み・困りごと）</li><li><b>なぜ</b>今変えたい？（きっかけ）</li><li><b>理想</b>はどうなりたい？（3ヶ月後・1年後）</li><li><b>壁</b>は何？（今までうまくいかなかった理由）</li><li><b>このまま</b>だとどうなりそう？</li></ul>
-        <p class="note">自分が話すのは3割まで。うなずき・相手の言葉をくり返す・「それは大変でしたね」と受け止める。<a href="#t-hearing">→質問リスト</a></p></li>
-      <li><span class="time">10分</span><h4>③ 未来の共有・解決の道すじ</h4><p class="goal">ゴール：「私にもできそう」と思ってもらう</p>
-        <ul class="dots"><li>聞いた内容を要約して返す（「つまり〇〇ということですね」）</li><li>今と理想のあいだにある「道のり」を見せる</li><li>「よかったら具体的なサポートをご紹介してもいいですか？」と<b>許可をとってから</b>提案へ</li></ul></li>
-      <li><span class="time">15分</span><h4>④ ご提案</h4><p class="goal">ゴール：サポート内容と条件を正しく伝える</p>
-        <ul class="dots"><li>提案書を画面共有</li><li>期間・内容・サポート方法・得られる変化</li><li>金額・支払い方法・分割の総額・キャンセル規定を<b>はっきり</b></li></ul>
-        <p class="say">3ヶ月で〇〇な状態を一緒に目指すサポートです。受講料は〇〇万円（税込）で、一括のほか〇回の分割（総額〇〇円）もお選びいただけます。</p></li>
-      <li><span class="time">10分</span><h4>⑤ クロージング（プロポーズ）</h4><p class="goal">ゴール：相手が自分で決める</p>
-        <p class="say">〇〇さんの「〇〇したい」を、私は本気で一緒に叶えたいと思っています。ご一緒しませんか？</p>
-        <ul class="dots"><li>言ったあとは<b>黙って待つ</b>（沈黙は考えている時間）</li><li>不安が出たら → <a href="#objection">答え方</a></li><li>即決をせかさない・長時間ひきとめない</li></ul></li>
-      <li><span class="time">5分</span><h4>⑥ 次の段取り</h4><p class="goal">ゴール：迷わせない</p>
-        <ul class="dots"><li><b>YESの方：</b>その場でチャットに申込フォーム・決済リンクを送る → 契約書の流れを説明</li><li><b>考えたい方：</b>「いつまでにお返事いただけそうですか？」と期限を一緒に決める</li><li><b>ご縁がない方：</b>気持ちよく感謝で終える</li></ul></li>
-    </ol>
-  </div>
-</section>
-
-<!-- ============ 4 反論 ============ -->
-<section class="sec" id="objection">
-  <div class="sec__head"><span class="sec__no">4</span><h2 class="sec__title"><small>堂々と誠実さを届ける</small>不安・反論への答え方</h2></div>
-  <div class="card">
-    <h3>基本の4ステップ</h3>
-    <div class="steps4">
-      <div><b>① 受け止める</b><br>「不安になるのは自然です」「私もそうでした」</div>
-      <div><b>② 見方を変える</b><br>「不安＝本気の証拠」「出費ではなく未来への投資」</div>
-      <div><b>③ 安心材料を渡す</b><br>「支払い方法を選べます」「最後まで伴走します」</div>
-      <div><b>④ 未来を見せる</b><br>「この選択の先にある景色」を一緒に思い描く</div>
+    <h3>なぜ「50%超え」はすごいのか</h3>
+    <div class="rate">
+      <div><small>個人がオンラインで<br>高額の無形商品を売る<br>一般的なご成約率</small><b>20%</b></div>
+      <div class="us"><small>ここらぼの<br>シンクロセールスの<br>ご成約率</small><b>50%+</b></div>
     </div>
-    <p class="warn">⚠️ ただし！ご縁がない人もいると割り切ることも大事。<br>反論や不安が出ない状態で「お願いします」と言ってもらえるよう、<b>当日までの信頼づくり</b>を磨きましょう。</p>
+    <p class="small" style="text-align:center">※10〜30万円の商品をクロージングする場合の目安と言われる数字です</p>
+    <h4>「シンクロセールス」とは</h4>
+    <p>自分が売るのではなく、<span class="em">相手の気持ちの流れ（感情曲線）にぴったり寄りそう</span>セールスです。シンクロナイズドスイミングのように呼吸を合わせて、相手のお話を聞き、困りごとやお悩みを受け止めて、<b>相手の最大の理解者になる</b>。だから「シンクロ」セールスと呼んでいます。</p>
   </div>
 
-  <details class="qa"><summary>💰「お金がなくて…」</summary><div class="body">
-    <p class="say">そう感じるのは当然です。大きな金額ですもんね。差しつかえなければ、「金額そのもの」と「払い方」、どちらが気になっていますか？</p>
-    <p>→ 払い方なら：分割・クレジットカードなどの選択肢と<b>総額</b>を説明。<br>→ 金額なら：今のまま1年過ごした場合と比べて考えてもらう。</p>
-    <p class="warn">借金（カードローン・消費者金融など）をすすめるのは絶対NG。生活に無理のある方には「今はやめておきましょう」と伝える勇気を。</p>
-  </div></details>
-  <details class="qa"><summary>👨‍👩‍👧「夫（家族）に相談したい」</summary><div class="body">
-    <p class="say">大切なことなので、ご家族に相談したいお気持ちは素敵です。ちなみに〇〇さんご自身のお気持ちとしてはいかがですか？</p>
-    <p>→ 本人がやりたいなら：家族に伝えるポイント（内容・期間・金額・得られる変化）を一緒に整理し、返事の期限を決める。必要なら提案書PDFを送る。</p>
-  </div></details>
-  <details class="qa"><summary>⏰「時間がなくて…」</summary><div class="body">
-    <p class="say">お忙しい中でも変わりたいと思って今日来てくださったんですよね。1日どのくらいなら時間をとれそうですか？</p>
-    <p>→ 1日の作業時間の目安、録画視聴・スマホでできることなど、現実的な進め方を伝える。</p>
-  </div></details>
-  <details class="qa"><summary>😢「私にできるか不安…」</summary><div class="body">
-    <p class="say">その不安は本気だからこそですね。〇〇さんと同じように、ゼロから始めた方もたくさんいます。</p>
-    <p>→ サポート体制（質問できる場所・個別フォロー）と、同じような状況からスタートした受講生の例を紹介。<br><small>※成果を約束する言い方（「絶対できます」）はしない</small></p>
-  </div></details>
-  <details class="qa"><summary>🤔「少し考えたいです」</summary><div class="body">
-    <p class="say">もちろんです。ちなみに、どのあたりを考えたいですか？今ここで解消できることがあればお答えしますね。</p>
-    <p>→ 迷いのポイントを聞いて答える。それでも考えたい場合は、返事の期限を一緒に決め、<a href="#t-hold">保留の方へのフォロー</a>へ。</p>
-  </div></details>
-  <details class="qa"><summary>🔍「他の講座とも比べたい」</summary><div class="body">
-    <p class="say">比べるのは大事なことです。〇〇さんが講座を選ぶ時に、いちばん大切にしたいことは何ですか？</p>
-    <p>→ 相手の大切にしたいことと、このサポートが合うかどうかを正直に伝える。他社の悪口は言わない。</p>
-  </div></details>
+  <ol class="secrets">
+    <li><h3>1本道全体でクロージング</h3>
+      <p>当日の数時間だけで、高額の決断をしていただくのは無理があります。当日までの1本道で<b>信頼の貯金</b>と<b>価値の教育</b>をして、当日安心して決断していただける道をつくること。<span class="em">これが「集客」です</span></p>
+      <div class="road"><b>0→1（月商50万円を安定させるまで）の道</b>
+        <ol><li>発信（トークリールがメイン）</li><li>公式LINE登録（特典をひとつ）</li><li>事前アンケート</li><li>前日リマインド</li><li>当日</li><li>フォローアップ</li></ol>
+      </div>
+      <p class="small" style="margin-top:6px">※発信はリール・ストーリーズ・Instagram以外のSNSなど全般。ただし<b>アフレコリールだけでは、トークリールほどお申込みは入りません</b></p>
+      <div class="road"><b>0→1以降（月商50万円〜500万円くらい）の道</b>
+        <ol><li>発信</li><li>オプトインLP</li><li>ステップ配信（UTAGE・エルメなど）</li><li>動画講座</li><li>事前アンケート</li><li>前日リマインド</li><li>当日</li><li>フォローアップ</li></ol>
+      </div>
+      <p class="note">道を長くしたから売上が上がるわけではありません。月商50万円をコンスタントにいただけるようになったからこそ、コンセプトやペルソナが明確になり、長い道がつくれるのです。<b>最初は短くても太い道を</b></p>
+    </li>
+    <li><h3>相手の人生を幸せにするまでが集客</h3>
+      <p>自分の売上・利益ではなく、相手がどうすれば問題が解決し、夢が叶うのか。<b>相手の立場で考えられることが、すべて</b></p>
+      <p class="note">漁業型（とって終わり）ではなく、<b>農業型（育てて実らせる）</b>で集客する</p>
+    </li>
+    <li><h3>セールスはプロポーズ</h3>
+      <p>「売る」とは、相手を助ける・救うためのアイデアを届けること。いわば<b>愛の告白</b>です</p>
+      <p>「共に幸せに、豊かになっていこう」という宣言。それがクロージングであり、金額の提示です</p>
+    </li>
+    <li><h3>とことん相手目線・自分語り禁止</h3>
+      <p>話す割合は<b>相手7：自分3</b>。自分の実績より、相手の気持ちと未来の話を</p>
+    </li>
+    <li><h3>押し売りしない 自然体でも売れるセールス</h3>
+      <p>土台は<b>ダイレクトレスポンスマーケティング</b>。興味があり「YES」と言ってくれた人にだけ、次のものを見せていきます</p>
+      <p>知りたいと言った人にだけ、次のお話をしていくので、相手が不快な思いをしません。<span class="em">そして最後が金額</span>。ここがとても大事です</p>
+    </li>
+    <li><h3>お金の話は誠実に</h3>
+      <p>金額・支払い方法・分割の総額・キャンセル条件は、はっきり堂々と。濁すと不信につながります</p>
+    </li>
+    <li><h3>反論処理ノートを作る</h3>
+      <p>聞かれたこと、答えに困ったことを毎回メモ。次の個別相談で必ず活きます</p>
+    </li>
+  </ol>
+  <a class="next" href="#s3"><span>次は</span><b>03 個別相談までにやること →</b></a>
 </section>
 
-<!-- ============ 5 後 ============ -->
-<section class="sec" id="after">
-  <div class="sec__head"><span class="sec__no">5</span><h2 class="sec__title"><small>個別相談のあとに</small>これだけやればOK！</h2></div>
+<!-- ================= 03 前 ================= -->
+<section class="sec" id="s3">
+  <div class="band"><span class="no">03</span><h2>個別相談までに<br>やることリスト</h2><p>ご成約は準備9割。上から順にチェック</p></div>
 
-  <div class="card checklist" data-key="after1">
-    <h3><span class="tag">全員</span>相談が終わったら</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>当日中（数時間以内）にお礼LINEを送った <a class="tlink" href="#t-thanks">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>反論処理ノートに、聞かれたこと・気づきをメモした</span></label>
-    <label class="ck"><input type="checkbox"><span>お客さまリスト（日付・結果・次の連絡日）に記録した</span></label>
-  </div>
+  <div class="card checklist" data-key="s3-1">
+    <span class="label gold">STEP 1</span>
+    <h3>声かけ・告知・お申込み</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
 
-  <div class="card checklist" data-key="after2">
-    <h3><span class="tag">検討中</span>お返事待ちの方</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span>お礼と一緒に、提案書・決済リンクを送った</span></label>
-    <label class="ck"><input type="checkbox"><span>翌日、安心＋追加情報のフォローを送った <a class="tlink" href="#t-follow">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>約束の期限に、最後のご連絡をした <a class="tlink" href="#t-hold">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>見送りの方には、感謝でしめくくった <a class="tlink" href="#t-no">→テンプレ</a></span></label>
-  </div>
-  <p class="note">追いかけるのは<b>最大2〜3回まで</b>。しつこい連絡は信頼を失います。今回ご縁がなくても、発信を見続けてくれて、あとから申し込む方もたくさんいます。</p>
-
-  <div class="card checklist" data-key="after3" style="margin-top:14px">
-    <h3><span class="tag">ご成約</span>講座スタートまでの6ステップ</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct">0/0</span></div>
-    <label class="ck"><input type="checkbox"><span><b>① 契約・決済</b>：契約書を送った（クラウドサインなど） <a class="tlink" href="#t-contract">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>入金を確認し、すぐに「入金確認」のお知らせを送った<small>「正式にスタートします！」のワクワクを伝える</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>② ウェルカム案内</b>：おめでとう＆ありがとうメッセージ <a class="tlink" href="#t-welcome">→テンプレ</a><small>今後の流れをシンプルに（例：①グループ参加 → ②事前課題 → ③初回セッション）</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>③ 環境づくり</b>：LINEグループ／Slack／FBグループに招待した</span></label>
-    <label class="ck"><input type="checkbox"><span>自己紹介テンプレ（名前・ひとこと・意気込み）を渡した <a class="tlink" href="#t-intro">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>教材リンク・マニュアルをまとめた<b>スタートキット</b>を渡した</span></label>
-    <label class="ck"><input type="checkbox"><span><b>④ 事前課題</b>：受講の目的・ゴールを書くフォームを送った <a class="tlink" href="#t-pre">→テンプレ</a><small>初回で共有すると一体感がグッとUP</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑤ 初回日程</b>を確定した<small>個別は熱が冷めないうちに早めに／グループは全体日程を確定</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑥ ワクワク設計</b>：開講までのカウントダウンや小さな課題を送った <a class="tlink" href="#t-countdown">→テンプレ</a></span></label>
-    <label class="ck"><input type="checkbox"><span>不安が出そうな方に個別でひと声かけた</span></label>
-  </div>
-  <p class="note">この流れを押さえると、「契約したけど不安…」が「ここに入ってよかった！」に変わり、キャンセルが減ります。</p>
-</section>
-
-<!-- ============ 6 契約書 ============ -->
-<section class="sec" id="contract">
-  <div class="sec__head"><span class="sec__no">6</span><h2 class="sec__title"><small>トラブルを防いで安心して届ける</small>契約書・法律の注意</h2></div>
-  <div class="card">
-    <h3>📄 契約書に入れる項目</h3>
-    <table class="tbl">
-      <tr><th>サービス</th><td>名前・内容・期間・回数・サポート方法</td></tr>
-      <tr><th>お金</th><td>金額（税込）・支払い方法・支払期限・<b>分割の場合は回数と総額</b></td></tr>
-      <tr><th>キャンセル</th><td>開始前：〇日前までなら〇％返金／開始後：返金なし など<br><small>ここがあいまいだとトラブル率UP</small></td></tr>
-      <tr><th>守秘義務</th><td>相談内容を第三者に話さない（お互いに）／教材やワークを勝手に公開しない</td></tr>
-      <tr><th>著作権</th><td>資料・動画の著作権は主催者のもの／無断コピー・商用利用は禁止</td></tr>
-      <tr><th>免責</th><td>成果を保証しない／心身の変化や事業上の損害は自己責任／医療行為ではない</td></tr>
-      <tr><th>その他</th><td>録画・個人情報の扱い／途中で続けられなくなった時の扱い／連絡方法</td></tr>
-    </table>
-  </div>
-  <div class="card">
-    <h3>✅ まずはこれだけ 3ステップ</h3>
-    <ol style="padding-left:1.3em">
-      <li>「オンライン講座 契約書 雛形」で検索し、無料・安価なテンプレートを入手</li>
-      <li>自分のサービスに合わせて書きかえる</li>
-      <li>クラウドサイン／freeeサインなどにアップロードして締結</li>
-    </ol>
-    <p class="note">いずれ一度だけ、弁護士（弁護士ドットコムなど）や司法書士にチェックしてもらうと安心度がグッと上がります（数万円〜）。<br>「モニター段階」なら軽めでもOK。<b>本格的に10万円以上の継続プログラムは必ず契約書を。</b></p>
-  </div>
-  <div class="card">
-    <h3>⚠️ 高額商品をオンラインで売るときの注意</h3>
-    <ul class="dots">
-      <li><b>特定商取引法の表記</b>をLPやプロフィールリンクに出す</li>
-      <li><b>大げさな表現はNG</b>：「誰でも絶対月収100万」「必ず稼げる」など（景品表示法）</li>
-      <li><b>お客さまの声</b>は本人の許可をとる。紹介料などを払っている場合は「PR」と明記（ステマ規制）</li>
-      <li><b>借金をすすめない</b>・即決をせまらない・長時間ひきとめない</li>
-      <li>取引の形によっては、<b>クーリング・オフ</b>や中途解約のルールが関わることがあります。わからない時は消費者庁・消費生活センターの情報や専門家で確認を</li>
-      <li>録画・個人情報は目的を伝えて同意をとり、大切に保管する</li>
-    </ul>
-    <p class="hint">※ここに書いてあるのは一般的な注意点です。法律の判断は専門家にご確認ください。</p>
-  </div>
-</section>
-
-<!-- ============ 7 計算 ============ -->
-<section class="sec" id="money">
-  <div class="sec__head"><span class="sec__no">7</span><h2 class="sec__title"><small>受け取るお金はすべてこの計算</small>売上の計算</h2></div>
-  <div class="card">
-    <p class="big" style="text-align:center">魂商品の価格 ✖️ ご成約数 ＝ 月商</p>
-    <p class="note">例）受講料20万円（3ヶ月）× 月3人 ＝ <b>月60万円</b><br>同じリズムで1年続けると ＝ <b>年商720万円</b></p>
-  </div>
-  <div class="card calc">
-    <h3>🧮 自分の数字で計算してみる</h3>
-    <div class="row">
-      <div><label for="cPrice">価格（万円）</label><input id="cPrice" type="number" inputmode="decimal" value="20" min="0"></div>
-      <div><label for="cNum">月のご成約数</label><input id="cNum" type="number" inputmode="numeric" value="3" min="0"></div>
+    <p class="phase">0→1フェーズの方</p>
+    <label class="ck"><input type="checkbox"><span>知人・友人、オフラインのコミュニティなど、声をかけたり食い込める先をリストアップした</span></label>
+    <label class="ck"><input type="checkbox"><span>一人ひとりに、自分の想いをこめたメッセージを送った</span></label>
+    <div class="secret-box">
+      <p><b>軽い声かけではなく、本気の想いを届けること</b></p>
+      <p>なぜあなたに連絡しているのか、なぜ自分が起業したのか。「とりあえず話を聞いて」ではなく、たとえ価格が安くても本気で。話を聞いてもらうことは、忙しい相手の時間をいただくことです</p>
+      <p>いきなり重たくする必要はありません。ある日突然、昔の友人や知人から連絡が来たら、どんなメッセージなら「話を聞こう」と思えるか。ここも<b>相手目線</b>です</p>
     </div>
-    <label for="cMonths">講座の期間（ヶ月）</label><input id="cMonths" type="number" inputmode="numeric" value="3" min="1">
-    <div class="out" aria-live="polite">
-      <div><span>月商</span><b id="oMonth">60万円</b></div>
-      <div><span>年商</span><b id="oYear">720万円</b></div>
-      <div><span>同時に支える受講生</span><b id="oStudents">9人</b></div>
+    <p class="note">0→1フェーズでもInstagramで募集してOK。ただし<b>フォロワーさんとの関係性ができていなければ、告知しても反応はありません</b>。関係性とは、継続的なリール投稿、ストーリーズやDMでの対話が起きていること。温まっていないところに告知しても反応がない、と覚えておきましょう</p>
+
+    <p class="phase">0→1以降の方</p>
+    <label class="ck"><input type="checkbox"><span>リアル人脈・オフラインのコミュニティへの食い込みを続けている</span></label>
+    <label class="ck"><input type="checkbox"><span>InstagramなどSNSで告知した<small>告知バナー・告知文は「おじさん草ライティング」で</small></span></label>
+    <span class="res video soon">おじさん草ライティング 講義動画</span>
+
+    <p class="phase">全員共通</p>
+    <label class="ck"><input type="checkbox"><span>無料のお申込みフォームを作った<small>相手が「話を聞きたい」とYESになったら、ストーリーズから直接フォームへ、またはDMでやり取りしてからフォームへ</small></span></label>
+    <p class="note">0→1フェーズの方は、まず<b>無料のGoogleフォーム</b>がおすすめ。UTAGEなどでステップを組めるようになったら、ほかのフォームも選べます</p>
+    <label class="ck"><input type="checkbox"><span>事前アンケートを作った</span></label>
+    <div class="secret-box">
+      <p>記述式・ラジオボタン式などを、ペルソナちゃんが<b>答えやすい形</b>に。アンケートに答えること自体が<b>内観ワーク</b>になり、当日が楽しみになるように作りましょう</p>
     </div>
   </div>
-  <div class="card">
-    <h3>ただし！自転車操業にならないために</h3>
-    <p>月3人を受け入れると、3ヶ月後には<b>9人を同時にサポート</b>しながら、<b>新しいセールス</b>と<b>集客・毎日の発信</b>も続けることになります。</p>
-    <p>だからこそ欠かせないのが <span class="big">せるこ</span>。</p>
-    <p class="note">「せるこ・8 サポート内容（フェーズ設計）」で、<b>何人まで・どこまで・どの方法で</b>サポートするかを先に決めておきましょう。グループで伝えること／個別で伝えることを分け、テンプレ・動画・FAQで仕組み化すると、人数が増えても質を落とさずに届けられます。</p>
+
+  <div class="card checklist" data-key="s3-2">
+    <span class="label gold">STEP 2</span>
+    <h3>準備</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>ご提案書を作った<small>Canva一択です</small></span></label>
+    <span class="res doc soon">ご提案書の極意（資料・講義）</span>
+    <label class="ck"><input type="checkbox"><span>Canva・Zoomを有料プランにした</span></label>
+    <label class="ck"><input type="checkbox"><span>決済方法を決めた<small>10万円以上なら分割は必須。クレジットカード決済を用意する</small></span></label>
+    <div class="warn"><b>決済の注意</b>
+      <ul class="dots">
+        <li>今は個人でもクレジットカード決済の手続きが簡単にできます。審査なども含めて事前に調べておく</li>
+        <li>〇〇ペイなどは使わない</li>
+        <li>銀行振込の一括払いだけにしない</li>
+      </ul>
+    </div>
+    <label class="ck"><input type="checkbox"><span>決済リンク・振込先を、慎重に何度も確認した</span></label>
+    <label class="ck"><input type="checkbox"><span>契約書・受講規約書を用意した <a href="#s7">→07</a></span></label>
+    <a class="res doc" href="https://www.canva.com/design/DAFyyoUbmBs/wxwfn0q8lqu_sDr14ujM0Q/edit" target="_blank" rel="noopener">ここらぼ受講規約（デモンストレーション・原文転載NG）</a>
+    <p class="note">ここらぼの規約は大きな講座用なのでしっかりめです。個人の場合は<b>サービス内容・金額と支払い・キャンセル規定・免責</b>の要点を押さえればOK。AIも活用して、自分で作りましょう</p>
+    <label class="ck"><input type="checkbox"><span>特定商取引法などの「必ず理解しておくこと」を読んだ <a href="#s7">→07</a></span></label>
+    <label class="ck"><input type="checkbox"><span>反論処理ノートを用意した <a href="#s5">→05</a></span></label>
+    <label class="ck"><input type="checkbox"><span>印象ブランディングを整えた<small>メイク・服装・背景・明るさ</small></span></label>
+    <div class="secret-box">
+      <p><b>原則、パソコンを使ってオンラインで</b></p>
+      <p>カフェで会って、ご自宅や相手のお家で…という方もいますが、ご成約率がまったく違います。ざわざわした場所や、いろいろなものが目に入る環境では集中できません。まずは<b>オンラインでできるようになること</b>を目指しましょう</p>
+    </div>
   </div>
-</section>
 
-<!-- ============ 8 テンプレ ============ -->
-<section class="sec" id="templates">
-  <div class="sec__head"><span class="sec__no">📋</span><h2 class="sec__title"><small>〇〇 の部分を書きかえて使ってね</small>コピペで使えるテンプレ一覧</h2></div>
+  <div class="card checklist" data-key="s3-3">
+    <span class="label gold">STEP 3</span>
+    <h3>練習</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>ご提案書の内容と当日の流れを、ほぼ完璧に頭に入れた</span></label>
+    <label class="ck"><input type="checkbox"><span>自分でZoomを開いて画面共有し、声に出して<b>通しで5回以上</b>練習した</span></label>
+    <label class="ck"><input type="checkbox"><span>Zoomで録画し、自分の通し練習を<b>3回以上見返した</b></span></label>
+    <a class="res video" href="https://vimeo.com/908171161/62ef8ed581?share=copy" target="_blank" rel="noopener">のむらななえ 個別相談デモンストレーション動画</a>
+    <div class="warn"><b>よくある「もったいない」失敗</b>
+      <ul class="dots"><li>画面共有ができない、資料が映らない</li><li>録画し忘れた</li><li>相手に所要時間を伝えていなかった</li></ul>
+      せっかく相手が時間を作ってくれたのに、ちょっとした準備不足で台なしにしないように。<b>ご成約は準備9割</b>です
+    </div>
+  </div>
 
-  <nav class="tpl-index" aria-label="テンプレの種類">
-    <a href="#g-before">📝 相談前</a><a href="#g-day">🎤 当日</a><a href="#g-after">💌 相談後</a><a href="#g-start">🌸 ご成約後</a><a href="#g-ad">📣 告知</a>
-  </nav>
-
-  <h3 class="tpl-group" id="g-before">📝 相談前</h3>
-
-  <div class="tpl" id="t-dm"><h4>① モニター協力のお声かけDM</h4><p class="when">知人・友人・フォロワーに</p>
-<pre>〇〇さん、こんにちは！お元気ですか？
-実は今、〇〇で悩んでいる方に向けて〇〇のサポートを始める準備をしています。
-
-その前に、モニターとして無料の個別相談（60分・Zoom）を受けていただける方を数名探していて、〇〇さんのことが思い浮かびました😊
-
-〇〇について、今の状況を一緒に整理して、これからの道すじを見つける時間にできたらと思っています。
-
-もしご興味があれば、お気軽にお返事くださいね。
-もちろん、ご都合が合わなければ全然大丈夫です！</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-form"><h4>② 申込フォーム・事前アンケートの質問項目</h4><p class="when">Googleフォームに入れる</p>
-<pre>【基本情報】
-・お名前（ニックネーム可）
-・メールアドレス／LINE名
-・ご希望の日時（第1〜第3希望）
-
-【事前アンケート】
-1. 今いちばん悩んでいること、困っていることは何ですか？
-2. それはいつ頃からですか？きっかけはありますか？
-3. 3ヶ月後・1年後、どんな自分になっていたら最高ですか？
-4. これまでに試したこと、うまくいかなかったことはありますか？
-5. 個別相談で、特に聞きたいこと・相談したいことはありますか？
-6. その他、伝えておきたいことがあればご自由にどうぞ</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-confirm"><h4>③ 日程確定のご連絡</h4><p class="when">お申込みが来たらすぐ</p>
-<pre>〇〇さん、お申込みありがとうございます！
-個別相談の日程が決まりましたのでご案内しますね。
-
-■日時：〇月〇日（〇）〇時〜〇時
-■場所：Zoom（URLは前日にお送りします）
-
-事前アンケートにご協力いただけると、当日もっと〇〇さんに合ったお話ができます。
-▼アンケート
-（URL）
-
-当日お会いできるのを楽しみにしています😊</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-remind"><h4>④ 前日リマインド</h4><p class="when">前日の夕方〜夜</p>
+  <div class="card checklist" data-key="s3-4">
+    <span class="label gold">STEP 4</span>
+    <h3>前日チェック</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>参加される方に、ZoomのURLを送った（下のテンプレ）</span></label>
+    <label class="ck"><input type="checkbox"><span>Wi-Fi・パソコンの充電・電源を確認した</span></label>
+    <label class="ck"><input type="checkbox"><span>印象ブランディング（メイク・服装・背景・明るさ）を最終確認した</span></label>
+    <label class="ck"><input type="checkbox"><span>事前アンケートを読み返し、聞きたいことをメモした</span></label>
+    <label class="ck"><input type="checkbox"><span>ご提案書・お申込みフォーム・決済リンクを、すぐ開けるようにした</span></label>
+    <label class="ck"><input type="checkbox"><span>当日はスマホ・パソコンの通知をオフにし、<b>10分前</b>に入室する</span></label>
+    <div class="tpl"><h4>前日リマインド（Zoomのご案内）</h4>
 <pre>〇〇さん、こんばんは！
 いよいよ明日は個別相談ですね。楽しみにしています✨
 
-■日時：〇月〇日（〇）〇時〜
+■日時：〇月〇日（〇）〇時〜〇時（約〇分）
 ■Zoom URL：（URL）
 ミーティングID：〇〇　パスコード：〇〇
 
 ▼当日のお願い
-・静かでお話しやすい場所からご参加ください
+・静かでお話ししやすい場所から、できればパソコンでご参加ください
 ・メモとペンがあると便利です
-・5分前くらいから入室いただけます
+・5分前から入室いただけます
 
-ご都合が悪くなった場合はお気軽にご連絡くださいね。</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
+ご都合が悪くなった場合は、お気軽にご連絡くださいね。</pre>
+      <button class="copy" type="button">コピーする</button></div>
+  </div>
+  <a class="next" href="#s4"><span>次は</span><b>04 当日の進め方 →</b></a>
+</section>
 
-  <h3 class="tpl-group" id="g-day">🎤 当日</h3>
+<!-- ================= 04 当日 ================= -->
+<section class="sec" id="s4">
+  <div class="band"><span class="no">04</span><h2>個別相談 当日の進め方</h2><p>ダイレクトレスポンスマーケティング｜目安60〜90分</p></div>
+  <div class="card">
+    <ol class="tl">
+      <li><span class="time">5分</span><h4>オープニング</h4><p class="goal">アイスブレイクで心を開いてもらう</p>
+        <ul class="dots">
+          <li>アイスブレイクで、緊張をほどく</li>
+          <li>全体像（森）を見せる：今日かかる時間、どんなことをするか</li>
+          <li>前半は個別相談。後半に有料のご案内があるけれど、<b>聞きたい場合だけ</b>お話しするので安心して選んでね、と伝える</li>
+          <li>録画する場合は、必ず許可をとる</li>
+        </ul></li>
+      <li><span class="time">25〜30分</span><h4>ヒアリング</h4><p class="goal">事前アンケートをもとに、相手の本音に寄りそう</p>
+        <ul class="dots"><li>今の状態・お悩み</li><li>なぜ今、変えたいのか</li><li>理想の未来</li><li>今まで叶わなかった理由</li></ul>
+        <p class="note">話すのは自分3割まで。うなずき、相手の言葉をくり返し、気持ちを受け止める</p></li>
+      <li><span class="time">10分</span><h4>未来の共有・解決の道すじ</h4><p class="goal">「私にもできそう」と思ってもらう</p>
+        <ul class="dots"><li>聞いた内容を要約して返す</li><li>今と理想のあいだの道のりを見せる</li><li>「具体的なサポートのお話を聞きたいですか？」と<b>YESをいただいてから</b>ご案内へ</li></ul></li>
+      <li><span class="time">15分</span><h4>ご提案</h4><p class="goal">ご提案書を画面共有して、正しく伝える</p>
+        <ul class="dots"><li>期間・内容・サポート方法・得られる変化</li><li>金額・支払い方法・分割の総額・キャンセル規定をはっきり</li></ul></li>
+      <li><span class="time">10分</span><h4>クロージング（プロポーズ）</h4><p class="goal">相手が自分で決める</p>
+        <ul class="dots"><li>「一緒に叶えたい」と本気で伝え、言ったあとは<b>黙って待つ</b></li><li>不安が出たら → <a href="#s5">05</a></li><li>即決をせまらない・長時間ひきとめない</li></ul></li>
+      <li><span class="time">5分</span><h4>次の段取り</h4><p class="goal">迷わせない</p>
+        <ul class="dots"><li>やりたい方：お申込みフォーム・決済のご案内を送る（<a href="#s6">06</a>のテンプレ）</li><li>考えたい方：お返事の目安を一緒に決める</li><li>今回は見送りの方：感謝で気持ちよく終える</li></ul></li>
+    </ol>
+    <p class="note">※各ステップの内容は、ご提案書テンプレートに合わせて今後さらに詳しくしていきます</p>
+  </div>
+  <div class="warn"><b>絶対NG：個人情報の取り扱い</b><br>当日の内容、お客さまとのZoomの画面写真、個人が特定できる情報は、<b>自分のストーリーズやSNSに絶対に出さない</b>。「セッションしました」と気軽に載せてしまう方が多いので要注意です</div>
+  <a class="next" href="#s5"><span>次は</span><b>05 不安・反論への答え方 →</b></a>
+</section>
 
-  <div class="tpl" id="t-open"><h4>⑤ オープニング台本</h4><p class="when">最初の5分</p>
-<pre>〇〇さん、今日はお時間をとっていただきありがとうございます！〇〇です。
+<!-- ================= 05 反論 ================= -->
+<section class="sec" id="s5">
+  <div class="band"><span class="no">05</span><h2>不安・反論への答え方</h2><p>堂々と、誠実さを届ける4つのステップ</p></div>
+  <div class="card">
+    <div class="steps4">
+      <div><b>① 受け止める</b><br>「不安になるのは自然です」「私もそうでした」</div>
+      <div><b>② 見方を変える</b><br>「不安＝本気の証拠」「出費ではなく未来への投資」</div>
+      <div><b>③ 安心材料を渡す</b><br>「お支払い方法を選べます」「最後まで伴走します」</div>
+      <div><b>④ 未来を見せる</b><br>この選択の先にある景色を、一緒に思い描く</div>
+    </div>
+  </div>
 
-今日は〇時までの約〇分、こんな流れで進めますね。
-①まず〇〇さんの今の状況や、叶えたいことをじっくり聞かせてください
-②そのうえで、理想に近づくための道すじを一緒に考えます
-③最後に、もしお役に立てそうならサポートのご案内もさせてください
+  <details class="qa"><summary>「お金がなくて…」</summary><div class="body">
+    <p>まずは気持ちを受け止め、「金額そのもの」と「払い方」のどちらが気になっているかを聞く。払い方なら、分割・クレジットカードと<b>総額</b>を説明</p>
+    <p class="warn" style="margin-top:8px">借金（カードローン・消費者金融など）をすすめるのは絶対NG。生活に無理がある方には「今はやめておきましょう」と伝える勇気を</p>
+  </div></details>
+  <details class="qa"><summary>「夫（家族）に相談したい」</summary><div class="body">
+    <p>家族を大切にする気持ちを受け止め、ご本人のお気持ちを確認。やりたい場合は、家族に伝えるポイント（内容・期間・金額・得られる変化）を一緒に整理して、お返事の目安を決める</p>
+  </div></details>
+  <details class="qa"><summary>「時間がなくて…」</summary><div class="body">
+    <p>1日にとれる時間を聞き、録画やスマホでできることなど、現実的な進め方を一緒に考える</p>
+  </div></details>
+  <details class="qa"><summary>「私にできるか不安…」</summary><div class="body">
+    <p>不安は本気の証拠と受け止め、サポート体制と、同じような状況からスタートした方の例を伝える。<b>「絶対できます」と成果を約束する言い方はしない</b></p>
+  </div></details>
+  <details class="qa"><summary>「少し考えたいです」</summary><div class="body">
+    <p>どのあたりを考えたいかを聞き、今ここで解消できることには答える。それでも考えたい場合は、お返事の目安を一緒に決める</p>
+  </div></details>
 
-ご案内を聞いて、合わないなと思ったら遠慮なく断っていただいて大丈夫です。今日は〇〇さんがスッキリして帰れることがいちばん大事なので😊
+  <div class="secret-box" style="margin-top:14px">
+    <p><b>そもそも、不安が出てこない関係をつくるのが本質</b></p>
+    <p>事前の1本道で信頼の貯金ができていれば、基本的に不安は出てきません。最後に出てきた不安を解消できる力も大事ですが、本質は<b>不安が出ない発信とお客さまとの関係づくり</b>です</p>
+    <p>それでも、答え方を持っておけば、いざという時にあわてずにすみます</p>
+  </div>
+  <a class="next" href="#s6"><span>次は</span><b>06 終了後にやること →</b></a>
+</section>
 
-（録画する場合）あとで見返せるように録画してもいいですか？〇〇さん以外には公開しません。</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
+<!-- ================= 06 後 ================= -->
+<section class="sec" id="s6">
+  <div class="band"><span class="no">06</span><h2>個別相談 終了後に<br>やることリスト</h2><p>ご成約からサービススタートまで</p></div>
 
-  <div class="tpl" id="t-hearing"><h4>⑥ ヒアリング質問リスト</h4><p class="when">いちばん大事な25〜30分</p>
-<pre>【今】
-・アンケートに〇〇と書いてくださっていましたが、もう少し詳しく教えてもらえますか？
-・それで、毎日どんなことに困っていますか？
-
-【きっかけ】
-・どうして「今」変えたいと思ったんですか？
-
-【理想】
-・3ヶ月後、どうなっていたら最高ですか？
-・それが叶ったら、毎日がどう変わりそうですか？
-
-【壁】
-・今まで何か試してみましたか？うまくいかなかった理由は何だと思いますか？
-
-【このままだと】
-・もしこのまま1年たったら、どうなっていそうですか？
-
-【本気度】
-・理想を叶えるために、時間やお金をかける準備はありますか？
-
-【まとめ】
-・お話を聞いて、〇〇さんは「〇〇」を手に入れたいんだなと感じました。合っていますか？</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-propose"><h4>⑦ ご提案〜クロージング台本</h4><p class="when">後半の25分</p>
-<pre>【提案に入る前】
-今日お聞きした〇〇さんの理想を叶えるために、私がご用意しているサポートがあるんですが、ご紹介してもいいですか？
-
-【ご提案】
-（画面共有しながら）
-〇〇という講座で、〇ヶ月間で〇〇な状態を目指します。
-内容は、①〇〇 ②〇〇 ③〇〇 です。
-〇〇さんが今つまずいている〇〇は、②の部分でしっかりサポートします。
-
-受講料は〇〇万円（税込）です。
-お支払いは、一括のほか、〇回の分割（総額〇〇円）もお選びいただけます。
-開始前のキャンセルは〇日前まで〇％返金、開始後は返金ができないルールです。
-
-【プロポーズ】
-〇〇さんの「〇〇したい」を、私は本気で一緒に叶えたいと思っています。
-ご一緒しませんか？
-（→ 黙って待つ）
-
-【YESの時】
-ありがとうございます！とってもうれしいです✨
-では今チャットにお申込みフォームと決済のご案内をお送りしますね。</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <h3 class="tpl-group" id="g-after">💌 相談後</h3>
-
-  <div class="tpl" id="t-thanks"><h4>⑧ お礼LINE（全員に）</h4><p class="when">相談後、数時間以内</p>
-<pre>〇〇さん、今日はありがとうございました！
-〇〇さんの「〇〇したい」というお話、とても心に残っています。
-
-今日お伝えしたポイントをまとめておきますね。
-・〇〇
-・〇〇
-・〇〇
-
-ご提案の資料はこちらです。
-（URL）
-
-わからないことや気になることがあれば、何でも気軽に聞いてくださいね😊</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-pay"><h4>⑨ お申込み・決済のご案内</h4><p class="when">YESをいただいた時</p>
+  <div class="card checklist" data-key="s6-1">
+    <span class="label gold">STEP 1</span>
+    <h3>相談が終わったら</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>当日中にお礼のLINEを送った</span></label>
+    <label class="ck"><input type="checkbox"><span>「やりたい」と言っていただいた方に、お申込み・決済のご案内を送った（下のテンプレ）<small>金額も入っているので、ご提案書はPDFにしてお渡ししてもOK</small></span></label>
+    <label class="ck"><input type="checkbox"><span>考えたい方には一度ご連絡して、お返事を待つ</span></label>
+    <label class="ck"><input type="checkbox"><span>反論処理ノートに、聞かれたことと気づきをメモした</span></label>
+    <div class="tpl"><h4>お申込み・決済のご案内</h4>
 <pre>〇〇さん、お申込みのお気持ち、本当にありがとうございます！
 
 下記よりお手続きをお願いいたします。
 
 ■お申込みフォーム：（URL）
-■お支払い：（決済URL／振込先）
+■お支払い：（決済URL）
 　・一括：〇〇円（税込）
 　・分割：〇回（総額〇〇円）
 ■お支払い期限：〇月〇日（〇）
 
 お手続き後、契約書をお送りします。
 一緒にスタートできるのを楽しみにしています✨</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
+      <button class="copy" type="button">コピーする</button></div>
+  </div>
 
-  <div class="tpl" id="t-follow"><h4>⑩ 翌日フォロー（検討中の方）</h4><p class="when">相談の翌日</p>
-<pre>〇〇さん、こんにちは！
-昨日はありがとうございました。
-
-あれから、いろいろ考えてくださっているかなと思います。
-大切なことなので、じっくり考えてくださいね。
-
-参考までに、〇〇さんと同じように「〇〇」で悩んでいた方が、受講後に〇〇できるようになったお話をお送りします。
-（受講生の声など）
-
-気になっていることや不安なことがあれば、どんな小さなことでも聞いてくださいね。
-お返事は〇日までにいただけるとうれしいです😊</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-hold"><h4>⑪ お返事期限のご連絡（保留の方）</h4><p class="when">約束した期限の日</p>
-<pre>〇〇さん、こんにちは！
-先日の個別相談の件で、ご連絡しました。
-
-ご検討いただいている〇〇講座ですが、今回のお申込みは〇日までとなっています。
-
-もちろん、無理にとは思っていません。
-〇〇さんにとって「今だ」と思えたら、ぜひ一緒に進めたいですし、今じゃないなと思ったら、それも大切なご判断だと思います。
-
-どちらの場合も、お返事いただけるとうれしいです😊</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-no"><h4>⑫ 見送りの方へ（ご縁をつなぐ）</h4><p class="when">お断りのお返事が来た時</p>
-<pre>〇〇さん、お返事ありがとうございます！
-しっかり考えてくださって、本当にうれしかったです。
-
-今回はご縁がなかったですが、〇〇さんの「〇〇したい」という想いを、心から応援しています。
-
-これからも発信でヒントをお届けしていくので、よかったら見てくださいね。
-またいつか、お力になれる時が来たらうれしいです😊</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <h3 class="tpl-group" id="g-start">🌸 ご成約後〜スタート</h3>
-
-  <div class="tpl" id="t-contract"><h4>⑬ 契約書送付のご案内</h4><p class="when">お申込み後すぐ</p>
+  <div class="card checklist" data-key="s6-2">
+    <span class="label gold">STEP 2</span>
+    <h3>ご成約〜サービススタート</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span><b>① 契約書</b>を送り、締結した（クラウドサインなど）</span></label>
+    <div class="tpl"><h4>契約書送付のご案内</h4>
 <pre>〇〇さん、お申込みありがとうございます！
 
 契約書をクラウドサインでお送りしました。
@@ -654,170 +589,120 @@ footer{text-align:center;font-size:14px;color:var(--ink-faint);margin-top:50px}
 
 特に、サービス内容・お支払い・キャンセル規定をご確認くださいね。
 ご不明な点があれば、お手続きの前にお気軽にご質問ください。</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-paid"><h4>⑭ 入金確認のお知らせ</h4><p class="when">入金を確認したらすぐ</p>
+      <button class="copy" type="button">コピーする</button></div>
+    <label class="ck"><input type="checkbox"><span><b>② 入金確認</b>をして、すぐにお知らせした</span></label>
+    <div class="tpl"><h4>入金確認のお知らせ</h4>
 <pre>〇〇さん、ご入金を確認いたしました！ありがとうございます✨
 
 これで正式にスタートです🎉
 〇〇さんと一緒に走れることが、本当にうれしいです。
 
 このあと、今後の流れをご案内しますね。</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
+      <button class="copy" type="button">コピーする</button></div>
+    <label class="ck"><input type="checkbox"><span><b>③ ウェルカム案内</b>を送り、個別LINEを開通した<small>今後の流れをシンプルに伝える</small></span></label>
+    <a class="res doc" href="https://share.evernote.com/note/e2b369e7-90e9-3902-31e7-5ef7bddfb524" target="_blank" rel="noopener">サンキューレター｜のむらななえ編</a>
+    <label class="ck"><input type="checkbox"><span><b>④ 環境づくり</b>：グループ（LINE・Slack・Facebookなど）に招待した</span></label>
+    <label class="ck"><input type="checkbox"><span><b>⑤ カリキュラム・制作物の仕込み</b>をした</span></label>
+    <label class="ck"><input type="checkbox"><span><b>⑥ 事前課題</b>を送った<small>内容によりけり</small></span></label>
+    <label class="ck"><input type="checkbox"><span><b>⑦ 日程調整</b>をした<small>熱が冷めないうちに、初回は早めに</small></span></label>
+    <label class="ck"><input type="checkbox"><span><b>⑧ 開講までの小さな課題</b>で、スタート前のワクワクを高めた</span></label>
+  </div>
+  <a class="next" href="#s7"><span>次は</span><b>07 契約書・法律・お金の注意 →</b></a>
+</section>
 
-  <div class="tpl" id="t-welcome"><h4>⑮ ウェルカムメッセージ</h4><p class="when">入金確認のあと</p>
-<pre>〇〇さん、ご入会おめでとうございます＆ありがとうございます🌸
-
-これからの流れはこちらです。
-①LINEグループに参加（URL）
-②事前課題に回答（〇日まで）
-③初回セッション：〇月〇日（〇）〇時〜
-
-スタートキット（教材・マニュアルまとめ）はこちら
-（URL）
-
-わからないことがあれば、いつでもグループでも個別でも聞いてくださいね。
-一緒に〇〇を叶えていきましょう！</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-intro"><h4>⑯ グループ自己紹介テンプレ</h4><p class="when">グループ招待と一緒に</p>
-<pre>【自己紹介】
-■お名前（呼ばれたい名前）：
-■住んでいるところ：
-■今していること：
-■この講座で叶えたいこと：
-■ひとこと意気込み：
-
-みなさん、よろしくお願いします！</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-pre"><h4>⑰ 事前課題（ウォーミングアップ）</h4><p class="when">初回セッションの前</p>
-<pre>初回セッションまでに、こちらに答えておいてくださいね（10分くらいでOK）
-
-1. この講座に入ろうと決めた理由は何ですか？
-2. 講座が終わる〇ヶ月後、どうなっていたいですか？
-3. そのために、いちばん不安なことは何ですか？
-4. 今の自分を10点満点で表すと何点ですか？
-
-▼回答フォーム
-（URL）
-
-初回にみんなでシェアします✨</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-countdown"><h4>⑱ 開講カウントダウン</h4><p class="when">開講3日前〜前日</p>
-<pre>〇〇さん、こんにちは！
-いよいよ開講まであと〇日です🎉
-
-当日までに、小さな準備をひとつだけ。
-→「〇〇」をメモしておいてください（1行でOK）
-
-初回は〇月〇日（〇）〇時〜です。
-Zoom URL：（URL）
-
-〇〇さんにお会いできるのを楽しみにしています✨</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-letter"><h4>⑲ サンキューレター</h4><p class="when">ご成約時・講座修了時に</p>
-<pre>〇〇さんへ
-
-数ある中から、私を選んでくださって本当にありがとうございます。
-
-個別相談で「〇〇」と話してくださった時の〇〇さんの表情、今でも覚えています。
-その想いを、これから一緒に形にしていけることが、心からうれしいです。
-
-迷う日も、不安な日もあると思います。
-そんな時は、ひとりで抱えずにいつでも声をかけてくださいね。
-〇〇さんならきっと大丈夫。私も全力で伴走します。
-
-これからどうぞよろしくお願いします。
-
-〇〇より</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <h3 class="tpl-group" id="g-ad">📣 告知・募集</h3>
-
-  <div class="tpl" id="t-banner"><h4>⑳ 告知バナーに入れる4つ</h4><p class="when">バナーは「看板」。3秒で価値が伝わるように</p>
-<pre>□ タイトル：ズバリ何ができるか
-□ ベネフィット：参加後どうなれるか
-□ 日時・参加方法：Zoom／対面、無料／有料
-□ 写真：主催者の顔写真 または 温度感が伝わる写真</pre>
-  <button class="copy" type="button">📋 コピーする</button>
-  <p class="hint">「ここすた・伝わる資料作成（前半・後半）」も復習しましょう</p></div>
-
-  <div class="tpl" id="t-ad"><h4>㉑ 告知文テンプレ</h4><p class="when">SNS投稿・LINE配信に</p>
-<pre>【問題提起】
-「〇〇したいのに、〇〇でなかなか進まない…」
-そんなふうに感じていませんか？
-
-【解決策】
-この〇〇相談会では、〇〇さんの今の状況をお聞きして、〇〇のための具体的な道すじを一緒に整理します。
-
-【参加後の未来】
-終わるころには、
-・〇〇がスッキリわかる
-・次にやることが明確になる
-・〇〇への一歩がふみ出せる
-
-【開催情報】
-■日時：〇月〇日（〇）〇時〜（約60分）
-■参加費：〇〇円（モニター価格）
-■定員：〇名
-■場所：Zoom
-
-【お申込み】
-DMで「相談会」と送ってください／フォームはこちら（URL）</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-objnote"><h4>㉒ 反論処理ノート（ひな形）</h4><p class="when">相談のたびに書き足す</p>
-<pre>■日付：
-■お相手：
-■出た不安・質問：
-■そのとき私が答えたこと：
-■相手の反応：
-■次はこう答えたい：
-■気づき：</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-list"><h4>㉓ お客さま管理リスト（ひな形）</h4><p class="when">スプレッドシートの見出しに</p>
-<pre>お名前／きっかけ（どこで知った？）／相談日／悩み／理想／結果（成約・検討中・見送り）／次の連絡日／メモ</pre>
-  <button class="copy" type="button">📋 コピーする</button></div>
-
-  <div class="tpl" id="t-law"><h4>㉔ 特定商取引法に基づく表記（項目）</h4><p class="when">LP・プロフィールリンクに</p>
-<pre>■販売事業者名：
-■運営責任者：
-■所在地：（請求があれば遅滞なく開示する旨の記載でも可とされる場合があります）
-■電話番号：
-■メールアドレス：
-■販売価格：各商品ページに記載（税込）
-■商品代金以外の必要料金：振込手数料・通信費はお客様負担
-■お支払い方法：クレジットカード／銀行振込
-■お支払い時期：
-■サービス提供時期：
-■キャンセル・返金について：</pre>
-  <button class="copy" type="button">📋 コピーする</button>
-  <p class="hint">※書き方は専門家や公的な情報で確認してください</p></div>
+<!-- ================= 07 契約・法律 ================= -->
+<section class="sec" id="s7">
+  <div class="band"><span class="no">07</span><h2>契約書・法律・<br>お金の注意</h2><p>トラブルを防いで、安心して届けるために</p></div>
 
   <div class="card">
-    <h3>🎁 参考資料（ここらぼ受講生向け）</h3>
-    <ul class="dots">
-      <li><a href="https://vimeo.com/908171161/62ef8ed581?share=copy" target="_blank" rel="noopener">体験会・個別相談の作り方（オープニング・ヒアリング・クロージング）動画｜のむらななえ編</a></li>
-      <li><a href="https://www.canva.com/design/DAFyyoUbmBs/wxwfn0q8lqu_sDr14ujM0Q/edit" target="_blank" rel="noopener">ここらぼ受講規約（参考用・原文転載NG）</a></li>
-      <li><a href="https://share.evernote.com/note/e2b369e7-90e9-3902-31e7-5ef7bddfb524" target="_blank" rel="noopener">サンキューレター｜のむらななえ編</a></li>
+    <span class="label rose">いちばん大事</span>
+    <h3>これだけは必ず</h3>
+    <ul class="must">
+      <li><b>契約書は必ず用意する</b>。モニター段階なら軽めでもOK、でも契約書は必要</li>
+      <li><b>特定商取引法に基づく表記</b>を、LPやプロフィールのリンク先に出す</li>
+      <li><b>大げさな表現をしない</b>：「誰でも絶対月収100万」「必ず稼げる」など</li>
+      <li><b>お客さまの声</b>は本人の許可をとる。報酬を払っている場合は「PR」と明記する</li>
+      <li><b>借金をすすめない・即決をせまらない・長時間ひきとめない</b></li>
+      <li><b>個人情報・録画</b>は目的を伝えて同意をとり、SNSに出さない</li>
     </ul>
+  </div>
+
+  <div class="card">
+    <h3>契約書に入れる項目</h3>
+    <table class="tbl">
+      <tr><th>サービス</th><td>名前・内容・期間・回数・サポート方法</td></tr>
+      <tr><th>お金</th><td>金額（税込）・支払い方法・期限・<b>分割の回数と総額</b></td></tr>
+      <tr><th>キャンセル</th><td>開始前は〇日前まで〇％返金／開始後は返金なし など</td></tr>
+      <tr><th>守秘義務</th><td>相談内容を第三者に話さない／教材を勝手に公開しない</td></tr>
+      <tr><th>著作権</th><td>資料・動画の著作権は主催者に。無断コピー・商用利用は禁止</td></tr>
+      <tr><th>免責</th><td>成果を保証しない／心身や事業上の損害は自己責任／医療行為ではない</td></tr>
+    </table>
+    <h4>作り方 3ステップ</h4>
+    <ol style="padding-left:1.3em">
+      <li>「オンライン講座 契約書 雛形」で検索し、テンプレートを入手</li>
+      <li>自分のサービスに合わせて書きかえる（AIも活用）</li>
+      <li>クラウドサイン・freeeサインなどで締結</li>
+    </ol>
+    <p class="note">最初から数万円かけて専門家に頼まなくてもOK。心配な方は、一度だけ弁護士や司法書士にチェックしてもらうと安心です</p>
+  </div>
+
+  <div class="card">
+    <span class="label">知っておく</span>
+    <h3>クーリング・オフについて</h3>
+    <p>取引の形によっては、クーリング・オフや中途解約のルールが関わることがあります。自分のサービスが当てはまるか不安な時は、消費者庁や消費生活センターの情報、専門家で確認しましょう</p>
+  </div>
+
+  <div class="card">
+    <span class="label">知っておく</span>
+    <h3>高額をいただく前に：個人事業主の手続きと税金</h3>
+    <ul class="must opt">
+      <li><b>開業届</b>：事業を始めたら、税務署に「個人事業の開業届」を出す（開業から1ヶ月以内が目安）。e-Taxでも提出できます</li>
+      <li><b>青色申告承認申請書</b>：開業届と一緒に出すのがおすすめ。条件を満たすと最大65万円の控除が受けられます（開業から2ヶ月以内が目安）</li>
+      <li><b>確定申告</b>：一定以上の所得があれば、毎年2月中旬〜3月中旬に申告。会社員の副業なら、給与以外の所得が年20万円を超えると原則必要</li>
+      <li><b>夫の扶養に入っている方</b>：所得が増えると、税金や社会保険の扶養から外れることがあります。早めに確認を</li>
+      <li><b>インボイス制度</b>：売上1,000万円以下なら登録は任意。法人や事業者のお客さまが多い場合は検討を</li>
+      <li><b>帳簿と領収書</b>：売上・経費は日々記録し、領収書は保管。会計ソフト（freee・マネーフォワードなど）が便利です</li>
+    </ul>
+    <p class="small" style="margin-top:10px">※税制は毎年のように変わります。最新情報は国税庁のホームページ、税務署、税理士に必ず確認してください</p>
+  </div>
+  <a class="next" href="#s8"><span>次は</span><b>08 売上の計算方法 →</b></a>
+</section>
+
+<!-- ================= 08 計算 ================= -->
+<section class="sec" id="s8">
+  <div class="band"><span class="no">08</span><h2>売上の計算方法</h2><p>受け取るお金は、すべてこの計算</p></div>
+  <div class="card">
+    <p class="formula">魂商品の価格 × ご成約数 ＝ 月商</p>
+    <p class="note">例）受講料20万円（3ヶ月）× 月3人 ＝ <b>月商60万円</b><br>同じリズムで1年続けると ＝ <b>年商720万円</b></p>
+  </div>
+  <div class="card calc">
+    <h3>自分の数字で計算してみる</h3>
+    <div class="row">
+      <div><label for="cPrice">価格（万円）</label><input id="cPrice" type="number" inputmode="decimal" value="20" min="0"></div>
+      <div><label for="cNum">月のご成約数</label><input id="cNum" type="number" inputmode="numeric" value="3" min="0"></div>
+    </div>
+    <label for="cMonths">サービスの期間（ヶ月）</label><input id="cMonths" type="number" inputmode="numeric" value="3" min="1">
+    <div class="out" aria-live="polite">
+      <div><span>月商</span><b id="oMonth">60万円</b></div>
+      <div><span>年商</span><b id="oYear">720万円</b></div>
+      <div><span>同時に支えるお客さま</span><b id="oStudents">9人</b></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>ただし！自転車操業にならないために</h3>
+    <p>月3人を受け入れると、3ヶ月後には<b>9人を同時にサポート</b>しながら、<b>新しいセールス</b>と<b>集客・毎日の発信</b>も続けることになります</p>
+    <p>だからこそ欠かせないのが、<span class="em">せるこ・8 サポート内容（フェーズ設計）</span>。何人まで・どこまで・どの方法でサポートするかを先に決め、グループと個別で伝えることを分けて仕組み化しておきましょう</p>
   </div>
 </section>
 
-<footer>©️ kokofuru co.,LTD</footer>
+<footer>
+  <p><a href="#" id="reTerms">取り扱い規約を読み返す</a></p>
+  <p>©️ kokofuru co.,LTD</p>
+</footer>
+</main>
 </div>
 
-<nav class="tabbar" aria-label="メニュー">
-  <a href="#flow"><span>🗺️</span>流れ</a>
-  <a href="#before"><span>📝</span>前</a>
-  <a href="#day"><span>🎤</span>当日</a>
-  <a href="#after"><span>💌</span>後</a>
-  <a href="#templates"><span>📋</span>テンプレ</a>
-</nav>
+<a class="totoc" href="#toc" id="toTop" hidden>目次へ ↑</a>
 
 <script>
 (function(){
@@ -826,17 +711,32 @@ DMで「相談会」と送ってください／フォームはこちら（URL）
     set:function(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
   };
 
-  // チェックリスト：進み具合の表示と保存
+  // ----- 取り扱い規約への同意 -----
+  var gate = document.getElementById('gate'), main = document.getElementById('main'), toTop = document.getElementById('toTop');
+  var ck = document.getElementById('agreeCk'), btn = document.getElementById('agreeBtn');
+  function openMain(scroll){
+    gate.hidden = true; main.hidden = false; toTop.hidden = false;
+    if(scroll) main.scrollIntoView({behavior:'smooth'});
+  }
+  if(store.get('ss-agreed')) openMain(false);
+  ck.addEventListener('change', function(){ btn.disabled = !ck.checked; });
+  btn.addEventListener('click', function(){ store.set('ss-agreed', true); openMain(true); });
+  document.getElementById('reTerms').addEventListener('click', function(e){
+    e.preventDefault(); gate.hidden = false; ck.checked = true; btn.disabled = false;
+    gate.scrollIntoView({behavior:'smooth'});
+  });
+
+  // ----- チェックリスト：進み具合の表示と保存 -----
   document.querySelectorAll('.checklist').forEach(function(list){
-    var key = 'sm-ck-' + list.dataset.key;
-    var boxes = list.querySelectorAll('input[type=checkbox]');
+    var key = 'ss-ck-' + list.dataset.key;
+    var boxes = list.querySelectorAll('.ck input');
     var saved = store.get(key) || [];
     var prog = list.querySelector('.progress');
     function update(){
       var done = 0, state = [];
       boxes.forEach(function(b){ state.push(b.checked); if(b.checked) done++; });
       prog.querySelector('i').style.width = (done / boxes.length * 100) + '%';
-      prog.querySelector('.pct').textContent = done === boxes.length ? '完了！🎉' : done + '/' + boxes.length;
+      prog.querySelector('.pct').textContent = done === boxes.length ? '完了 ✦' : done + ' / ' + boxes.length;
       prog.classList.toggle('done', done === boxes.length);
       store.set(key, state);
     }
@@ -850,23 +750,18 @@ DMで「相談会」と送ってください／フォームはこちら（URL）
     list.appendChild(reset);
     update();
   });
-
-  // チェックリスト内のリンクを押してもチェックが入らないように
   document.querySelectorAll('.ck a').forEach(function(a){
     a.addEventListener('click', function(e){ e.stopPropagation(); });
   });
 
-  // テンプレのコピー
-  document.querySelectorAll('.copy').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      var text = btn.parentNode.querySelector('pre').textContent;
+  // ----- テンプレのコピー -----
+  document.querySelectorAll('.copy').forEach(function(b){
+    b.addEventListener('click', function(){
+      var text = b.parentNode.querySelector('pre').textContent;
       function ok(){
-        btn.classList.add('ok'); btn.textContent = '✓ コピーしました';
-        setTimeout(function(){ btn.classList.remove('ok'); btn.textContent = '📋 コピーする'; }, 1800);
+        b.classList.add('ok'); b.textContent = '✓ コピーしました';
+        setTimeout(function(){ b.classList.remove('ok'); b.textContent = 'コピーする'; }, 1800);
       }
-      if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(text).then(ok, fallback);
-      } else { fallback(); }
       function fallback(){
         var ta = document.createElement('textarea');
         ta.value = text; ta.setAttribute('readonly',''); ta.style.position = 'fixed'; ta.style.opacity = '0';
@@ -874,10 +769,12 @@ DMで「相談会」と送ってください／フォームはこちら（URL）
         try{ document.execCommand('copy'); ok(); }catch(e){ alert('長押しで文章を選んでコピーしてください'); }
         document.body.removeChild(ta);
       }
+      if(navigator.clipboard && window.isSecureContext){ navigator.clipboard.writeText(text).then(ok, fallback); }
+      else { fallback(); }
     });
   });
 
-  // 売上計算
+  // ----- 売上計算 -----
   var p = document.getElementById('cPrice'), n = document.getElementById('cNum'), m = document.getElementById('cMonths');
   function fmt(v){ return (Math.round(v * 10) / 10).toLocaleString('ja-JP'); }
   function calc(){
@@ -888,18 +785,6 @@ DMで「相談会」と送ってください／フォームはこちら（URL）
   }
   [p, n, m].forEach(function(el){ el.addEventListener('input', calc); });
   calc();
-
-  // 下のメニュー：今いる場所を色づけ
-  var tabs = document.querySelectorAll('.tabbar a');
-  var secs = ['flow','before','day','after','templates'].map(function(id){ return document.getElementById(id); });
-  function onScroll(){
-    var y = window.scrollY + window.innerHeight * 0.35, cur = -1;
-    secs.forEach(function(s, i){ if(s.offsetTop <= y) cur = i; });
-    // 心がまえ・反論・契約・計算は近い前のタブを光らせる
-    tabs.forEach(function(t, i){ t.classList.toggle('on', i === cur); });
-  }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  onScroll();
 })();
 </script>
 </body>
