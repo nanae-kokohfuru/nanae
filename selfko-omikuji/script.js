@@ -114,14 +114,19 @@
     }, SHAKE_MS);
   }
 
+  // ?test=1 を付けて開いた時だけ、1日1回の制限を無視して毎回フル抽選する。
+  // このテストモードでは localStorage を読み書きしないため、通常URLの
+  // 「1日1回」動作には一切影響しない(同じ端末で両方試しても混ざらない)。
+  const isTestMode = new URLSearchParams(location.search).has("test");
+
   const today = getJstDateString();
-  const saved = loadSavedResult();
+  const saved = isTestMode ? null : loadSavedResult();
 
   if (saved && saved.date === today) {
     showStatic(saved.key);
   } else {
     const key = pickRandom();
-    saveResult(today, key);
+    if (!isTestMode) saveResult(today, key);
     runDraw(key);
   }
 })();
