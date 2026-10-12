@@ -4,6 +4,9 @@
     daikichi: "assets/daikichi.webp",
     metsukichi: "assets/metsukichi.webp",
     "love-kichi": "assets/love-kichi.webp",
+    bakukichi: "assets/bakukichi.webp",
+    kokuhoukichi: "assets/kokuhoukichi.webp",
+    megurikichi: "assets/megurikichi.webp",
   };
   const KEYS = Object.keys(RESULTS);
   const STORAGE_KEY = "selfkoOmikujiDaily";
