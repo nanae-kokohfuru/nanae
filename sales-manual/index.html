@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>魔法のシンクロセールス 黄金の航海図</title>
-<meta name="description" content="これがあれば安心｜ご成約率50%超えの個別相談を、前・当日・後の一本道でまとめた黄金の航海図">
+<title>シンクロセールス 個別相談の羅針盤</title>
+<meta name="description" content="これがあれば安心｜相手とこころがシンクロしながら自然と売れる、個別相談の羅針盤">
 <meta name="theme-color" content="#E9D6A6">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,7 +55,7 @@ a{color:var(--bronze)}
   background:linear-gradient(100deg,#4E3410 0%,#7E5A22 25%,#A8823C 42%,#D7B66A 50%,#9C7533 58%,#6B4A1A 78%,#4E3410 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
   filter:drop-shadow(0 1px 0 rgba(255,250,232,.9)) drop-shadow(0 6px 18px rgba(255,244,210,.8));
   animation:foil 7s ease-in-out infinite}
-.hero__title .t1{display:block;font-size:22px;letter-spacing:.18em}
+.hero__title .t1{display:block;font-size:17px;line-height:1.7;letter-spacing:.08em;margin-top:14px;color:var(--bronze-deep);-webkit-text-fill-color:var(--bronze-deep);font-weight:600}
 .hero__title .t2{display:block;font-size:40px;letter-spacing:.06em}
 .hero__title .t3{display:block;font-size:25px;letter-spacing:.1em;margin-top:6px;white-space:nowrap}
 @keyframes foil{0%,100%{background-position:0% 0}50%{background-position:100% 0}}
@@ -106,7 +106,7 @@ ul.dots li{margin:4px 0}
 
 /* ================= 目次 ================= */
 .howto{text-align:center;margin:-56px 0 18px;position:relative;z-index:2}
-.howto p{display:inline-block;background:var(--pearl);border:1px solid var(--line);border-radius:999px;padding:8px 20px;font-weight:700;font-size:16px;white-space:nowrap;box-shadow:var(--shadow)}
+.howto p{display:inline-block;background:var(--pearl);border:1px solid var(--line);border-radius:28px;padding:10px 20px;font-weight:700;font-size:16px;line-height:1.6;max-width:100%;box-shadow:var(--shadow)}
 .toc{list-style:none;background:var(--pearl);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden}
 .toc li+li{border-top:1px solid #F0E4CB}
 .toc a{display:flex;align-items:center;gap:14px;padding:15px 16px;text-decoration:none;color:var(--ink);min-height:68px}
@@ -224,6 +224,57 @@ details.qa .body p+p{margin-top:8px}
 footer{text-align:center;font-size:14px;color:var(--ink-faint);margin-top:56px}
 footer a{color:var(--ink-faint)}
 
+
+/* ================= 追加パーツ ================= */
+.hero__chain{font-weight:800;color:var(--rose)}
+.term-period{background:var(--sea-pale);border-radius:14px;padding:12px 16px;margin:0 0 12px;font-size:16px;line-height:1.7;color:var(--sea-deep)}
+.terms__warm{margin:6px 0 8px;padding:12px 14px;border-radius:12px;background:var(--champagne);font-weight:700;color:var(--bronze-deep)}
+.fig{margin:4px 0 16px;text-align:center}
+.fig img{display:block;width:100%;max-width:520px;height:auto;margin:0 auto;border-radius:18px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.fig figcaption{font-size:13px;color:var(--ink-faint);margin-top:6px}
+.flow>li .diagram,.flow>li .ways{margin-left:-48px}
+.ways li strong{color:var(--bronze-deep)}
+.diagram{margin:12px 0 4px;border:1.5px dashed var(--gold-light);border-radius:16px;padding:14px;background:linear-gradient(180deg,#FFFCF3,#FBF1DA)}
+.diagram__title{font-family:var(--serif);font-weight:800;font-size:17px;text-align:center;color:var(--bronze-deep);margin-bottom:10px}
+.diagram__steps{display:grid;gap:8px}
+.diagram__steps div{position:relative;background:var(--pearl);border-radius:12px;padding:10px 12px 10px 48px;line-height:1.55}
+.diagram__steps .dn{position:absolute;left:12px;top:10px;font-family:var(--serif);font-weight:800;font-size:22px;color:var(--gold)}
+.diagram__steps b{display:block;color:var(--bronze-deep);font-size:17px}
+.diagram__steps small{display:block;font-size:14px;color:var(--ink-faint)}
+.diagram__steps em{display:block;font-style:normal;font-size:15px;font-weight:700;color:var(--sea-deep)}
+.diagram__foot{text-align:center;font-size:15px;margin-top:10px;line-height:1.7}
+.diagram__foot b{color:var(--rose)}
+.chain{list-style:none;display:flex;flex-wrap:wrap;gap:6px 4px;font-size:15px;font-weight:700}
+.chain li{background:var(--champagne);border-radius:8px;padding:2px 10px}
+.chain li:not(:last-child)::after{content:" →";color:var(--gold)}
+.chain.big{justify-content:center;font-size:18px;gap:10px 6px}
+.chain.big li{padding:6px 14px;background:var(--pearl);border:1px solid var(--gold-light)}
+.mantra{margin:18px 0 14px;text-align:center;font-family:var(--serif);font-weight:800;font-size:21px;line-height:1.75;color:var(--bronze-deep);padding:18px 12px;border-top:1px solid var(--gold-light);border-bottom:1px solid var(--gold-light);background:linear-gradient(180deg,transparent,rgba(244,230,196,.55),transparent)}
+.mantra-s{margin-top:10px;text-align:center;font-family:var(--serif);font-weight:800;font-size:18px;line-height:1.7;color:var(--rose)}
+.say-q{margin-top:8px;padding:12px 14px;border-radius:12px;background:var(--ivory);border-left:4px solid var(--gold);font-family:var(--serif);font-weight:600;font-size:17px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 4px}
+.compare div{text-align:center;border-radius:14px;padding:10px 6px;background:var(--ivory);line-height:1.5}
+.compare div.us{background:linear-gradient(135deg,#FFF6DD,#EED9A2)}
+.compare small{display:block;font-size:14px;font-weight:700;color:var(--ink-faint)}
+.compare b{display:block;font-family:var(--serif);font-size:28px;color:var(--bronze-deep)}
+.compare span{font-size:15px;font-weight:700}
+.four{padding-left:1.4em}
+.four li{margin:4px 0}
+.four small{display:block;font-size:14px;color:var(--ink-faint)}
+.roads{display:grid;gap:10px;margin-top:12px}
+.roads .road{margin-top:0}
+.roads .road small{display:block;font-size:14px;color:var(--ink-faint);line-height:1.5}
+.hint-love{margin-top:10px;font-size:15px;line-height:1.8;color:var(--ink-soft);background:var(--rose-pale);border-radius:12px;padding:10px 14px}
+.tiers{display:grid;gap:10px}
+.tiers div{background:var(--ivory);border-radius:12px;padding:10px 14px}
+.tiers b{font-family:var(--serif);color:var(--bronze-deep)}
+.loop{margin-top:18px}
+.pager{display:flex;gap:10px;align-items:stretch;margin-top:18px}
+.pager .next{flex:1;margin-top:0;flex-direction:column;align-items:flex-start;justify-content:center;gap:0}
+.pager .next span{font-size:14px}
+.road strong{color:var(--sea-deep)}
+.pager .prev{flex:none;display:flex;align-items:center;padding:14px 16px;border-radius:16px;background:var(--pearl);border:1px solid var(--line);text-decoration:none;color:var(--ink-faint);font-weight:700;font-size:16px}
+footer a{margin:0 6px}
 @media (min-width:720px){
   .hero{padding:90px 24px 260px}
   .hero__title .t2{font-size:52px}
@@ -241,7 +292,7 @@ footer a{color:var(--ink-faint)}
 </head>
 <body>
 
-<header class="hero">
+<header class="hero" id="top">
   <svg class="scene" viewBox="0 0 400 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -272,15 +323,15 @@ footer a{color:var(--ink-faint)}
     <g class="st"><path d="M254 475 Q254 485 264 485 Q254 485 254 494 Q254 485 245 485 Q254 485 254 475Z" fill="#FFFBEA" style="animation-delay:1.3s"/><path d="M55 519 Q55 528 65 528 Q55 528 55 538 Q55 528 46 528 Q55 528 55 519Z" fill="#FFFBEA" style="animation-delay:1.0s"/><path d="M282 677 Q282 685 290 685 Q282 685 282 693 Q282 685 274 685 Q282 685 282 677Z" fill="#FFFBEA" style="animation-delay:1.9s"/><path d="M193 611 Q193 620 202 620 Q193 620 193 630 Q193 620 183 620 Q193 620 193 611Z" fill="#FFFBEA" style="animation-delay:3.1s"/><path d="M249 481 Q249 487 254 487 Q249 487 249 493 Q249 487 243 487 Q249 487 249 481Z" fill="#FFFBEA" style="animation-delay:1.3s"/><path d="M283 529 Q283 537 291 537 Q283 537 283 545 Q283 537 274 537 Q283 537 283 529Z" fill="#FFFBEA" style="animation-delay:0.1s"/><path d="M51 520 Q51 529 60 529 Q51 529 51 538 Q51 529 42 529 Q51 529 51 520Z" fill="#FFFBEA" style="animation-delay:3.5s"/><path d="M260 526 Q260 534 268 534 Q260 534 260 542 Q260 534 252 534 Q260 534 260 526Z" fill="#FFFBEA" style="animation-delay:2.3s"/><path d="M189 486 Q189 496 199 496 Q189 496 189 506 Q189 496 178 496 Q189 496 189 486Z" fill="#FFFBEA" style="animation-delay:1.0s"/><path d="M363 671 Q363 676 368 676 Q363 676 363 681 Q363 676 357 676 Q363 676 363 671Z" fill="#FFFBEA" style="animation-delay:2.3s"/><path d="M309 675 Q309 683 316 683 Q309 683 309 691 Q309 683 301 683 Q309 683 309 675Z" fill="#FFFBEA" style="animation-delay:1.3s"/><path d="M101 672 Q101 678 108 678 Q101 678 101 684 Q101 678 95 678 Q101 678 101 672Z" fill="#FFFBEA" style="animation-delay:2.9s"/></g>
   </svg>
   <div class="hero__inner">
-    <p class="hero__en">Magic Synchro Sales</p>
+    <p class="hero__en">Synchro Sales</p>
     <div class="hero__line"></div>
     <p class="hero__pre">これがあれば安心</p>
     <h1 class="hero__title">
-      <span class="t1">魔法の</span>
       <span class="t2">シンクロセールス</span>
-      <span class="t3">個別相談 黄金の航海図</span>
+      <span class="t1">相手とこころがシンクロしながら<br>自然と売れる</span>
+      <span class="t3">個別相談の羅針盤</span>
     </h1>
-    <p class="hero__lead">ご成約率 <b>50%</b> 超えを生み出してきた<br>ここらぼの個別相談のすべてを<br>この一冊に、ぎゅっと込めました</p>
+    <p class="hero__lead">のむらななえが<br>1000件以上のセールス経験から磨いてきた<br><span class="hero__chain">「売る」極意 ▶ 段取り ▶ 考え方</span>を<br>この1つにギュッとまとめた永久保存版</p>
   </div>
   <svg class="wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0,64 C240,112 480,16 720,56 C960,96 1200,28 1440,60 L1440,120 L0,120 Z" fill="#FBF6EC" opacity=".55"/>
@@ -293,119 +344,216 @@ footer a{color:var(--ink-faint)}
 <!-- ================= 取り扱い規約（同意してから本編へ） ================= -->
 <section class="gate" id="gate">
   <div class="card">
-    <h2><small>Terms of Use</small>はじめに必ずお読みください</h2>
-    <p class="gate__msg">この航海図には、ここらぼがこれまでの実践で積み重ねてきた知恵を、惜しみなくすべて込めています。<br>お金や契約にかかわる大切な内容も含まれるため、下の取り扱い規約をお読みいただき、同意のうえでお進みください。</p>
-    <div class="terms" tabindex="0" aria-label="取り扱い規約">
+    <h2><small>Terms of Use</small>はじめにお読みください</h2>
+    <p class="gate__msg">この教材には、ここらぼがこれまでの実践で積み重ねてきた知恵を、惜しみなく込めています。<br>お金や契約にかかわる大切な内容も含まれるため、下の利用規約を読んで、同意のうえでお進みください。</p>
+    <div class="term-period"><b>ご利用期間：2026年12月31日まで</b><br>12月31日を過ぎると、このページは閲覧できなくなります</div>
+    <div class="terms" tabindex="0" aria-label="利用規約">
       <ol>
+        <li><b>OKなこと</b><br>ご自身の事業のために読んで、実践に使うこと。自分のノートに学びをメモすること。どんどんやってください☺️</li>
+        <li><b>ごめんなさい、NGなこと</b>
+          <ul class="dots">
+            <li>スクリーンショットでの保存</li>
+            <li>文章や画像のコピー・転載・再配布</li>
+            <li>URLや動画・資料リンクを第三者に共有すること</li>
+            <li>ご自身の講座や教材への流用</li>
+            <li>家族・友人・お客さまを含む、第三者への転送</li>
+          </ul></li>
         <li><b>著作権について</b><br>本資料（文章・構成・画像・動画・資料リンクを含む）の著作権は、株式会社kokofuruに帰属します。</li>
-        <li><b>ご利用の範囲</b><br>ご自身の事業のために読み、実践にお役立ていただくことは自由です。</li>
-        <li><b>禁止事項</b><br>無断での転載・複製・再配布・販売、ご自身の教材やサービスとしての流用、SNSなどへのスクリーンショット掲載は禁止します。</li>
-        <li><b>資料・動画リンクの取り扱い</b><br>本資料内の動画・資料リンクは、本資料をご利用の方のためのものです。URLの共有・転載はご遠慮ください。</li>
-        <li><b>契約・お金・法律の情報について</b><br>契約書・特定商取引法・税金などの記載は、一般的な情報と経験にもとづくもので、法的・税務的な助言ではありません。最終的な判断は、弁護士・税理士・税務署など専門家にご確認ください。</li>
+        <li><b>契約・お金・法律の情報について</b><br>契約書・特定商取引法・税金などの記載は、一般的な情報と経験にもとづくもので、法的・税務的な個別の助言ではありません。最終的な判断は、弁護士・税理士・税務署など専門家にご確認ください。</li>
         <li><b>成果について</b><br>本資料は成果や売上を保証するものではありません。</li>
         <li><b>販売・契約の責任</b><br>本資料を参考に行う販売・契約・お客さまとのやり取りの責任は、各事業者ご自身にあります。</li>
         <li><b>内容の更新</b><br>内容は、より良いものにするため予告なく更新することがあります。</li>
       </ol>
+      <p class="terms__warm">みんなを信頼してお渡ししている、大切な教材です。<br>ここらぼの中だけで、大切に、そして遠慮なく使い倒してください☺️</p>
+      <p class="small">※万が一、外部への共有・転載などが確認された場合は、コンテンツの利用を停止させていただく場合があります。</p>
     </div>
-    <label class="agree"><input type="checkbox" id="agreeCk"><span>上記の取り扱い規約を読み、同意します</span></label>
+    <label class="agree"><input type="checkbox" id="agreeCk"><span>上記の利用規約を読み、同意します</span></label>
     <button type="button" class="btn" id="agreeBtn" disabled>本編へすすむ</button>
   </div>
 </section>
 
 <main id="main" hidden>
 
-<div class="howto"><p>✦ 下の目次から、今やることを開くだけ ✦</p></div>
+<div class="howto"><p>✦ 今のあなたに必要な扉を、<br>ひとつ開いてみよう ✦</p></div>
 
 <nav aria-label="目次">
   <ol class="toc" id="toc">
-    <li><a href="#s1"><span class="no">01</span><span class="tt">個別相談 前後の全体の流れ</span><span class="arr">›</span></a></li>
-    <li><a href="#s2"><span class="no">02</span><span class="tt">セールスの心構え<small>感謝されて自然と売れる 7つの極意</small></span><span class="arr">›</span></a></li>
-    <li><a href="#s3"><span class="no">03</span><span class="tt">個別相談までに<br>やることリスト</span><span class="arr">›</span></a></li>
-    <li><a href="#s4"><span class="no">04</span><span class="tt">個別相談 当日の進め方<small>ダイレクトレスポンスマーケティング</small></span><span class="arr">›</span></a></li>
-    <li><a href="#s5"><span class="no">05</span><span class="tt">不安・反論への答え方</span><span class="arr">›</span></a></li>
-    <li><a href="#s6"><span class="no">06</span><span class="tt">個別相談 終了後に<br>やることリスト</span><span class="arr">›</span></a></li>
-    <li><a href="#s7"><span class="no">07</span><span class="tt">契約書・法律・お金の注意</span><span class="arr">›</span></a></li>
+    <li><a href="#s1"><span class="no">01</span><span class="tt">個別相談（セールス）の<br>前後の流れを確認する</span><span class="arr">›</span></a></li>
+    <li><a href="#s2"><span class="no">02</span><span class="tt">シンクロセールス<br>7つの極意</span><span class="arr">›</span></a></li>
+    <li><a href="#s3"><span class="no">03</span><span class="tt">個別相談当日までの<br>やることリスト</span><span class="arr">›</span></a></li>
+    <li><a href="#s4"><span class="no">04</span><span class="tt">個別相談当日の進め方</span><span class="arr">›</span></a></li>
+    <li><a href="#s5"><span class="no">05</span><span class="tt">クロージング時の<br>不安への対処法</span><span class="arr">›</span></a></li>
+    <li><a href="#s6"><span class="no">06</span><span class="tt">個別相談終了後の<br>やることリスト</span><span class="arr">›</span></a></li>
+    <li><a href="#s7"><span class="no">07</span><span class="tt">契約時の注意点</span><span class="arr">›</span></a></li>
     <li><a href="#s8"><span class="no">08</span><span class="tt">売上の計算方法</span><span class="arr">›</span></a></li>
+    <li><a href="#s9"><span class="no">09</span><span class="tt">より成約率を上げるための<br>振り返り方</span><span class="arr">›</span></a></li>
   </ol>
 </nav>
 
-<!-- ================= 01 全体の流れ ================= -->
+<!-- ================= 01 前後の流れ ================= -->
 <section class="sec" id="s1">
-  <div class="band"><span class="no">01</span><h2>個別相談 前後の<br>全体の流れ</h2><p>まずはここで、航海の全体像をつかみましょう</p></div>
+  <div class="band"><span class="no">01</span><h2>個別相談（セールス）の<br>前後の流れを確認する</h2><p>まずは全体像をつかみましょう</p></div>
+
+  <figure class="fig">
+    <a href="../assets/img10.webp" target="_blank" rel="noopener"><img src="../assets/img10.webp" alt="商品って、どうやって売るの？知ってもらう→気になってもらう→もっと知ってもらう→直接お話しする→ご提案する→必要な人が「やりたい」と決める" loading="lazy"></a>
+    <figcaption>タップで拡大できます</figcaption>
+  </figure>
+
   <ol class="flow">
-    <li><h3>告知・お申込み</h3><p>個別相談を知ってもらう方法は3つ</p>
+    <li><h3>告知</h3><p>個別相談を知ってもらう方法は3つ</p>
+      <!-- TODO 図解画像差し込み：「最初のお客様は、どこから出会う？」（新規図解1）。画像ができたら下の .diagram をこの画像に差し替え -->
+      <div class="diagram" aria-label="最初のお客様は、どこから出会う？">
+        <p class="diagram__title">最初のお客様は、どこから出会う？</p>
+        <div class="diagram__steps">
+          <div><span class="dn">①</span><b>リアル人脈</b><small>すでに信頼がある</small><em>→ 最初の1人におすすめ</em></div>
+          <div><span class="dn">②</span><b>所属コミュニティ</b><small>普段から関係をつくる</small><em>→ 関係性の中から相談へ</em></div>
+          <div><span class="dn">③</span><b>SNS</b><small>問題提起→未来提示→CTA</small><em>→ 発信と対話の先に個別相談</em></div>
+        </div>
+        <p class="diagram__foot">起業初期は ①→②→③ がおすすめ<br><b>フォロワー0人でも、<br>最初のお客様はつくれる</b></p>
+      </div>
       <ul class="ways">
-        <li><b>① リアル人脈に声をかける</b>身近な友人・知人、すでに信頼関係があるメンバーへ</li>
-        <li><b>② 所属コミュニティに食い込む</b>地域やオンラインのコミュニティで関係をつくる、チラシやDMを置かせてもらう</li>
-        <li><b>③ 自分のSNSで告知・募集する</b>認知の媒体で募集（ここらぼではInstagramを推進）</li>
+        <li><b>① リアル人脈に声をかける</b>軽い営業DMではなく「実はこんな挑戦を始めようと思っていて、まずあなたに話を聞いてほしい」と、<strong>なぜこの仕事を始めるのか・なぜあなたに連絡したのか・率直な意見を聞きたい</strong>ことを、自分の言葉で誠実に</li>
+        <li><b>② 所属コミュニティに食い込む</b>地域やオンラインのコミュニティで、普段から関係をつくる。チラシやDMを置かせてもらうのも◎</li>
+        <li><b>③ 自分のSNSで告知する</b>基本は「問題提起 → 未来提示 → CTA」。ただし、継続発信やフォロワーさんとの対話がほぼない状態で、突然「個別相談募集」だけ出しても来にくいです</li>
       </ul>
-      <p class="note">起業したばかりで発信が育っていないうちは、<span class="em">①②のリアル人脈・オフラインが有力</span>。発信が育ってきたら③のSNSが中心になっていきます。</p>
     </li>
-    <li><h3>準備と練習</h3><p>ご提案書・決済・契約書・Zoom・印象ブランディング・通し練習</p></li>
-    <li><h3>個別相談 当日</h3><p>オープニング → ヒアリング → 未来の共有 → ご提案 → クロージング</p></li>
-    <li><h3>相談後のフォロー</h3><p>お礼のLINE → お申込み・決済のご案内</p></li>
-    <li><h3>ご成約・契約・決済</h3><p>契約書 → 入金確認 → ウェルカム案内</p></li>
-    <li><h3>サービススタート</h3><p>講座・セッション・プログラムなど</p></li>
+    <li><h3>お申込みフォーム＆事前アンケート</h3><p>初心者さんには <b>Googleフォーム</b> がおすすめ</p>
+      <ul class="dots">
+        <li>無料／写真などで世界観もつくれる</li>
+        <li>回答をスプレッドシートで管理できる</li>
+        <li>事前ヒアリングを兼ねられる</li>
+      </ul>
+      <p class="note">記述式だらけにせず、<b>ラジオボタンや選択式が中心</b>。本当に聞きたいところだけ記述式に。記入が負担にならず、当日が楽しみになるフォームに。<br>有料商品のご案内があること・キャンセルについて・お子さま連れの可否など、必要事項も明記しておきましょう</p>
+      <a class="res doc" href="https://docs.google.com/forms/d/16fz7hYdD9c_92wVriMZ4tRgbdkPYNUEYY6Y_ANggnqM/edit?usp=drive_web&amp;ouid=112663742047490598613" target="_blank" rel="noopener">参考フォーム（Googleフォーム）</a>
+      <p class="small">※そのままコピーするのではなく、自分の商品・サービスに置き換えてモデリングしてくださいね</p>
+    </li>
+    <li><h3>個別相談に必要なものを準備</h3>
+      <p>ご提案書／決済フォーム・決済リンク／契約書／Zoom／印象ブランディング／通し練習</p>
+      <p class="mantra-s">ご成約は、準備9割</p>
+      <p class="small">→ 詳しいチェックは <a href="#s3">03</a> へ</p>
+    </li>
+    <li><h3>個別相談 前日</h3>
+      <p>前日の早い時間に、必ずリマインド。Zoomリンク・「明日楽しみにしています」の一言・PC参加のおすすめ・ネット環境の確認など</p>
+      <p class="note">当日の2時間だけで売るのではなく、<b>事前から価値と信頼を届ける</b>。必要に応じて、事前に見てほしいPDF・動画・リールも添えて</p>
+    </li>
+    <li><h3>個別相談 当日</h3>
+      <p>電波・PC充電・Zoom・画面共有・ご提案書・事前アンケート・自分用メモ・通知OFF・見られたくない画面を閉じる……を余裕をもって確認して、スタンバイ</p>
+      <p class="small">→ 進め方は <a href="#s4">04</a> へ</p>
+    </li>
+    <li><h3>相談後 3時間以内</h3>
+      <p>原則、終了後3時間以内にサンキューメール／LINE。ご縁と時間への感謝、印象に残ったこと、そして<b>本プログラムへの意思確認</b>（原則、翌日までのお返事）まで</p>
+      <p class="small">「ありがとうございました」で終わらせないのがポイント → <a href="#s6">06</a> へ</p>
+    </li>
+    <li><h3>お申込み・契約・決済</h3>
+      <ol class="chain"><li>契約書</li><li>決済</li><li>入金確認</li><li>ウェルカム案内</li></ol>
+      <p class="small" style="margin-top:6px">→ 注意点は <a href="#s7">07 契約時の注意点</a> へ</p>
+    </li>
+    <li><h3>サービス開始準備</h3>
+      <p>初回日程／LINE・Slackなどの連絡環境／事前課題／今後の流れ／必要な資料づくり</p>
+      <p class="note">最初から何十ページ、何百ページもの講義資料はつくらなくて大丈夫。まず丁寧に相手の話を聞いて、<b>必要になったものだけ資料にしていく</b></p>
+      <figure class="fig">
+        <a href="../assets/img14.webp" target="_blank" rel="noopener"><img src="../assets/img14.webp" alt="NO！完璧 YES！育てる：つくる→届ける→反応を見る→磨く" loading="lazy"></a>
+      </figure>
+    </li>
+    <li><h3>個人情報</h3>
+      <p>写真・名前・相談内容・感想・ビフォーアフター・Zoom画面などを外に出すときは、<b>必ずご本人に確認</b>。1対1の伴走で、許可なくSNSなどに公開しない</p>
+      <p class="mantra-s">信頼を守ることも、セールス</p>
+    </li>
   </ol>
-  <a class="next" href="#s2"><span>次は</span><b>02 セールスの心構え →</b></a>
+  <nav class="pager"><a class="next" href="#s2"><span>次は</span><b>02 シンクロセールス 7つの極意 →</b></a></nav>
 </section>
 
-<!-- ================= 02 心構え ================= -->
+<!-- ================= 02 7つの極意 ================= -->
 <section class="sec" id="s2">
-  <div class="band"><span class="no">02</span><h2>セールスの心構え<br>感謝されて自然と売れる 7つの極意</h2><p>ご成約率50%超えの土台になる考え方</p></div>
+  <div class="band"><span class="no">02</span><h2>シンクロセールス<br>7つの極意</h2><p>感謝されて自然と売れる土台</p></div>
 
   <div class="card">
-    <h3>なぜ「50%超え」はすごいのか</h3>
+    <h3>ご成約率がすべて</h3>
     <div class="rate">
-      <div><small>個人がオンラインで<br>高額の無形商品を売る<br>一般的なご成約率</small><b>20%</b></div>
-      <div class="us"><small>ここらぼの<br>シンクロセールスの<br>ご成約率</small><b>50%+</b></div>
+      <div><small>一般的な<br>個人起業家の<br>ご成約率</small><b>20%</b></div>
+      <div class="us"><small>ここらぼ式<br>シンクロセールスの<br>ご成約率</small><b>50%+</b></div>
     </div>
-    <p class="small" style="text-align:center">※10〜30万円の商品をクロージングする場合の目安と言われる数字です</p>
+    <h4>なぜ「率」が大事なの？</h4>
+    <p class="small">10万円の商品を、同じ10人に提案すると……</p>
+    <div class="compare">
+      <div><small>成約率10%</small><b>1人</b><span>売上 10万円</span></div>
+      <div class="us"><small>成約率50%</small><b>5人</b><span>売上 50万円</span></div>
+    </div>
+    <p class="mantra-s">売上を5倍にする方法は、集客を5倍にすることだけじゃない<br>量だけを増やす前に、率を上げる</p>
+    <h4>もうひとつの見方</h4>
+    <ul class="dots">
+      <li>2,000円のタロット鑑定で20万円 → <b>100件</b>必要</li>
+      <li>20万円の継続プログラムを1人に届ける → <b>1件</b>で20万円</li>
+    </ul>
+    <p class="note">安い商品が悪いわけでも、高額なら何でもいいわけでもありません。<b>自分の時間・エネルギー＋お客さまの変化の深さ</b>まで含めて、商品を設計しましょう</p>
+    <h4>成約率を上げる土台は4つ</h4>
+    <ol class="four">
+      <li>コーチング・対話の基本<small>11月の次元上昇Zoomで扱う予定です</small></li>
+      <li>ダイレクトレスポンスマーケティング</li>
+      <li>売れるご提案書</li>
+      <li>契約・決済など、安心して買える準備</li>
+    </ol>
     <h4>「シンクロセールス」とは</h4>
-    <p>自分が売るのではなく、<span class="em">相手の気持ちの流れ（感情曲線）にぴったり寄りそう</span>セールスです。シンクロナイズドスイミングのように呼吸を合わせて、相手のお話を聞き、困りごとやお悩みを受け止めて、<b>相手の最大の理解者になる</b>。だから「シンクロ」セールスと呼んでいます。</p>
+    <p>自分が売るのではなく、<span class="em">相手の気持ちの流れ（感情曲線）にぴったり寄りそう</span>セールス。シンクロナイズドスイミングのように呼吸を合わせて、相手の最大の理解者になることです</p>
   </div>
 
   <ol class="secrets">
-    <li><h3>1本道全体でクロージング</h3>
-      <p>当日の数時間だけで、高額の決断をしていただくのは無理があります。当日までの1本道で<b>信頼の貯金</b>と<b>価値の教育</b>をして、当日安心して決断していただける道をつくること。<span class="em">これが「集客」です</span></p>
-      <div class="road"><b>0→1（月商50万円を安定させるまで）の道</b>
-        <ol><li>発信（トークリールがメイン）</li><li>公式LINE登録（特典をひとつ）</li><li>事前アンケート</li><li>前日リマインド</li><li>当日</li><li>フォローアップ</li></ol>
+    <li><h3>一本道全体でクロージング</h3>
+      <p>個別相談2〜3時間の「点」で売るのではありません。発信 → LINE → 制作物 → やり取り → 個別相談、そのすべてを通して「この人なら大丈夫」という信頼貯金が貯まっていきます</p>
+      <p class="mantra">個別相談で一本釣りするのではなく<br>信頼貯金をコツコツ貯めて<br>満期になった人がご成約する</p>
+      <figure class="fig">
+        <a href="../assets/img11.webp" target="_blank" rel="noopener"><img src="../assets/img11.webp" alt="お客様は、こうやって近づいてくる：マーケティングファネル" loading="lazy"></a>
+        <figcaption>タップで拡大できます</figcaption>
+      </figure>
+      <!-- TODO 図解画像差し込み：「0→1と0→1以降の一本道の違い」（新規図解2）。画像ができたら下の .roads をこの画像に差し替え -->
+      <div class="roads">
+        <div class="road"><b>0→1フェーズ</b><small>目安：月商50万円を安定させるまで</small>
+          <ol><li>リアル人脈・SNS</li><li>公式LINE</li><li>軽い特典</li><li>お申込みフォーム</li><li>個別相談</li><li>ご成約</li></ol>
+          <p class="small">発信はトークリール中心。リアル人脈も強く活用</p>
+        </div>
+        <div class="road"><b>0→1以降</b><small>目安：月商50〜300万円を安定させたい</small>
+          <ol><li>SNS・広告・リアル人脈</li><li>オプトインLP</li><li>公式LINE</li><li>ステップ配信（UTAGE・エルメなど）</li><li>動画講座など</li><li>お申込みフォーム</li><li>個別相談</li><li>ご成約</li></ol>
+          <p class="small">売上額だけでなく、魂商品に<strong>最低10人程度</strong>は実際にお客さまを通していることもひとつの目安</p>
+        </div>
       </div>
-      <p class="small" style="margin-top:6px">※発信はリール・ストーリーズ・Instagram以外のSNSなど全般。ただし<b>アフレコリールだけでは、トークリールほどお申込みは入りません</b></p>
-      <div class="road"><b>0→1以降（月商50万円〜500万円くらい）の道</b>
-        <ol><li>発信</li><li>オプトインLP</li><li>ステップ配信（UTAGE・エルメなど）</li><li>動画講座</li><li>事前アンケート</li><li>前日リマインド</li><li>当日</li><li>フォローアップ</li></ol>
-      </div>
-      <p class="note">道を長くしたから売上が上がるわけではありません。月商50万円をコンスタントにいただけるようになったからこそ、コンセプトやペルソナが明確になり、長い道がつくれるのです。<b>最初は短くても太い道を</b></p>
+      <p class="note">講師経験が少ないうちに複雑な導線を先につくると、何を伝えるべきかがまだ見えていなくて大変です。<b>まず、届ける経験を積む</b></p>
     </li>
     <li><h3>相手の人生を幸せにするまでが集客</h3>
-      <p>自分の売上・利益ではなく、相手がどうすれば問題が解決し、夢が叶うのか。<b>相手の立場で考えられることが、すべて</b></p>
-      <p class="note">漁業型（とって終わり）ではなく、<b>農業型（育てて実らせる）</b>で集客する</p>
+      <p>漁業型（取って終わり）ではなく、<b>農業型</b>で</p>
+      <ol class="chain"><li>知る</li><li>関係をつくる</li><li>信頼を育てる</li><li>届ける</li></ol>
     </li>
-    <li><h3>セールスはプロポーズ</h3>
-      <p>「売る」とは、相手を助ける・救うためのアイデアを届けること。いわば<b>愛の告白</b>です</p>
-      <p>「共に幸せに、豊かになっていこう」という宣言。それがクロージングであり、金額の提示です</p>
+    <li><h3>セールス＝プロポーズ</h3>
+      <p>「売る」とは、相手に愛のご提案をすること</p>
+      <p class="say-q">あなたと、こんな未来を一緒につくりたい</p>
     </li>
-    <li><h3>とことん相手目線・自分語り禁止</h3>
-      <p>話す割合は<b>相手7：自分3</b>。自分の実績より、相手の気持ちと未来の話を</p>
+    <li><h3>とことん相手目線</h3>
+      <p><b>自分の頭だけで考えない。相手の脳で考える</b></p>
+      <ul class="dots">
+        <li>今この話を聞いたら、どう感じる？</li>
+        <li>今これを伝えて大丈夫？</li>
+        <li>何が不安？ 何がまだ見えていない？</li>
+        <li>本当は何を知りたい？</li>
+      </ul>
+      <p class="small">自分が伝えたい量より、相手の感情曲線を見る</p>
     </li>
-    <li><h3>押し売りしない 自然体でも売れるセールス</h3>
-      <p>土台は<b>ダイレクトレスポンスマーケティング</b>。興味があり「YES」と言ってくれた人にだけ、次のものを見せていきます</p>
-      <p>知りたいと言った人にだけ、次のお話をしていくので、相手が不快な思いをしません。<span class="em">そして最後が金額</span>。ここがとても大事です</p>
+    <li><h3>ダイレクトレスポンスマーケティング</h3>
+      <p>一方的に進めず、<b>相手のYESを取りながら次へ進む</b>。知りたいと言った人にだけ次のお話をするので、相手が不快な思いをしません。<span class="em">そして最後が金額</span></p>
       <a class="res video" href="https://vimeo.com/1042982127/63dfd6a178?share=copy" target="_blank" rel="noopener">売り込まないセールス新常識</a>
     </li>
-    <li><h3>お金の話は誠実に</h3>
-      <p>金額・支払い方法・分割の総額・キャンセル条件は、はっきり堂々と。濁すと不信につながります</p>
+    <li><h3>お金の話を正々堂々とする</h3>
+      <p>金額・支払方法・分割の総額・キャンセル条件を、濁さず誠実に</p>
     </li>
-    <li><h3>反論処理ノートを作る</h3>
-      <p>聞かれたこと、答えに困ったことを毎回メモ。次の個別相談で必ず活きます</p>
+    <li><h3>反論処理ノートをつくる</h3>
+      <p>答えに困った質問・不安・迷いを毎回記録して、次回に活かす</p>
     </li>
   </ol>
-  <a class="next" href="#s3"><span>次は</span><b>03 個別相談までにやること →</b></a>
+  <p class="mantra">シンクロセールスは<br>喋る技術ではなく<br>相手の心を見る力</p>
+  <nav class="pager"><a class="prev" href="#s1">← 01</a><a class="next" href="#s3"><span>次は</span><b>03 当日までのやることリスト →</b></a></nav>
 </section>
 
-<!-- ================= 03 前 ================= -->
+<!-- ================= 03 当日までのやること ================= -->
 <section class="sec" id="s3">
-  <div class="band"><span class="no">03</span><h2>個別相談までに<br>やることリスト</h2><p>ご成約は準備9割。上から順にチェック</p></div>
+  <div class="band"><span class="no">03</span><h2>個別相談当日までの<br>やることリスト</h2><p>ご成約は準備9割。上から順にチェック</p></div>
 
   <div class="card checklist" data-key="s3-1">
     <span class="label gold">STEP 1</span>
@@ -417,10 +565,10 @@ footer a{color:var(--ink-faint)}
     <label class="ck"><input type="checkbox"><span>一人ひとりに、自分の想いをこめたメッセージを送った</span></label>
     <div class="secret-box">
       <p><b>軽い声かけではなく、本気の想いを届けること</b></p>
-      <p>なぜあなたに連絡しているのか、なぜ自分が起業したのか。「とりあえず話を聞いて」ではなく、たとえ価格が安くても本気で。話を聞いてもらうことは、忙しい相手の時間をいただくことです</p>
-      <p>いきなり重たくする必要はありません。ある日突然、昔の友人や知人から連絡が来たら、どんなメッセージなら「話を聞こう」と思えるか。ここも<b>相手目線</b>です</p>
+      <p>なぜあなたに連絡しているのか、なぜ自分が起業したのか。話を聞いてもらうことは、忙しい相手の時間をいただくことです</p>
+      <p>ある日突然、昔の友人や知人から連絡が来たら、どんなメッセージなら「話を聞こう」と思えるか。ここも<b>相手目線</b>です</p>
     </div>
-    <p class="note">0→1フェーズでもInstagramで募集してOK。ただし<b>フォロワーさんとの関係性ができていなければ、告知しても反応はありません</b>。関係性とは、継続的なリール投稿、ストーリーズやDMでの対話が起きていること。温まっていないところに告知しても反応がない、と覚えておきましょう</p>
+    <p class="note">Instagramで募集してもOK。ただし<b>フォロワーさんとの関係性（継続的なリール・ストーリーズやDMでの対話）がないまま告知しても、反応はありません</b></p>
 
     <p class="phase">0→1以降の方</p>
     <label class="ck"><input type="checkbox"><span>リアル人脈・オフラインのコミュニティへの食い込みを続けている</span></label>
@@ -433,30 +581,27 @@ footer a{color:var(--ink-faint)}
         <li><b>アフター言語化</b>（小さく具体的な一歩先の未来）</li>
         <li><b>行動の橋渡し</b>（CTA：次の行動へ橋をかける）</li>
       </ol>
-      <p>告知も、ご提案書も、セールスも、すべてこの型でシンカします</p>
     </div>
     <a class="res video" href="https://vimeo.com/1115754043/99b64de524?share=copy" target="_blank" rel="noopener">【9月】月1特別講義「集客の基本のき・おじさん草ライティング」の極意</a>
 
     <p class="phase">全員共通</p>
-    <label class="ck"><input type="checkbox"><span>無料のお申込みフォームを作った<small>相手が「話を聞きたい」とYESになったら、ストーリーズから直接フォームへ、またはDMでやり取りしてからフォームへ</small></span></label>
-    <p class="note">0→1フェーズの方は、まず<b>無料のGoogleフォーム</b>がおすすめ。UTAGEなどでステップを組めるようになったら、ほかのフォームも選べます</p>
-    <label class="ck"><input type="checkbox"><span>事前アンケートを作った</span></label>
-    <div class="secret-box">
-      <p>記述式・ラジオボタン式などを、ペルソナちゃんが<b>答えやすい形</b>に。アンケートに答えること自体が<b>内観ワーク</b>になり、当日が楽しみになるように作りましょう</p>
-    </div>
+    <label class="ck"><input type="checkbox"><span>お申込みフォーム＆事前アンケートを作った<small>Googleフォームがおすすめ。選択式中心で、本当に聞きたいところだけ記述式に</small></span></label>
+    <label class="ck"><input type="checkbox"><span>有料商品のご案内・キャンセル・お子さま連れの可否など、必要事項をフォームに明記した</span></label>
+    <a class="res doc" href="https://docs.google.com/forms/d/16fz7hYdD9c_92wVriMZ4tRgbdkPYNUEYY6Y_ANggnqM/edit?usp=drive_web&amp;ouid=112663742047490598613" target="_blank" rel="noopener">参考フォーム（自分の商品に置き換えてモデリング）</a>
   </div>
 
   <div class="card checklist" data-key="s3-2">
     <span class="label gold">STEP 2</span>
     <h3>準備</h3>
     <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
-    <label class="ck"><input type="checkbox"><span>ご提案書を作った<small>Canva一択です</small></span></label>
-    <a class="res doc" href="https://drive.google.com/file/d/12LT0PDt6mtZCuiVc_7liAYHwolLLmmT6/view?usp=sharing" target="_blank" rel="noopener">ご提案書の極意（資料）</a>
+    <label class="ck"><input type="checkbox"><span>ご提案書を作った<small>ここらぼでは、操作・共有がしやすいCanvaでの作成を推奨しています</small></span></label>
     <a class="res video" href="https://vimeo.com/1042972841/b214da2b1f?share=copy" target="_blank" rel="noopener">魔法のご提案書の作り方・前編</a>
     <a class="res video" href="https://vimeo.com/1042973667/fb5acd94a2?share=copy" target="_blank" rel="noopener">魔法のご提案書の作り方・後編</a>
     <a class="res video" href="https://vimeo.com/1042975673/bc91bc8e90?share=copy" target="_blank" rel="noopener">美しく！確実に想いが届く 資料作成の秘訣・前半</a>
     <a class="res video" href="https://vimeo.com/1042976543/8499cbbaca?share=copy" target="_blank" rel="noopener">美しく！確実に想いが届く 資料作成の秘訣・後半</a>
-    <label class="ck"><input type="checkbox"><span>Canva・Zoomを有料プランにした</span></label>
+    <!-- TODO 魂商品ミラクルキットのURLが確定したら href を入れて soon クラスを外す -->
+    <span class="res doc soon">ご提案書がまだの方は：魂商品ミラクルキット</span>
+    <label class="ck"><input type="checkbox"><span>オンライン個別相談を本格的に行うため、Zoomの有料プランを準備した</span></label>
     <label class="ck"><input type="checkbox"><span>決済方法を決めた<small>原則は「銀行振込（一括）」か「クレジットカード決済」</small></span></label>
     <div class="note"><b>おすすめはPayPal（ペイパル）・MOSH（モッシュ）</b>
       <ul class="dots">
@@ -464,16 +609,15 @@ footer a{color:var(--ink-faint)}
         <li>今は個人でもクレジットカード決済の手続きが簡単にできます。審査なども含めて事前に調べておく</li>
       </ul>
     </div>
-    <label class="ck"><input type="checkbox"><span>決済リンク・振込先を、慎重に何度も確認した</span></label>
+    <label class="ck"><input type="checkbox"><span>決済リンク・振込先を<b>3回確認</b>した</span></label>
     <label class="ck"><input type="checkbox"><span>契約書・受講規約書を用意した <a href="#s7">→07</a></span></label>
     <a class="res doc" href="https://www.canva.com/design/DAFyyoUbmBs/wxwfn0q8lqu_sDr14ujM0Q/edit" target="_blank" rel="noopener">ここらぼ受講規約（デモンストレーション・原文転載NG）</a>
     <p class="note">ここらぼの規約は大きな講座用なのでしっかりめです。個人の場合は<b>サービス内容・金額と支払い・キャンセル規定・免責</b>の要点を押さえればOK。AIも活用して、自分で作りましょう</p>
-    <label class="ck"><input type="checkbox"><span>特定商取引法などの「必ず理解しておくこと」を読んだ <a href="#s7">→07</a></span></label>
     <label class="ck"><input type="checkbox"><span>反論処理ノートを用意した <a href="#s5">→05</a></span></label>
-    <label class="ck"><input type="checkbox"><span>印象ブランディングを整えた<small>メイク・服装・背景・明るさ</small></span></label>
+    <label class="ck"><input type="checkbox"><span>印象ブランディングを整えた<small>衣装・メイク・背景・明るさ</small></span></label>
     <div class="secret-box">
       <p><b>原則、パソコンを使ってオンラインで</b></p>
-      <p>カフェで会って、ご自宅や相手のお家で…という方もいますが、ご成約率がまったく違います。ざわざわした場所や、いろいろなものが目に入る環境では集中できません。まずは<b>オンラインでできるようになること</b>を目指しましょう</p>
+      <p>カフェやご自宅、相手のお家で……という方もいますが、ご成約率がまったく違います。まずは<b>オンラインでできるようになること</b>を目指しましょう</p>
     </div>
   </div>
 
@@ -481,9 +625,9 @@ footer a{color:var(--ink-faint)}
     <span class="label gold">STEP 3</span>
     <h3>練習</h3>
     <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
-    <label class="ck"><input type="checkbox"><span>ご提案書の内容と当日の流れを、ほぼ完璧に頭に入れた</span></label>
-    <label class="ck"><input type="checkbox"><span>自分でZoomを開いて画面共有し、声に出して<b>通しで5回以上</b>練習した</span></label>
-    <label class="ck"><input type="checkbox"><span>Zoomで録画し、自分の通し練習を<b>3回以上見返した</b></span></label>
+    <label class="ck"><input type="checkbox"><span>ご提案書の内容と当日の流れを、ほぼ頭に入れた</span></label>
+    <label class="ck"><input type="checkbox"><span>自分でZoomを開いて画面共有し、声に出して<b>通しで最低3回</b>練習した</span></label>
+    <label class="ck"><input type="checkbox"><span>必要に応じて録画し、自分でも見返した</span></label>
     <a class="res video" href="https://vimeo.com/908171161/62ef8ed581?share=copy" target="_blank" rel="noopener">のむらななえ 個別相談デモンストレーション動画</a>
     <a class="res video" href="https://vimeo.com/1042971390/72aa16bfea?share=copy" target="_blank" rel="noopener">個別相談・フロントセミナーの作り方</a>
     <div class="warn"><b>よくある「もったいない」失敗</b>
@@ -496,15 +640,16 @@ footer a{color:var(--ink-faint)}
     <span class="label gold">STEP 4</span>
     <h3>前日チェック</h3>
     <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
-    <label class="ck"><input type="checkbox"><span>参加される方に、ZoomのURLを送った（下のテンプレ）</span></label>
+    <label class="ck"><input type="checkbox"><span>前日の早い時間に、リマインドとZoomのURLを送った（下のテンプレ）</span></label>
+    <label class="ck"><input type="checkbox"><span>必要に応じて、事前に見てほしいPDF・動画・リールを送った</span></label>
     <label class="ck"><input type="checkbox"><span>Wi-Fi・パソコンの充電・電源を確認した</span></label>
-    <label class="ck"><input type="checkbox"><span>印象ブランディング（メイク・服装・背景・明るさ）を最終確認した</span></label>
+    <label class="ck"><input type="checkbox"><span>印象ブランディング（衣装・メイク・背景・明るさ）を最終確認した</span></label>
     <label class="ck"><input type="checkbox"><span>事前アンケートを読み返し、聞きたいことをメモした</span></label>
     <label class="ck"><input type="checkbox"><span>ご提案書・お申込みフォーム・決済リンクを、すぐ開けるようにした</span></label>
-    <label class="ck"><input type="checkbox"><span>当日はスマホ・パソコンの通知をオフにし、<b>10分前</b>に入室する</span></label>
+    <label class="ck"><input type="checkbox"><span>当日は通知OFF・見られたくない画面を閉じて、<b>10分前</b>に入室する</span></label>
     <div class="tpl"><h4>前日リマインド（Zoomのご案内）</h4>
-<pre>〇〇さん、こんばんは！
-いよいよ明日は個別相談ですね。楽しみにしています✨
+<pre>〇〇さん、こんにちは！
+いよいよ明日は個別相談ですね。お話しできるのを楽しみにしています✨
 
 ■日時：〇月〇日（〇）〇時〜〇時（約〇分）
 ■Zoom URL：（URL）
@@ -512,95 +657,134 @@ footer a{color:var(--ink-faint)}
 
 ▼当日のお願い
 ・静かでお話ししやすい場所から、できればパソコンでご参加ください
+・Zoomが初めての方は、事前に一度開けるか確認しておいてくださいね
+・Wi-Fiなど、ネット環境が安定した場所だと安心です
 ・メモとペンがあると便利です
-・5分前から入室いただけます
 
 ご都合が悪くなった場合は、お気軽にご連絡くださいね。</pre>
       <button class="copy" type="button">コピーする</button></div>
+    <p class="hint-love">このままコピペするより、あなたの言葉やお相手との関係性に合わせて少し肉付けして使ってくださいね💌<br>「あなたから届いた」と感じられる文章にすることも、相談前の大切な信頼づくりです</p>
   </div>
-  <a class="next" href="#s4"><span>次は</span><b>04 当日の進め方 →</b></a>
+  <nav class="pager"><a class="prev" href="#s2">← 02</a><a class="next" href="#s4"><span>次は</span><b>04 当日の進め方 →</b></a></nav>
 </section>
 
-<!-- ================= 04 当日 ================= -->
+<!-- ================= 04 当日の進め方 ================= -->
 <section class="sec" id="s4">
-  <div class="band"><span class="no">04</span><h2>個別相談 当日の進め方</h2><p>ダイレクトレスポンスマーケティング｜目安60〜90分</p></div>
+  <div class="band"><span class="no">04</span><h2>個別相談当日の進め方</h2><p>全体の目安60〜90分</p></div>
+  <figure class="fig">
+    <a href="../assets/img12.webp" target="_blank" rel="noopener"><img src="../assets/img12.webp" alt="個別相談・セールスって、どうやるの？8つのステップ" loading="lazy"></a>
+    <figcaption>タップで拡大できます</figcaption>
+  </figure>
   <div class="card">
     <ol class="tl">
-      <li><span class="time">5分</span><h4>オープニング</h4><p class="goal">アイスブレイクで心を開いてもらう</p>
+      <li><span class="time">5分程度</span><h4>① オープニング</h4><p class="goal">アイスブレイクで心を開いてもらう</p>
         <ul class="dots">
           <li>アイスブレイクで、緊張をほどく</li>
           <li>全体像（森）を見せる：今日かかる時間、どんなことをするか</li>
           <li>前半は個別相談。後半に有料のご案内があるけれど、<b>聞きたい場合だけ</b>お話しするので安心して選んでね、と伝える</li>
           <li>録画する場合は、必ず許可をとる</li>
         </ul></li>
-      <li><span class="time">25〜30分</span><h4>ヒアリング</h4><p class="goal">事前アンケートをもとに、相手の本音に寄りそう</p>
-        <ul class="dots"><li>今の状態・お悩み</li><li>なぜ今、変えたいのか</li><li>理想の未来</li><li>今まで叶わなかった理由</li></ul>
-        <p class="note">話すのは自分3割まで。うなずき、相手の言葉をくり返し、気持ちを受け止める</p></li>
-      <li><span class="time">10分</span><h4>未来の共有・解決の道すじ</h4><p class="goal">「私にもできそう」と思ってもらう</p>
-        <ul class="dots"><li>聞いた内容を要約して返す</li><li>今と理想のあいだの道のりを見せる</li><li>「具体的なサポートのお話を聞きたいですか？」と<b>YESをいただいてから</b>ご案内へ</li></ul></li>
-      <li><span class="time">15分</span><h4>ご提案</h4><p class="goal">ご提案書を画面共有して、正しく伝える</p>
-        <ul class="dots"><li>期間・内容・サポート方法・得られる変化</li><li>金額・支払い方法・分割の総額・キャンセル規定をはっきり</li></ul></li>
-      <li><span class="time">10分</span><h4>クロージング（プロポーズ）</h4><p class="goal">相手が自分で決める</p>
-        <ul class="dots"><li>「一緒に叶えたい」と本気で伝え、言ったあとは<b>黙って待つ</b></li><li>不安が出たら → <a href="#s5">05</a></li><li>即決をせまらない・長時間ひきとめない</li></ul>
+      <li><span class="time">15分程度</span><h4>② ヒアリング</h4><p class="goal">事前アンケートをもとに、ここまでを明確に</p>
+        <ul class="dots"><li>今の現在地</li><li>本人が自覚している課題</li><li>どこへ行きたいのか</li></ul>
+        <p class="warn">ここは「無料お悩み相談」ではありません。悩みを解決しすぎない、大量のアドバイスをしない</p></li>
+      <li><h4>③ 前半：セールスパート</h4><p class="goal">本人がまだ見えていない「行き先」を一緒に言語化する</p>
+        <p>ご提案書に合わせて</p>
+        <ol class="chain"><li>問題提起</li><li>自分のストーリー</li><li>未来提示・行き先</li><li>解決への道</li></ol>
+        <p class="note">一方的に話さず、相手の顔・表情・反応・感情曲線を見ながら。<b>感情曲線が止まった、閉じた、不安そう、思考停止した</b>……その違和感を察するのが、シンクロセールスのいちばん大事なところ</p></li>
+      <li><h4>④ YESを取る</h4><p class="goal">前半が終わったら、一度区切る</p>
+        <p class="say-q">ここから先は、私が実際に提供しているプログラムの具体的な内容・金額のお話になります。ここまで聞いて、もっと詳しく聞いてみたいと思いますか？</p>
+        <ul class="dots"><li><b>YES</b> → 後半へ</li><li><b>NO</b> → 気持ちよく終了。相手を責めず、前半のどこでシンクロできなかったかを後で振り返る（<a href="#s9">09</a>）</li></ul></li>
+      <li><h4>⑤ 後半：ガイダンス・クロージングパート</h4><p class="goal">プログラム・講座・セッションを改めてご案内</p>
+        <ul class="dots"><li>カリキュラムの細部を長々と説明しない</li><li>軸は「<b>なぜこれが必要なのか</b>」「<b>この人がどんな行き先へ行くためなのか</b>」</li><li>そのうえで、金額を正々堂々と伝える</li></ul>
         <a class="res video" href="https://vimeo.com/1042977065/52c30035a3?share=copy" target="_blank" rel="noopener">安心と希望のクロージング</a></li>
-      <li><span class="time">5分</span><h4>次の段取り</h4><p class="goal">迷わせない</p>
-        <ul class="dots"><li>やりたい方：お申込みフォーム・決済のご案内を送る（<a href="#s6">06</a>のテンプレ）</li><li>考えたい方：お返事の目安を一緒に決める</li><li>今回は見送りの方：感謝で気持ちよく終える</li></ul></li>
+      <li><h4>⑥ 最終確認</h4><p class="goal">押し込まない、プッシュしない</p>
+        <ul class="dots"><li>不安はないか</li><li>聞いておきたいことはないか</li><li>本人はどう感じているか</li><li>自分の想いも誠実に伝える</li></ul>
+        <p class="note">理想は「これ、私のための商品ですね」「やりたいです」が自然に出る状態<br>即決 → 次の手続きへ（<a href="#s6">06</a>）／保留 → <a href="#s6">06</a>のサンキューメールへ</p></li>
     </ol>
-    <p class="note">※各ステップの内容は、ご提案書テンプレートに合わせて今後さらに詳しくしていきます</p>
   </div>
-  <div class="warn"><b>絶対NG：個人情報の取り扱い</b><br>当日の内容、お客さまとのZoomの画面写真、個人が特定できる情報は、<b>自分のストーリーズやSNSに絶対に出さない</b>。「セッションしました」と気軽に載せてしまう方が多いので要注意です</div>
-  <a class="next" href="#s5"><span>次は</span><b>05 不安・反論への答え方 →</b></a>
+  <div class="warn"><b>絶対NG：個人情報の取り扱い</b><br>当日の内容、お客さまとのZoomの画面写真、個人が特定できる情報は、<b>本人の許可なくストーリーズやSNSに出さない</b>。「セッションしました」と気軽に載せてしまう方が多いので要注意です</div>
+  <nav class="pager"><a class="prev" href="#s3">← 03</a><a class="next" href="#s5"><span>次は</span><b>05 不安への対処法 →</b></a></nav>
 </section>
 
-<!-- ================= 05 反論 ================= -->
+<!-- ================= 05 不安への対処法 ================= -->
 <section class="sec" id="s5">
-  <div class="band"><span class="no">05</span><h2>不安・反論への答え方</h2><p>堂々と、誠実さを届ける4つのステップ</p></div>
+  <div class="band"><span class="no">05</span><h2>クロージング時の<br>不安への対処法</h2><p>反論を言い負かすのではなく、不安の正体を一緒に見る</p></div>
   <div class="card">
     <div class="steps4">
       <div><b>① 受け止める</b><br>「不安になるのは自然です」「私もそうでした」</div>
-      <div><b>② 見方を変える</b><br>「不安＝本気の証拠」「出費ではなく未来への投資」</div>
+      <div><b>② 不安の正体を一緒に見る</b><br>お金？ 時間？ 自信？ ご家族？ 何が引っかかっているのかを、責めずに聞く</div>
       <div><b>③ 安心材料を渡す</b><br>「お支払い方法を選べます」「最後まで伴走します」</div>
-      <div><b>④ 未来を見せる</b><br>この選択の先にある景色を、一緒に思い描く</div>
+      <div><b>④ 未来をもう一度一緒に見る</b><br>この選択の先にある景色を、一緒に思い描く</div>
     </div>
   </div>
 
-  <details class="qa"><summary>「お金がなくて…」</summary><div class="body">
-    <p>まずは気持ちを受け止め、「金額そのもの」と「払い方」のどちらが気になっているかを聞く。払い方なら、分割・クレジットカードと<b>総額</b>を説明</p>
-    <p class="warn" style="margin-top:8px">借金（カードローン・消費者金融など）をすすめるのは絶対NG。生活に無理がある方には「今はやめておきましょう」と伝える勇気を</p>
-  </div></details>
   <details class="qa"><summary>「夫（家族）に相談したい」</summary><div class="body">
     <p>家族を大切にする気持ちを受け止め、ご本人のお気持ちを確認。やりたい場合は、家族に伝えるポイント（内容・期間・金額・得られる変化）を一緒に整理して、お返事の目安を決める</p>
+  </div></details>
+  <details class="qa"><summary>「お金が不安…」</summary><div class="body">
+    <p>まずは気持ちを受け止め、「金額そのもの」と「払い方」のどちらが気になっているかを聞く。払い方なら、分割・クレジットカードと<b>総額</b>を説明</p>
+  </div></details>
+  <details class="qa"><summary>「自分にできるか不安…」</summary><div class="body">
+    <p>不安は本気の証拠と受け止め、サポート体制と、同じような状況からスタートした方の例を伝える。<b>「絶対できます」と成果を約束する言い方はしない</b></p>
   </div></details>
   <details class="qa"><summary>「時間がなくて…」</summary><div class="body">
     <p>1日にとれる時間を聞き、録画やスマホでできることなど、現実的な進め方を一緒に考える</p>
   </div></details>
-  <details class="qa"><summary>「私にできるか不安…」</summary><div class="body">
-    <p>不安は本気の証拠と受け止め、サポート体制と、同じような状況からスタートした方の例を伝える。<b>「絶対できます」と成果を約束する言い方はしない</b></p>
+  <details class="qa"><summary>「一度自分でやってみたい」</summary><div class="body">
+    <p>その気持ちを尊重したうえで、自分でやる場合とサポートを受ける場合で、行き先までの道のりや時間がどう違いそうかを一緒に見てみる</p>
   </div></details>
   <details class="qa"><summary>「少し考えたいです」</summary><div class="body">
     <p>どのあたりを考えたいかを聞き、今ここで解消できることには答える。それでも考えたい場合は、お返事の目安を一緒に決める</p>
   </div></details>
 
   <div class="secret-box" style="margin-top:14px">
-    <p><b>そもそも、不安が出てこない関係をつくるのが本質</b></p>
-    <p>事前の1本道で信頼の貯金ができていれば、基本的に不安は出てきません。最後に出てきた不安を解消できる力も大事ですが、本質は<b>不安が出ない発信とお客さまとの関係づくり</b>です</p>
-    <p>それでも、答え方を持っておけば、いざという時にあわてずにすみます</p>
+    <p><b>NOが出たときほど、相手の問題にする前に振り返る</b></p>
+    <p>個別相談まで来てくださった方は、何かしらの興味や可能性を感じて来ています</p>
+    <p>導線／前半の伝え方／行き先／信頼／タイミング／ペルソナとのズレ</p>
+    <p class="small">もちろん、そもそもペルソナではない、タイミングが違う、今は買わない方がいい、というケースもあります。全員がご成約するのが正解、ではありません</p>
   </div>
-  <a class="next" href="#s6"><span>次は</span><b>06 終了後にやること →</b></a>
+  <div class="warn"><b>これだけは守る</b>
+    <ul class="dots"><li>借金（カードローン・消費者金融など）をすすめない</li><li>無理な即決を迫らない</li><li>長時間引き止めない</li></ul>
+  </div>
+  <nav class="pager"><a class="prev" href="#s4">← 04</a><a class="next" href="#s6"><span>次は</span><b>06 終了後のやることリスト →</b></a></nav>
 </section>
 
-<!-- ================= 06 後 ================= -->
+<!-- ================= 06 終了後 ================= -->
 <section class="sec" id="s6">
-  <div class="band"><span class="no">06</span><h2>個別相談 終了後に<br>やることリスト</h2><p>ご成約からサービススタートまで</p></div>
+  <div class="band"><span class="no">06</span><h2>個別相談終了後の<br>やることリスト</h2><p>ご成約からサービス開始まで</p></div>
 
   <div class="card checklist" data-key="s6-1">
     <span class="label gold">STEP 1</span>
-    <h3>相談が終わったら</h3>
+    <h3>相談後 3時間以内</h3>
     <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
-    <label class="ck"><input type="checkbox"><span>当日中にお礼のLINEを送った</span></label>
-    <label class="ck"><input type="checkbox"><span>「やりたい」と言っていただいた方に、お申込み・決済のご案内を送った（下のテンプレ）<small>金額も入っているので、ご提案書はPDFにしてお渡ししてもOK</small></span></label>
-    <label class="ck"><input type="checkbox"><span>考えたい方には一度ご連絡して、お返事を待つ</span></label>
+    <label class="ck"><input type="checkbox"><span>サンキューメール／LINEを送った<small>原則、終了後3時間以内に</small></span></label>
+    <label class="ck"><input type="checkbox"><span>本プログラムへの意思確認と、お返事の目安（原則翌日まで）を入れた</span></label>
     <label class="ck"><input type="checkbox"><span>反論処理ノートに、聞かれたことと気づきをメモした</span></label>
+    <div class="tpl"><h4>サンキューメッセージ</h4>
+<pre>〇〇さん、今日は本当にありがとうございました！
+
+たくさんの方がいる中でご縁をいただけたこと、そしてお忙しい中お時間をつくってくださったこと、心から感謝しています。
+
+今日お話しした中で、〇〇さんの「〇〇」という言葉がとても心に残っています。
+（今日実際に話した内容・感じたこと）
+
+私は、〇〇さんが〇〇な未来へ進むお手伝いを、本気でしたいと思っています。
+
+ご案内した〇〇（プログラム名）について、〇〇さんのお気持ちはいかがでしょうか？
+〇月〇日（〇）までに、お返事をいただけたらうれしいです。
+
+気になることがあれば、どんな小さなことでも聞いてくださいね。</pre>
+      <button class="copy" type="button">コピーする</button></div>
+    <p class="hint-love">このままコピペせず、あなたの言葉、お相手との関係性、今日実際に話した内容を肉付けしてくださいね💌</p>
+    <a class="res doc" href="https://app.notion.com/p/3fee3ca10aec8040ad1aeb5b704ecb72?v=270e3ca10aec8075a633000cea6805ff&amp;source=copy_link" target="_blank" rel="noopener">サンキューレター｜のむらななえ編（Notion）</a>
+  </div>
+
+  <div class="card checklist" data-key="s6-2">
+    <span class="label gold">STEP 2</span>
+    <h3>YESの場合：契約・決済</h3>
+    <ol class="chain" style="margin-bottom:8px"><li>契約書</li><li>決済</li><li>入金確認</li><li>ウェルカム案内</li></ol>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>お申込み・決済のご案内を送った</span></label>
     <div class="tpl"><h4>お申込み・決済のご案内</h4>
 <pre>〇〇さん、お申込みのお気持ち、本当にありがとうございます！
 
@@ -615,13 +799,7 @@ footer a{color:var(--ink-faint)}
 お手続き後、契約書をお送りします。
 一緒にスタートできるのを楽しみにしています✨</pre>
       <button class="copy" type="button">コピーする</button></div>
-  </div>
-
-  <div class="card checklist" data-key="s6-2">
-    <span class="label gold">STEP 2</span>
-    <h3>ご成約〜サービススタート</h3>
-    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
-    <label class="ck"><input type="checkbox"><span><b>① 契約書</b>を送り、締結した（クラウドサインなど）</span></label>
+    <label class="ck"><input type="checkbox"><span><b>契約書</b>を送り、締結した（クラウドサインなど） <a href="#s7">→07</a></span></label>
     <div class="tpl"><h4>契約書送付のご案内</h4>
 <pre>〇〇さん、お申込みありがとうございます！
 
@@ -631,7 +809,7 @@ footer a{color:var(--ink-faint)}
 特に、サービス内容・お支払い・キャンセル規定をご確認くださいね。
 ご不明な点があれば、お手続きの前にお気軽にご質問ください。</pre>
       <button class="copy" type="button">コピーする</button></div>
-    <label class="ck"><input type="checkbox"><span><b>② 入金確認</b>をして、すぐにお知らせした</span></label>
+    <label class="ck"><input type="checkbox"><span><b>入金確認</b>を必ず行い、すぐにお知らせした<small>可能であれば、仕事用口座と生活用口座を分けるのがおすすめ</small></span></label>
     <div class="tpl"><h4>入金確認のお知らせ</h4>
 <pre>〇〇さん、ご入金を確認いたしました！ありがとうございます✨
 
@@ -640,73 +818,82 @@ footer a{color:var(--ink-faint)}
 
 このあと、今後の流れをご案内しますね。</pre>
       <button class="copy" type="button">コピーする</button></div>
-    <label class="ck"><input type="checkbox"><span><b>③ ウェルカム案内</b>を送り、個別LINEを開通した<small>今後の流れをシンプルに伝える</small></span></label>
-    <a class="res doc" href="https://share.evernote.com/note/e2b369e7-90e9-3902-31e7-5ef7bddfb524" target="_blank" rel="noopener">サンキューレター｜のむらななえ編</a>
-    <label class="ck"><input type="checkbox"><span><b>④ 環境づくり</b>：グループ（LINE・Slack・Facebookなど）に招待した</span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑤ カリキュラム・制作物の仕込み</b>をした</span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑥ 事前課題</b>を送った<small>内容によりけり</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑦ 日程調整</b>をした<small>熱が冷めないうちに、初回は早めに</small></span></label>
-    <label class="ck"><input type="checkbox"><span><b>⑧ 開講までの小さな課題</b>で、スタート前のワクワクを高めた</span></label>
+    <label class="ck"><input type="checkbox"><span><b>ウェルカム案内</b>を送った</span></label>
   </div>
-  <a class="next" href="#s7"><span>次は</span><b>07 契約書・法律・お金の注意 →</b></a>
+
+  <div class="card checklist" data-key="s6-3">
+    <span class="label gold">STEP 3</span>
+    <h3>サービス開始準備</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>初回セッションの日程を決めた<small>熱が冷めないうちに、早めに</small></span></label>
+    <label class="ck"><input type="checkbox"><span>LINE・Slackなどの連絡環境を整えた</span></label>
+    <label class="ck"><input type="checkbox"><span>事前課題を送った<small>内容によりけり</small></span></label>
+    <label class="ck"><input type="checkbox"><span>今後の流れをご案内した</span></label>
+    <p class="note">最初から壮大な教材はつくらない。相手と対話しながら、<b>必要になった教材や資料だけ</b>つくっていけば大丈夫です（<a href="#s1">01</a>の「NO！完璧 YES！育てる」の図も見てね）</p>
+    <figure class="fig">
+      <a href="../assets/img07.webp" target="_blank" rel="noopener"><img src="../assets/img07.webp" alt="実際にどうやるの？1対1・少人数・講座グループ。届け方は目的に合わせて選べばいい" loading="lazy"></a>
+      <figcaption>届け方は、目的に合わせて選べばいい</figcaption>
+    </figure>
+  </div>
+  <nav class="pager"><a class="prev" href="#s5">← 05</a><a class="next" href="#s7"><span>次は</span><b>07 契約時の注意点 →</b></a></nav>
 </section>
 
-<!-- ================= 07 契約・法律 ================= -->
+<!-- ================= 07 契約時の注意点 ================= -->
 <section class="sec" id="s7">
-  <div class="band"><span class="no">07</span><h2>契約書・法律・<br>お金の注意</h2><p>トラブルを防いで、安心して届けるために</p></div>
+  <div class="band"><span class="no">07</span><h2>契約時の注意点</h2><p>全部完璧にしてから…じゃなくて大丈夫。ここだけ押さえよう</p></div>
 
   <div class="card">
     <span class="label rose">いちばん大事</span>
-    <h3>これだけは必ず</h3>
+    <h3>これだけは守る</h3>
     <ul class="must">
-      <li><b>契約書は必ず用意する</b>。モニター段階なら軽めでもOK、でも契約書は必要</li>
-      <li><b>特定商取引法に基づく表記</b>を、LPやプロフィールのリンク先に出す</li>
-      <li><b>大げさな表現をしない</b>：「誰でも絶対月収100万」「必ず稼げる」など</li>
-      <li><b>お客さまの声</b>は本人の許可をとる。報酬を払っている場合は「PR」と明記する</li>
-      <li><b>借金をすすめない・即決をせまらない・長時間ひきとめない</b></li>
-      <li><b>個人情報・録画</b>は目的を伝えて同意をとり、SNSに出さない</li>
+      <li><b>誇大表現をしない</b>：「誰でも絶対月収100万」「必ず稼げる」など</li>
+      <li><b>成果を保証しない</b></li>
+      <li><b>お客さまの声や写真</b>は、本人の許可をとる</li>
+      <li><b>借金をすすめない・即決を迫らない・長時間引き止めない</b></li>
+      <li><b>個人情報</b>を丁寧に扱う</li>
     </ul>
   </div>
 
   <div class="card">
-    <h3>契約書に入れる項目</h3>
+    <h3>契約書</h3>
+    <p>ここらぼでは、金額にかかわらず、契約内容を双方で確認できる形に残すことを強くおすすめします。特に継続講座・高額商品は契約書を用意しましょう</p>
+    <h4>基本の項目</h4>
     <table class="tbl">
-      <tr><th>サービス</th><td>名前・内容・期間・回数・サポート方法</td></tr>
-      <tr><th>お金</th><td>金額（税込）・支払い方法・期限・<b>分割の回数と総額</b></td></tr>
-      <tr><th>キャンセル</th><td>開始前は〇日前まで〇％返金／開始後は返金なし など</td></tr>
-      <tr><th>守秘義務</th><td>相談内容を第三者に話さない／教材を勝手に公開しない</td></tr>
-      <tr><th>著作権</th><td>資料・動画の著作権は主催者に。無断コピー・商用利用は禁止</td></tr>
-      <tr><th>免責</th><td>成果を保証しない／心身や事業上の損害は自己責任／医療行為ではない</td></tr>
+      <tr><th>商品</th><td>商品・サービス名／提供内容／期間</td></tr>
+      <tr><th>お金</th><td>金額／支払方法</td></tr>
+      <tr><th>解約</th><td>キャンセル・中途解約</td></tr>
+      <tr><th>守る</th><td>守秘義務／著作権／個人情報</td></tr>
+      <tr><th>その他</th><td>免責／双方で確認すべき事項</td></tr>
     </table>
-    <h4>作り方 3ステップ</h4>
-    <ol style="padding-left:1.3em">
-      <li>「オンライン講座 契約書 雛形」で検索し、テンプレートを入手</li>
-      <li>自分のサービスに合わせて書きかえる（AIも活用）</li>
-      <li>クラウドサイン・freeeサインなどで締結</li>
-    </ol>
-    <p class="note">最初から数万円かけて専門家に頼まなくてもOK。心配な方は、一度だけ弁護士や司法書士にチェックしてもらうと安心です</p>
+    <p class="note">クラウドサインなどの電子契約を使うと、管理がしやすくなります。雛形を自分のサービスに合わせて書きかえ（AIも活用）、心配な方は一度だけ専門家にチェックしてもらうと安心です</p>
   </div>
 
   <div class="card">
     <span class="label">知っておく</span>
-    <h3>クーリング・オフについて</h3>
-    <p>取引の形によっては、クーリング・オフや中途解約のルールが関わることがあります。自分のサービスが当てはまるか不安な時は、消費者庁や消費生活センターの情報、専門家で確認しましょう</p>
+    <h3>特定商取引法に基づく表記</h3>
+    <p>オンラインの販売ページなどから申込みを受ける場合など、必要に応じて「特定商取引法に基づく表記」を準備します</p>
+    <p class="small">価格／支払方法／提供時期／解約・返金条件／事業者情報 などを、わかりやすく表示</p>
+    <p class="small">具体的な適用の判断は、販売方法や契約形態によって異なります。不安な場合は、消費者庁や専門家などで確認しましょう</p>
   </div>
 
   <div class="card">
     <span class="label">知っておく</span>
-    <h3>高額をいただく前に：個人事業主の手続きと税金</h3>
-    <ul class="must opt">
-      <li><b>開業届</b>：事業を始めたら、税務署に「個人事業の開業届」を出す（開業から1ヶ月以内が目安）。e-Taxでも提出できます</li>
-      <li><b>青色申告承認申請書</b>：開業届と一緒に出すのがおすすめ。条件を満たすと最大65万円の控除が受けられます（開業から2ヶ月以内が目安）</li>
-      <li><b>確定申告</b>：一定以上の所得があれば、毎年2月中旬〜3月中旬に申告。会社員の副業なら、給与以外の所得が年20万円を超えると原則必要</li>
-      <li><b>夫の扶養に入っている方</b>：所得が増えると、税金や社会保険の扶養から外れることがあります。早めに確認を</li>
-      <li><b>インボイス制度</b>：売上1,000万円以下なら登録は任意。法人や事業者のお客さまが多い場合は検討を</li>
-      <li><b>帳簿と領収書</b>：売上・経費は日々記録し、領収書は保管。会計ソフト（freee・マネーフォワードなど）が便利です</li>
-    </ul>
-    <p class="small" style="margin-top:10px">※税制は毎年のように変わります。最新情報は国税庁のホームページ、税務署、税理士に必ず確認してください</p>
+    <h3>解約・返金・キャンセル</h3>
+    <p>解約・返金・キャンセル条件は、販売方法や契約形態によって扱いが異なります。自分の商品に合った条件を決め、<b>申込前にわかりやすく提示</b>しましょう</p>
   </div>
-  <a class="next" href="#s8"><span>次は</span><b>08 売上の計算方法 →</b></a>
+
+  <div class="card">
+    <span class="label">知っておく</span>
+    <h3>税務のこと（3段階で）</h3>
+    <div class="tiers">
+      <div><b>まず確認</b><ul class="dots"><li>開業届</li><li>青色申告を使う場合は、青色申告承認申請</li></ul></div>
+      <div><b>売上が動き始めたら整える</b><ul class="dots"><li>帳簿・領収書・経費</li><li>確定申告</li><li>事業用口座</li></ul></div>
+      <div><b>必要になったら確認</b><ul class="dots"><li>インボイス</li><li>扶養</li><li>その他の税務</li></ul></div>
+    </div>
+    <p class="small" style="margin-top:10px">※制度や期限は変わります。最新情報は国税庁・税務署・税理士などに確認してください</p>
+  </div>
+  <p class="small">※この章は一般的な情報で、法的・税務的な個別の助言ではありません</p>
+  <nav class="pager"><a class="prev" href="#s6">← 06</a><a class="next" href="#s8"><span>次は</span><b>08 売上の計算方法 →</b></a></nav>
 </section>
 
 <!-- ================= 08 計算 ================= -->
@@ -734,10 +921,35 @@ footer a{color:var(--ink-faint)}
     <p>月3人を受け入れると、3ヶ月後には<b>9人を同時にサポート</b>しながら、<b>新しいセールス</b>と<b>集客・毎日の発信</b>も続けることになります</p>
     <p>だからこそ欠かせないのが、<span class="em">せるこ・8 サポート内容（フェーズ設計）</span>。何人まで・どこまで・どの方法でサポートするかを先に決め、グループと個別で伝えることを分けて仕組み化しておきましょう</p>
   </div>
+  <nav class="pager"><a class="prev" href="#s7">← 07</a><a class="next" href="#s9"><span>次は</span><b>09 振り返り方 →</b></a></nav>
+</section>
+
+<!-- ================= 09 振り返り ================= -->
+<section class="sec" id="s9">
+  <div class="band"><span class="no">09</span><h2>より成約率を上げるための<br>振り返り方</h2><p>個別相談が終わったら、毎回ここでチェック</p></div>
+  <div class="card checklist" data-key="s9-1">
+    <h3>振り返りチェック</h3>
+    <div class="progress"><div class="progress__bar"><i></i></div><span class="pct"></span></div>
+    <label class="ck"><input type="checkbox"><span>どこで相手の表情が変わった？</span></label>
+    <label class="ck"><input type="checkbox"><span>どこで前のめりになった？</span></label>
+    <label class="ck"><input type="checkbox"><span>どこで止まった／閉じた？</span></label>
+    <label class="ck"><input type="checkbox"><span>行き先は、本人の言葉で見えた？</span></label>
+    <label class="ck"><input type="checkbox"><span>YESを取る前に、不安は残っていなかった？</span></label>
+    <label class="ck"><input type="checkbox"><span>商品説明が長くなっていなかった？</span></label>
+    <label class="ck"><input type="checkbox"><span>金額を堂々と伝えられた？</span></label>
+    <label class="ck"><input type="checkbox"><span>NOの場合、どこがシンクロしなかった？</span></label>
+    <label class="ck"><input type="checkbox"><span>自分が喋りすぎていなかった？</span></label>
+    <label class="ck"><input type="checkbox"><span>次回、1つだけ変えるなら何？</span></label>
+  </div>
+  <div class="loop">
+    <ol class="chain big"><li>相談する</li><li>振り返る</li><li>1個直す</li><li>また届ける</li></ol>
+    <p class="mantra">毎回1つだけ<br>改善すればいい</p>
+  </div>
+  <nav class="pager"><a class="prev" href="#s8">← 08</a><a class="next" href="#toc"><span>おつかれさまでした</span><b>目次へ戻る ↑</b></a></nav>
 </section>
 
 <footer>
-  <p><a href="#" id="reTerms">取り扱い規約を読み返す</a></p>
+  <p><a href="#top" id="toPageTop">ページの先頭へ</a>　<a href="#" id="reTerms">利用規約を読み返す</a></p>
   <p>©️ kokofuru co.,LTD</p>
 </footer>
 </main>
@@ -759,9 +971,9 @@ footer a{color:var(--ink-faint)}
     gate.hidden = true; main.hidden = false; toTop.hidden = false;
     if(scroll) main.scrollIntoView({behavior:'smooth'});
   }
-  if(store.get('ss-agreed')) openMain(false);
+  if(store.get('ss-agreed-v2')) openMain(false);
   ck.addEventListener('change', function(){ btn.disabled = !ck.checked; });
-  btn.addEventListener('click', function(){ store.set('ss-agreed', true); openMain(true); });
+  btn.addEventListener('click', function(){ store.set('ss-agreed-v2', true); openMain(true); });
   document.getElementById('reTerms').addEventListener('click', function(e){
     e.preventDefault(); gate.hidden = false; ck.checked = true; btn.disabled = false;
     gate.scrollIntoView({behavior:'smooth'});
@@ -769,7 +981,7 @@ footer a{color:var(--ink-faint)}
 
   // ----- チェックリスト：進み具合の表示と保存 -----
   document.querySelectorAll('.checklist').forEach(function(list){
-    var key = 'ss-ck-' + list.dataset.key;
+    var key = 'ss2-ck-' + list.dataset.key;
     var boxes = list.querySelectorAll('.ck input');
     var saved = store.get(key) || [];
     var prog = list.querySelector('.progress');
