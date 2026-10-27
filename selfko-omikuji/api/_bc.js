@@ -133,6 +133,12 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(Buffer.from(sha256(a), 'hex'), Buffer.from(sha256(b), 'hex'));
 }
 
+/* 合言葉の比べ方をそろえる：前後の空白・改行を除き、文字の表記ゆれ（濁点の合成など）をそろえる
+   Vercel に値を貼り付けたときに末尾へ空白や改行が入っていても認証できるように */
+function normalizeSecret(text) {
+  return typeof text === 'string' ? text.normalize('NFC').trim() : '';
+}
+
 function randomId(bytes) { return crypto.randomBytes(bytes).toString('base64url'); }
 
 function clientIp(req) {
@@ -150,5 +156,5 @@ async function rateLimit(name, req, max, windowSec) {
 
 module.exports = {
   STORAGE_VAR_PAIRS, storageVarNames, KEY_RECORD, KEY_INDEX,
-  httpError, redis, pipeline, send, readJson, sha256, safeEqual, randomId, clientIp, rateLimit
+  httpError, redis, pipeline, send, readJson, sha256, safeEqual, normalizeSecret, randomId, clientIp, rateLimit
 };

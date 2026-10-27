@@ -1,9 +1,14 @@
 /* =====================================================================
    BUSINESS COMPASS — PRIVATE ANALYSIS（ななえ専用・事業分析カルテ）
    ---------------------------------------------------------------------
-   ・本人の83問の回答は「読むだけ」。書き換えることはありません。
-   ・ななえの分析は consultant_analysis として、本人の回答とは別の
-     保存領域（localStorage: business-compass:analysis:v1）に保存します。
+   ・本人の80問の回答は「読むだけ」。書き換えることはありません。
+   ・開くと、まず送信された回答者の一覧を表示します（analysis.html）。
+     名前を選ぶと、その人のカルテを開きます（analysis.html?r=回答者ID）。
+     回答はそのたびにサーバーから最新を読み込みます。
+   ・ななえの分析は consultant_analysis として、本人の回答とは別に、回答者ごとに
+     この端末へ保存します（localStorage: business-compass:analysis:v1:r:回答者ID）。
+   ・回答ファイル（JSON）から開く以前の使い方は analysis.html?local=1 に残しています
+     （保存先は従来どおり business-compass:analysis:v1）。
    ・AI による診断・採点・提案・自動生成は行いません。
    ===================================================================== */
 
@@ -62,9 +67,22 @@
     });
     return base;
   }
+  /* どの画面を開くか：一覧（既定）／回答者のカルテ（?r=）／回答ファイルから（?local=1） */
+  var params = new URLSearchParams(location.search);
+  var RID = /^[A-Za-z0-9_-]{16,64}$/.test(params.get('r') || '') ? params.get('r') : '';
+  var MODE = RID ? 'cloud' : (params.get('local') ? 'local' : 'list');
+  var DOC_KEY = MODE === 'cloud' ? ANALYSIS_KEY + ':r:' + RID : ANALYSIS_KEY;
+
   function loadDoc() {
     var saved = null;
-    try { saved = JSON.parse(localStorage.getItem(ANALYSIS_KEY)); } catch (e) {}
+    try { saved = JSON.parse(localStorage.getItem(DOC_KEY)); } catch (e) {}
+    /* 以前の版で、この回答者を読み込んで書いていた分析があれば引き継ぐ */
+    if (!saved && MODE === 'cloud') {
+      try {
+        var legacy = JSON.parse(localStorage.getItem(ANALYSIS_KEY));
+        if (legacy && legacy.client_snapshot && legacy.client_snapshot.id === RID) saved = legacy;
+      } catch (e) {}
+    }
     var doc = { version: 1, session_date: '', client_snapshot: null, consultant_analysis: blankAnalysis(), updatedAt: null };
     if (saved && typeof saved === 'object') {
       doc.session_date = saved.session_date || '';
@@ -75,8 +93,7 @@
     if (!doc.session_date) doc.session_date = new Date().toISOString().slice(0, 10);
     return doc;
   }
-  var doc = loadDoc();
-  var A = doc.consultant_analysis;
+  var doc = null, A = null;
 
   var saveTimer = null;
   var statusEl;
@@ -86,14 +103,14 @@
     saveTimer = setTimeout(function () {
       doc.updatedAt = new Date().toISOString();
       try {
-        localStorage.setItem(ANALYSIS_KEY, JSON.stringify(doc));
+        localStorage.setItem(DOC_KEY, JSON.stringify(doc));
         if (statusEl) statusEl.textContent = '保存しました ' + new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
       } catch (e) {
         if (statusEl) statusEl.textContent = '保存できませんでした';
       }
     }, now ? 0 : 400);
   }
-  window.addEventListener('pagehide', function () { if (saveTimer) { clearTimeout(saveTimer); doc.updatedAt = new Date().toISOString(); try { localStorage.setItem(ANALYSIS_KEY, JSON.stringify(doc)); } catch (e) {} } });
+  window.addEventListener('pagehide', function () { if (saveTimer && doc) { clearTimeout(saveTimer); doc.updatedAt = new Date().toISOString(); try { localStorage.setItem(DOC_KEY, JSON.stringify(doc)); } catch (e) {} } });
 
   function getPath(obj, path) {
     return path.split('.').reduce(function (o, k) { return o == null ? undefined : o[k]; }, obj);
@@ -108,12 +125,13 @@
   /* ---------- 本人の回答（読むだけ） ---------- */
   function clientAnswers() {
     if (doc.client_snapshot && doc.client_snapshot.raw) return doc.client_snapshot.raw;
+    if (MODE === 'cloud') return {};
     try {
       var s = JSON.parse(localStorage.getItem(CLIENT_KEY));
       return (s && s.answers) || {};
     } catch (e) { return {}; }
   }
-  var answers = clientAnswers();
+  var answers = {};
   function get(k) { return answers[k]; }
 
   function summary(id) {
@@ -165,10 +183,10 @@
   }
 
   /* SOURCE｜本人の回答を見る（開閉式） */
-  function source(groups, title) {
+  function source(groups, title, open) {
     var count = 0;
     groups.forEach(function (g) { g.ids.forEach(function (id) { if (Q[id] && F.get(Q[id].type).isAnswered(Q[id], get)) count += 1; }); });
-    return el('details', { class: 'src' },
+    return el('details', { class: 'src', open: !!open },
       el('summary', { class: 'src__summary' },
         el('span', { class: 'src__label', text: 'SOURCE' }),
         el('span', { class: 'src__title', text: title || '本人の回答を見る' }),
@@ -328,24 +346,25 @@
     return d.getFullYear() + '/' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
-  /* ---------- 送信された回答（サーバー）：合言葉 → 回答者一覧 → 読み込み／削除 ---------- */
-  var PASS_KEY = 'business-compass:admin-pass'; /* このタブを閉じるまでだけ覚える（sessionStorage） */
-  function getPass() { try { return sessionStorage.getItem(PASS_KEY) || ''; } catch (e) { return ''; } }
-  function setPass(v) { try { if (v) sessionStorage.setItem(PASS_KEY, v); else sessionStorage.removeItem(PASS_KEY); } catch (e) {} }
+  /* ---------- 送信された回答（サーバー）：ログイン → 回答者一覧 → 名前を選んでカルテへ ---------- */
+  /* ログインはサーバーが発行する Cookie（HttpOnly・30日）で保ちます。合言葉はこの端末に保存しません */
+  try { sessionStorage.removeItem('business-compass:admin-pass'); } catch (e) {} /* 以前の版が覚えていた合言葉を消す */
   function adminApi(method, query, body) {
-    var headers = { 'X-BC-Passphrase': getPass() };
+    var headers = {};
     if (body) headers['Content-Type'] = 'application/json';
-    return fetch('/api/bc-admin' + (query || ''), { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store' })
+    return fetch('/api/bc-admin' + (query || ''), { method: method, headers: headers, body: body ? JSON.stringify(body) : undefined, cache: 'no-store', credentials: 'same-origin' })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { status: r.status, body: j }; }); },
         function () { return { status: 0, body: {} }; });
   }
   function adminError(r) {
-    if (r.status === 401) return '合言葉が違います';
+    if (r.status === 401) return r.body && r.body.error === 'login' ? 'もう一度ログインしてください' : '合言葉が違います';
     if (r.status === 429) return '合言葉を何度も間違えたため　しばらく受け付けません　15分ほど待ってからお試しください';
     if (r.status === 503) return '保存先の設定が見つかりません　Vercel の環境変数を確認してください';
+    if (r.status === 404) return 'この回答者は見つかりませんでした（削除された可能性があります）';
     if (r.status === 0) return '通信できませんでした　通信状況をご確認ください';
     return 'うまく読み込めませんでした（' + r.status + '）';
   }
+  function karteUrl(id) { return 'analysis.html?r=' + encodeURIComponent(id); }
 
   function cloudPanel() {
     var box = el('div', { class: 'an-cloud' });
@@ -355,17 +374,29 @@
       box.innerHTML = '';
       var id = 'an-pass';
       var input = el('input', { type: 'password', id: id, class: 'an-cloud__pass', autocomplete: 'current-password', placeholder: '合言葉' });
+      var go = el('button', { type: 'submit', class: 'btn-line an-cloud__go' }, 'ログインして回答者一覧を表示');
       var form = el('form', { class: 'an-cloud__login', onsubmit: function (e) {
         e.preventDefault();
-        if (!input.value) return;
-        setPass(input.value);
-        drawList();
+        if (!input.value || go.disabled) return;
+        go.disabled = true;
+        msg.textContent = '確認しています…';
+        adminApi('POST', '', { action: 'login', passphrase: input.value }).then(function (r) {
+          go.disabled = false;
+          if (r.status !== 200) { msg.textContent = adminError(r); input.select(); return; }
+          drawList();
+        });
       } },
         el('label', { class: 'an-cloud__label', for: id }, el('span', { class: 'an-srcbar__en', text: 'RESPONDENTS' }), '送信された回答を見るには　合言葉を入力してください'),
-        el('div', { class: 'an-cloud__row' }, input, el('button', { type: 'submit', class: 'btn-line an-cloud__go' }, '回答者一覧を表示')));
+        el('div', { class: 'an-cloud__row' }, input, go),
+        el('p', { class: 'an-cloud__note', text: 'このブラウザでは30日間ログインしたままになります' }));
       box.appendChild(form);
       msg.textContent = text || '';
       box.appendChild(msg);
+      requestAnimationFrame(function () { input.focus(); });
+    }
+
+    function logout() {
+      adminApi('POST', '', { action: 'logout' }).then(function () { drawLogin('ログアウトしました'); });
     }
 
     function drawList() {
@@ -373,45 +404,35 @@
       msg.textContent = '読み込み中…';
       box.appendChild(msg);
       adminApi('GET', '?action=list').then(function (r) {
-        if (r.status !== 200) { if (r.status === 401) setPass(''); drawLogin(adminError(r)); return; }
+        if (r.status === 401) { drawLogin(r.body && r.body.error === 'login' ? '' : adminError(r)); return; }
+        if (r.status !== 200) { msg.textContent = adminError(r); return; }
         var list = r.body.respondents || [];
         box.innerHTML = '';
-        var current = doc.client_snapshot && doc.client_snapshot.source === 'cloud' ? doc.client_snapshot.id : null;
         var head = el('div', { class: 'an-cloud__head' },
           el('p', { class: 'an-cloud__label' }, el('span', { class: 'an-srcbar__en', text: 'RESPONDENTS' }), '回答者一覧　' + list.length + '人'),
           el('div', { class: 'an-cloud__tools' },
             el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: drawList }, '最新にする'),
-            el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { setPass(''); drawLogin('合言葉を消しました'); } }, '閉じる')));
+            el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: logout }, 'ログアウト')));
         box.appendChild(head);
-        if (!list.length) { box.appendChild(el('p', { class: 'an-cloud__empty', text: 'まだ送信された回答はありません' })); return; }
+        if (!list.length) { box.appendChild(el('p', { class: 'an-cloud__empty', text: 'まだ送信された回答はありません' })); box.appendChild(msg); msg.textContent = ''; return; }
+        box.appendChild(el('p', { class: 'an-cloud__hint', text: '名前を選ぶと　その人の80問の回答とカルテを開きます' }));
         var table = el('table', { class: 'an-cloud__table' },
           el('thead', {}, el('tr', {}, ['回答者', '状況', '送信日時', '最終更新', ''].map(function (h) { return el('th', { scope: 'col', text: h }); }))),
           el('tbody', {}, list.map(function (p) {
-            var isCur = p.id === current;
-            return el('tr', { class: isCur ? 'is-current' : '' },
-              el('td', { class: 'an-cloud__name', 'data-label': '回答者' }, p.name || '（名前未入力）', isCur ? el('span', { class: 'an-cloud__now', text: '表示中' }) : null),
+            return el('tr', {},
+              el('td', { class: 'an-cloud__name', 'data-label': '回答者' },
+                el('a', { class: 'an-cloud__open', href: karteUrl(p.id) }, p.name || '（名前未入力）')),
               el('td', { 'data-label': '状況' }, el('span', { class: 'an-cloud__badge is-' + p.status, text: p.status === 'submitted' ? '送信済み' : '回答中' }),
                 el('span', { class: 'an-cloud__count', text: p.answered + ' / ' + (p.total || 80) })),
               el('td', { 'data-label': '送信日時', text: fmt(p.submittedAt) }),
               el('td', { 'data-label': '最終更新', text: fmt(p.updatedAt) }),
               el('td', { class: 'an-cloud__actions' },
-                el('button', { type: 'button', class: 'btn-line an-cloud__load', onclick: function () { loadOne(p); } }, '読み込む'),
+                el('a', { class: 'btn-line an-cloud__load', href: karteUrl(p.id) }, '開く'),
                 el('button', { type: 'button', class: 'text-btn text-btn--light an-cloud__del', onclick: function () { removeOne(p); } }, '削除')));
           })));
         box.appendChild(table);
         box.appendChild(msg);
         msg.textContent = '';
-      });
-    }
-
-    function loadOne(p) {
-      msg.textContent = (p.name || '回答者') + ' さんの回答を読み込んでいます…';
-      adminApi('GET', '?action=get&id=' + encodeURIComponent(p.id)).then(function (r) {
-        if (r.status !== 200) { msg.textContent = adminError(r); return; }
-        doc.client_snapshot = { raw: r.body.answers || {}, source: 'cloud', id: r.body.id, name: r.body.name,
-          file: (r.body.name || '回答者') + '（送信された回答）', exportedAt: r.body.updatedAt, submittedAt: r.body.submittedAt, loadedAt: new Date().toISOString() };
-        save(true);
-        setTimeout(function () { location.reload(); }, 50);
       });
     }
 
@@ -426,8 +447,20 @@
       });
     }
 
-    if (getPass()) drawList(); else drawLogin();
+    drawList();
     return box;
+  }
+
+  /* 回答者のカルテの上部：一覧へ戻る・誰の回答か */
+  function respondentBar() {
+    var snap = doc.client_snapshot || {};
+    return el('div', { class: 'an-srcbar' },
+      el('p', { class: 'an-srcbar__label' }, el('span', { class: 'an-srcbar__en', text: 'CLIENT DATA' }),
+        '送信された回答：' + (snap.name || '名前未入力') +
+        (snap.submittedAt ? '（送信 ' + fmt(snap.submittedAt) + '）' : '') +
+        (snap.exportedAt ? '（最終更新 ' + fmt(snap.exportedAt) + '）' : '')),
+      el('div', { class: 'an-srcbar__actions' },
+        el('a', { class: 'text-btn text-btn--light an-back', href: 'analysis.html' }, '← 回答者一覧へ')));
   }
 
   /* 80問すべての回答（章ごと） */
@@ -436,7 +469,7 @@
       var ids = [];
       ch.questions.forEach(function (st) { if (!st.interlude) (st.items || [st]).forEach(function (q) { ids.push(q.id); }); });
       return { label: ch.no + ' ' + ch.en + '　' + ch.ja, ids: ids };
-    }), '80問すべての回答を見る');
+    }), '80問すべての回答を見る', MODE === 'cloud');
   }
 
   function voice(label, en, id, strong) {
@@ -456,6 +489,8 @@
     statusEl = el('p', { class: 'an-nav__status', 'aria-live': 'polite', text: doc.updatedAt ? '保存済み' : '' });
 
     var header = el('header', { class: 'an-head' },
+      el('div', { class: 'an-head__inner an-head__top' },
+        el('a', { class: 'text-btn text-btn--light an-back', href: 'analysis.html' }, '← 回答者一覧へ')),
       el('div', { class: 'an-head__inner' },
         el('div', { class: 'an-head__brand' },
           el('p', { class: 'an-head__only', text: 'FOR CONSULTANT USE ONLY' }),
@@ -465,7 +500,7 @@
       el('div', { class: 'an-head__inner an-head__voices' },
         voice('本人が今日整理したいこと', 'CLIENT’S AGENDA', 'session_goal.today', false),
         voice('本人が感じている最大の急所', 'SELF-PERCEIVED', 'self_perceived_bottleneck.key_one', true)),
-      el('div', { class: 'an-head__inner' }, sourceBar(), cloudPanel()));
+      el('div', { class: 'an-head__inner' }, MODE === 'cloud' ? respondentBar() : sourceBar()));
 
     var nav = el('nav', { class: 'an-nav', 'aria-label': '裏カルテの目次' },
       el('div', { class: 'an-nav__inner' },
@@ -657,6 +692,42 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
 
-  build();
-  window.BusinessCompassAnalysis = { doc: doc, save: function () { save(true); } };
+  /* 最初の画面：回答者一覧だけを表示する */
+  function listPage() {
+    root.appendChild(el('header', { class: 'an-head an-head--list' },
+      el('div', { class: 'an-head__inner' },
+        el('div', { class: 'an-head__brand' },
+          el('p', { class: 'an-head__only', text: 'FOR CONSULTANT USE ONLY' }),
+          el('h1', { class: 'an-head__title' }, el('span', { text: 'BUSINESS COMPASS' }), el('span', { class: 'an-head__sub', text: 'PRIVATE ANALYSIS' })),
+          el('p', { class: 'an-head__ja', text: 'ななえ専用・事業分析カルテ' }))),
+      el('div', { class: 'an-head__inner' }, cloudPanel()),
+      el('div', { class: 'an-head__inner an-list-foot' },
+        el('a', { class: 'text-btn text-btn--light', href: 'analysis.html?local=1' }, '回答ファイル（JSON）から開く'))));
+  }
+
+  /* 回答者のカルテ：サーバーから最新の回答を読み込んでから組み立てる */
+  function cloudPage() {
+    var wait = el('div', { class: 'an-head an-head--list' },
+      el('div', { class: 'an-head__inner' },
+        el('p', { class: 'an-cloud__msg', role: 'status', 'aria-live': 'polite', text: '回答を読み込んでいます…' }),
+        el('a', { class: 'text-btn text-btn--light an-back', href: 'analysis.html' }, '← 回答者一覧へ')));
+    root.appendChild(wait);
+    adminApi('GET', '?action=get&id=' + encodeURIComponent(RID)).then(function (r) {
+      if (r.status === 401) { location.replace('analysis.html'); return; }
+      if (r.status !== 200) { wait.querySelector('.an-cloud__msg').textContent = adminError(r); return; }
+      doc = loadDoc(); A = doc.consultant_analysis;
+      doc.client_snapshot = { raw: r.body.answers || {}, source: 'cloud', id: r.body.id, name: r.body.name,
+        file: (r.body.name || '回答者') + '（送信された回答）', exportedAt: r.body.updatedAt, submittedAt: r.body.submittedAt, loadedAt: new Date().toISOString() };
+      answers = doc.client_snapshot.raw;
+      save(true);
+      root.innerHTML = '';
+      document.title = (r.body.name || '回答者') + ' — PRIVATE ANALYSIS';
+      build();
+    });
+  }
+
+  if (MODE === 'list') listPage();
+  else if (MODE === 'cloud') cloudPage();
+  else { doc = loadDoc(); A = doc.consultant_analysis; answers = clientAnswers(); build(); }
+  window.BusinessCompassAnalysis = { get doc() { return doc; }, save: function () { if (doc) save(true); } };
 })();
