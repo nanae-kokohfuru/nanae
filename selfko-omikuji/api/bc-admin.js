@@ -6,7 +6,8 @@
      合言葉そのものはブラウザに保存しません。
    ・合言葉を変更すると、それまでのログインはすべて無効になります（Cookie の照合に合言葉を使うため）。
    ・以前の画面との互換のため、X-BC-Passphrase ヘッダー（encodeURIComponent 済み）でも認証できます。
-   ・合言葉は前後の空白・改行を除き、文字の表記をそろえてから比べます（日本語の合言葉も使えます）。
+   ・合言葉は、全角／半角・大文字／小文字・空白・貼り付け時の余分な文字の違いをそろえてから比べます
+     （_bc.js の normalizeSecret）。日本語の合言葉も使えます。
    ・合言葉を何度も間違えると、しばらく受け付けなくなります。
    POST { action: 'login', passphrase }   ログイン
    POST { action: 'logout' }              ログアウト
@@ -33,12 +34,13 @@ function summary(r) {
 }
 
 /* 合言葉の照合（そのまま／encodeURIComponent 済み のどちらで届いても比べられるように） */
-function passMatches(value, passphrase) {
+function passMatches(value, secrets) {
   const raw = typeof value === 'string' ? value : '';
   if (!raw) return false;
   let decoded = raw;
   try { decoded = decodeURIComponent(raw); } catch (e) { /* そのままの値 */ }
-  return [raw, decoded].map(bc.normalizeSecret).some((v) => bc.safeEqual(v, passphrase));
+  const given = [raw, decoded].map(bc.normalizeSecret).filter(Boolean);
+  return given.some((v) => secrets.some((s) => bc.safeEqual(v, s)));
 }
 
 function readCookie(req, name) {
@@ -54,8 +56,10 @@ function sessionKey(token, passphrase) { return KEY_SESSION + bc.sha256(token + 
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET' && req.method !== 'POST') { res.setHeader('Allow', 'GET, POST'); return bc.send(res, 405, { error: 'method_not_allowed' }); }
   try {
-    const passphrase = bc.normalizeSecret(process.env.BC_ADMIN_PASSPHRASE);
-    if (!passphrase) return bc.send(res, 503, { error: 'not_configured' });
+    const secrets = bc.adminSecrets();
+    if (!secrets.length) return bc.send(res, 503, { error: 'not_configured' });
+    /* ログインの照合に使う値：合言葉を変えると、それまでのログインは使えなくなる */
+    const passphrase = secrets.join('\n');
 
     const url = new URL(req.url, 'http://local');
     const body = req.method === 'POST' ? await bc.readJson(req, 4096) : {};
@@ -77,7 +81,7 @@ module.exports = async function handler(req, res) {
 
     if (action === 'login' && req.method === 'POST') {
       if (await locked()) return bc.send(res, 429, { error: 'locked' });
-      if (!passMatches(body.passphrase, passphrase)) { await failed(); return bc.send(res, 401, { error: 'passphrase' }); }
+      if (!passMatches(body.passphrase, secrets)) { await failed(); return bc.send(res, 401, { error: 'passphrase' }); }
       const fresh = bc.randomId(32);
       await bc.pipeline([['SET', sessionKey(fresh, passphrase), JSON.stringify({ createdAt: new Date().toISOString() }), 'EX', SESSION_SEC], ['DEL', failKey]]);
       setCookie(res, fresh, SESSION_SEC);
@@ -90,7 +94,7 @@ module.exports = async function handler(req, res) {
       const header = String(req.headers['x-bc-passphrase'] || '');
       if (!header) return bc.send(res, 401, { error: 'login' });
       if (await locked()) return bc.send(res, 429, { error: 'locked' });
-      if (!passMatches(header, passphrase)) { await failed(); return bc.send(res, 401, { error: 'passphrase' }); }
+      if (!passMatches(header, secrets)) { await failed(); return bc.send(res, 401, { error: 'passphrase' }); }
       authed = true;
     }
 
@@ -98,7 +102,8 @@ module.exports = async function handler(req, res) {
 
     if (action === 'status') {
       const pong = await bc.redis(['PING']);
-      return bc.send(res, 200, { ok: true, storage: pong === 'PONG', storageVars: bc.storageVarNames(), invite: !!process.env.BC_INVITE_CODE });
+      return bc.send(res, 200, { ok: true, storage: pong === 'PONG', storageVars: bc.storageVarNames(), invite: !!process.env.BC_INVITE_CODE,
+        adminVars: Object.keys(process.env).filter((k) => k === 'BC_ADMIN_PASSPHRASE' || /^BC_.*PASS/i.test(k)).sort() });
     }
 
     if (action === 'list' && req.method === 'GET') {
