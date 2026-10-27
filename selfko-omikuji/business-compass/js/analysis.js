@@ -373,7 +373,16 @@
     function drawLogin(text) {
       box.innerHTML = '';
       var id = 'an-pass';
-      var input = el('input', { type: 'password', id: id, class: 'an-cloud__pass', autocomplete: 'current-password', placeholder: '合言葉' });
+      var input = el('input', { type: 'password', id: id, class: 'an-cloud__pass', autocomplete: 'current-password', placeholder: '合言葉',
+        autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false' });
+      /* 入力した文字を確かめられるように */
+      var peek = el('button', { type: 'button', class: 'text-btn text-btn--light an-cloud__peek', 'aria-pressed': 'false', onclick: function () {
+        var show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        peek.textContent = show ? '隠す' : '表示';
+        peek.setAttribute('aria-pressed', show ? 'true' : 'false');
+        input.focus();
+      } }, '表示');
       var go = el('button', { type: 'submit', class: 'btn-line an-cloud__go' }, 'ログインして回答者一覧を表示');
       var form = el('form', { class: 'an-cloud__login', onsubmit: function (e) {
         e.preventDefault();
@@ -387,7 +396,7 @@
         });
       } },
         el('label', { class: 'an-cloud__label', for: id }, el('span', { class: 'an-srcbar__en', text: 'RESPONDENTS' }), '送信された回答を見るには　合言葉を入力してください'),
-        el('div', { class: 'an-cloud__row' }, input, go),
+        el('div', { class: 'an-cloud__row' }, input, peek, go),
         el('p', { class: 'an-cloud__note', text: 'このブラウザでは30日間ログインしたままになります' }));
       box.appendChild(form);
       msg.textContent = text || '';

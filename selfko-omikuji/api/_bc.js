@@ -133,10 +133,24 @@ function safeEqual(a, b) {
   return crypto.timingSafeEqual(Buffer.from(sha256(a), 'hex'), Buffer.from(sha256(b), 'hex'));
 }
 
-/* 合言葉の比べ方をそろえる：前後の空白・改行を除き、文字の表記ゆれ（濁点の合成など）をそろえる
-   Vercel に値を貼り付けたときに末尾へ空白や改行が入っていても認証できるように */
+/* 合言葉の比べ方をそろえる（入力方法の違いで失敗しないように）
+   ・全角／半角の違い（日本語入力のまま設定した「ｓａｋｕｒａ」と「sakura」）→ NFKC で同じにする
+   ・大文字／小文字の違い（スマホで先頭が自動で大文字になった）→ 小文字にそろえる
+   ・空白・改行（前後・途中、全角スペースも）→ 取り除く
+   ・値ごと貼り付けた「BC_ADMIN_PASSPHRASE=…」や、前後の引用符 → 取り除く */
 function normalizeSecret(text) {
-  return typeof text === 'string' ? text.normalize('NFC').trim() : '';
+  if (typeof text !== 'string') return '';
+  let v = text.normalize('NFKC').trim();
+  v = v.replace(/^[A-Za-z0-9_]*PASS[A-Za-z0-9_]*\s*=\s*/i, '');
+  v = v.replace(/^["'`“”‘’「『]+|["'`“”‘’」』]+$/g, '');
+  return v.replace(/\s+/g, '').toLowerCase();
+}
+
+/* 裏カルテの合言葉が入っている環境変数（値ではなく名前で探す）。
+   基本は BC_ADMIN_PASSPHRASE。名前を少し変えて作り直した場合（BC_ADMIN_PASSWORD など）にも対応する */
+function adminSecrets() {
+  const names = Object.keys(process.env).filter((k) => k === 'BC_ADMIN_PASSPHRASE' || /^BC_.*PASS/i.test(k)).sort();
+  return names.map((k) => normalizeSecret(process.env[k])).filter(Boolean);
 }
 
 function randomId(bytes) { return crypto.randomBytes(bytes).toString('base64url'); }
@@ -156,5 +170,5 @@ async function rateLimit(name, req, max, windowSec) {
 
 module.exports = {
   STORAGE_VAR_PAIRS, storageVarNames, KEY_RECORD, KEY_INDEX,
-  httpError, redis, pipeline, send, readJson, sha256, safeEqual, normalizeSecret, randomId, clientIp, rateLimit
+  httpError, redis, pipeline, send, readJson, sha256, safeEqual, normalizeSecret, adminSecrets, randomId, clientIp, rateLimit
 };
