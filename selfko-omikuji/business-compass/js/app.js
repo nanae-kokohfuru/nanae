@@ -184,7 +184,8 @@
       el('div', { class: 'cover__actions' },
         goldButton(c.cta, function () { go(S.state.consent.required ? (hasProgress ? resumeTarget() : 'index') : 'consent'); }),
         hasProgress ? el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: function () { go('index'); } }, '目次を見る') : null
-      )
+      ),
+      remoteOn() ? null : el('p', { class: 'cover__note' }, lines(C.notice.noInvite))
     ));
     s.appendChild(copyright('copyright--cover'));
     return s;
@@ -572,6 +573,7 @@
         invited ? sendCta(c) : keepPanel(c)),
       el('div', { class: 'fin__links' },
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'),
+        invited ? el('button', { type: 'button', class: 'text-btn fin__copy', onclick: downloadJSON }, C.send.keepCopy) : null,
         invited ? null : el('button', { type: 'button', class: 'text-btn text-btn--quiet', onclick: confirmReset }, 'すべて消去して最初から')),
       copyright()));
     return s;
@@ -1111,8 +1113,29 @@
   }
   function doReset() { S.reset(); current = null; go('cover', { instant: true }); }
 
+  /* ---------- 画面上部のお知らせ：端末に保存できない／のむら ななえへの途中保存に失敗した ---------- */
+  var notice = el('div', { class: 'bc-notice', role: 'status', 'aria-live': 'polite', hidden: true });
+  stage.parentNode.insertBefore(notice, stage);
+  var remoteProblem = null;   /* null | 'invite' | 'network' */
+  function drawNotice() {
+    var msgs = [];
+    if (!S.storageOk) msgs.push(['storage', C.notice.storage]);
+    if (remoteProblem) msgs.push([remoteProblem, C.notice[remoteProblem]]);
+    if (!msgs.length && remoteOn() && window.BCRemote.isTest()) msgs.push(['test', C.notice.test]);
+    notice.innerHTML = '';
+    msgs.forEach(function (m) { notice.appendChild(el('p', { class: 'bc-notice__item is-' + m[0] }, lines(m[1]))); });
+    notice.hidden = !msgs.length;
+  }
+  window.addEventListener('bc:storage', drawNotice);
+  if (window.BCRemote) window.BCRemote.onStatus(function (kind, r) {
+    if (r.ok) remoteProblem = null;
+    else if (kind === 'autosave') remoteProblem = r.reason === 'invite' ? 'invite' : 'network';
+    drawNotice();
+  });
+
   /* ---------- 起動 ---------- */
   S.init();
+  drawNotice();
   var dlg = document.getElementById('resetDialog');
   if (dlg) {
     dlg.addEventListener('close', function () { if (dlg.returnValue === 'reset') doReset(); });

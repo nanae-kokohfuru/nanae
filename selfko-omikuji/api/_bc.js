@@ -146,6 +146,10 @@ function normalizeSecret(text) {
   return v.replace(/\s+/g, '').toLowerCase();
 }
 
+/* 招待コードの比べ方：合言葉と同じそろえ方に加えて「+」を除く
+   （URL に招待コードをそのまま入れると「+」が空白として読まれるため） */
+function normalizeInvite(text) { return normalizeSecret(text).replace(/\+/g, ''); }
+
 /* 裏カルテの合言葉が入っている環境変数（値ではなく名前で探す）。
    基本は BC_ADMIN_PASSPHRASE。名前を少し変えて作り直した場合（BC_ADMIN_PASSWORD など）にも対応する */
 function adminSecrets() {
@@ -170,5 +174,5 @@ async function rateLimit(name, req, max, windowSec) {
 
 module.exports = {
   STORAGE_VAR_PAIRS, storageVarNames, KEY_RECORD, KEY_INDEX,
-  httpError, redis, pipeline, send, readJson, sha256, safeEqual, normalizeSecret, adminSecrets, randomId, clientIp, rateLimit
+  httpError, redis, pipeline, send, readJson, sha256, safeEqual, normalizeSecret, normalizeInvite, adminSecrets, randomId, clientIp, rateLimit
 };

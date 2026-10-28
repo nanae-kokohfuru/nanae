@@ -8,6 +8,8 @@
    ・サーバーとのやりとりは /api/bc-save だけです（保存専用・読み出しなし）。
    ・回答者ID とトークンは、この端末に保存します。同じ端末からの保存は
      同じ回答者として上書きされるので、回答者が増えることはありません。
+   ・途中保存の結果（成功・失敗）は onStatus で画面に知らせます。失敗したまま黙って進まないように。
+   ・テスト用リンク（?invite=…&test=1）から開いた回答は、裏カルテで「テスト」と表示されます。
    ===================================================================== */
 
 (function () {
@@ -28,19 +30,24 @@
     var invite = url.searchParams.get('invite');
     if (invite) {
       state.invite = invite.slice(0, 200);
+      if (url.searchParams.get('test') === '1') state.test = true;
       persist();
       url.searchParams.delete('invite');
+      url.searchParams.delete('test');
       window.history.replaceState(null, '', url.pathname + url.search + url.hash);
     }
   } catch (e) {}
 
   var timer = null;
   var inflight = null;
+  var listeners = [];
+  function emit(kind, r) { listeners.forEach(function (fn) { try { fn(kind, r); } catch (e) {} }); }
 
   function enabled() { return !!state.invite; }
 
   function post(kind, payload) {
     var body = Object.assign({}, payload, { kind: kind, invite: state.invite, id: state.id || null, token: state.token || null });
+    if (state.test) body.test = true;
     return fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -75,7 +82,7 @@
 
   /* 同時に2つ送らない（回答者が二重に作られないように） */
   function queue(kind, getPayload) {
-    var run = function () { return attempt(kind, getPayload()); };
+    var run = function () { return attempt(kind, getPayload()).then(function (r) { emit(kind, r); return r; }); };
     var p = (inflight || Promise.resolve()).then(run, run);
     inflight = p.then(function (x) { if (inflight === p) inflight = null; return x; });
     return p;
@@ -83,6 +90,9 @@
 
   window.BCRemote = {
     enabled: enabled,
+    isTest: function () { return !!state.test; },
+    /* 保存の結果を受け取る：fn(kind, { ok, reason }) */
+    onStatus: function (fn) { listeners.push(fn); },
     submittedAt: function () { return state.submittedAt || null; },
     /* 途中保存：画面を進めたあと、少し待ってから静かに送る（失敗しても何も表示しない） */
     schedule: function (getPayload) {

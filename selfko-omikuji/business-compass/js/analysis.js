@@ -423,6 +423,7 @@
             el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: drawList }, '最新にする'),
             el('button', { type: 'button', class: 'text-btn text-btn--light', onclick: logout }, 'ログアウト')));
         box.appendChild(head);
+        box.appendChild(invitePanel());
         if (!list.length) { box.appendChild(el('p', { class: 'an-cloud__empty', text: 'まだ送信された回答はありません' })); box.appendChild(msg); msg.textContent = ''; return; }
         box.appendChild(el('p', { class: 'an-cloud__hint', text: '名前を選ぶと　その人の80問の回答とカルテを開きます' }));
         var table = el('table', { class: 'an-cloud__table' },
@@ -430,7 +431,8 @@
           el('tbody', {}, list.map(function (p) {
             return el('tr', {},
               el('td', { class: 'an-cloud__name', 'data-label': '回答者' },
-                el('a', { class: 'an-cloud__open', href: karteUrl(p.id) }, p.name || '（名前未入力）')),
+                el('a', { class: 'an-cloud__open', href: karteUrl(p.id) }, p.name || '（名前未入力）'),
+                p.test ? el('span', { class: 'an-cloud__test', text: 'テスト' }) : null),
               el('td', { 'data-label': '状況' }, el('span', { class: 'an-cloud__badge is-' + p.status, text: p.status === 'submitted' ? '送信済み' : '回答中' }),
                 el('span', { class: 'an-cloud__count', text: p.answered + ' / ' + (p.total || 80) })),
               el('td', { 'data-label': '送信日時', text: fmt(p.submittedAt) }),
@@ -457,6 +459,43 @@
     }
 
     drawList();
+    return box;
+  }
+
+  /* 新しい回答者に送る招待リンク（ログイン済みのときだけ。招待コードはサーバーから受け取る） */
+  function invitePanel() {
+    var code = null;
+    var field = el('input', { type: 'text', class: 'an-invite__url', readonly: true, 'aria-label': '招待リンク', hidden: true });
+    var note = el('p', { class: 'an-invite__msg', role: 'status', 'aria-live': 'polite' });
+    function link(test) { return location.origin + '/business-compass/?invite=' + encodeURIComponent(code) + (test ? '&test=1' : ''); }
+    function copy(test) {
+      if (!code) { note.textContent = '招待リンクを準備しています　少し待ってからもう一度押してください'; return; }
+      var url = link(test);
+      field.value = url; field.hidden = false;
+      var done = function () {
+        note.textContent = test
+          ? 'テスト用リンクをコピーしました　ご自分で開いて送信すると　この一覧に「テスト」として届きます（確認後は削除してください）'
+          : '招待リンクをコピーしました　LINE やメールに貼り付けて送ってください';
+      };
+      var fallback = function () {
+        field.focus(); field.select();
+        try { if (document.execCommand('copy')) { done(); return; } } catch (e) {}
+        note.textContent = '自動でコピーできませんでした　上のリンクを長押し（またはクリック）して選択し　コピーしてください';
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, fallback);
+      else fallback();
+    }
+    var box = el('div', { class: 'an-invite' },
+      el('p', { class: 'an-invite__title' }, el('span', { class: 'an-srcbar__en', text: 'INVITE' }), '新しい回答者に送る招待リンク'),
+      el('p', { class: 'an-invite__lead', text: '必ずこのリンクを送ってください　招待コードのない通常のURLから回答した場合は　ここに届きません' }),
+      el('div', { class: 'an-invite__actions' },
+        el('button', { type: 'button', class: 'btn-line an-invite__copy', onclick: function () { copy(false); } }, '招待リンクをコピー'),
+        el('button', { type: 'button', class: 'text-btn text-btn--light an-invite__test', onclick: function () { copy(true); } }, 'テスト用リンクをコピー')),
+      field, note);
+    adminApi('GET', '?action=invite').then(function (r) {
+      if (r.status === 200 && r.body.code) code = r.body.code;
+      else note.textContent = r.status === 503 ? '招待コードが設定されていません（Vercel の BC_INVITE_CODE）' : adminError(r);
+    });
     return box;
   }
 
