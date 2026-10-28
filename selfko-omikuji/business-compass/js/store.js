@@ -21,7 +21,17 @@
       } catch (e) { return null; }
     },
     save: function (state) {
-      try { window.localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 保存できない環境でも動作は続ける */ }
+      try { window.localStorage.setItem(KEY, JSON.stringify(state)); return true; } catch (e) { return false; /* 保存できない環境でも動作は続ける（画面で警告） */ }
+    },
+    /* この端末（ブラウザ）に保存できるか。プライベートブラウズや Cookie をブロックする設定では保存できないことがある */
+    probe: function () {
+      try {
+        var k = KEY + ':probe';
+        window.localStorage.setItem(k, '1');
+        var ok = window.localStorage.getItem(k) === '1';
+        window.localStorage.removeItem(k);
+        return ok;
+      } catch (e) { return false; }
     },
     clear: function () {
       try { window.localStorage.removeItem(KEY); } catch (e) {}
@@ -41,6 +51,12 @@
   var adapter = localAdapter;
   var state = blank();
   var timer = null;
+  var storageOk = true;
+  function setStorageOk(ok) {
+    if (ok === storageOk) return;
+    storageOk = ok;
+    try { window.dispatchEvent(new CustomEvent('bc:storage', { detail: { ok: ok } })); } catch (e) {}
+  }
 
   function merge(saved) {
     var s = blank();
@@ -56,12 +72,17 @@
     clearTimeout(timer);
     timer = null;
     state.updatedAt = new Date().toISOString();
-    adapter.save(state);
+    setStorageOk(adapter.save(state) !== false);
   }
 
   window.BCStore = {
     use: function (next) { adapter = next; },
-    init: function () { state = merge(adapter.load()); return state; },
+    init: function () {
+      state = merge(adapter.load());
+      storageOk = adapter.probe ? adapter.probe() : true;
+      return state;
+    },
+    get storageOk() { return storageOk; },
     get state() { return state; },
 
     answer: function (key) { return state.answers[key]; },

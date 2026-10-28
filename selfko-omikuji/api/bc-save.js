@@ -2,6 +2,8 @@
    POST /api/bc-save — 回答の保存（途中保存と「回答をななえに送る」）
    ---------------------------------------------------------------------
    ・招待コード（環境変数 BC_INVITE_CODE）が一致したときだけ受け付けます。
+     全角／半角・大文字／小文字・空白・「+」の違いはそろえてから比べます（_bc.js の normalizeInvite）。
+   ・テスト用リンク（?test=1）から送られた回答には test: true を付け、裏カルテで「テスト」と表示します。
    ・初回は回答者ID と 回答者だけが持つ秘密のトークン を発行します。
      2回目以降は同じIDとトークンで上書きするので、回答者は増えません。
    ・トークンはハッシュ化して保存し、元の値は回答者の端末にだけ残ります。
@@ -19,12 +21,12 @@ function int(v, max) { const n = Math.floor(Number(v)); return Number.isFinite(n
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); return bc.send(res, 405, { error: 'method_not_allowed' }); }
   try {
-    const invite = process.env.BC_INVITE_CODE;
+    const invite = bc.normalizeInvite(process.env.BC_INVITE_CODE);
     if (!invite) return bc.send(res, 503, { error: 'not_configured' });
     if (!(await bc.rateLimit('save', req, 60, 60))) return bc.send(res, 429, { error: 'too_many_requests' });
 
     const body = await bc.readJson(req, LIMIT_BYTES);
-    if (!bc.safeEqual(String(body.invite || ''), invite)) return bc.send(res, 403, { error: 'invite' });
+    if (!bc.safeEqual(bc.normalizeInvite(String(body.invite || '')), invite)) return bc.send(res, 403, { error: 'invite' });
     if (body.consent !== true) return bc.send(res, 400, { error: 'consent' });
 
     const answers = body.answers;
@@ -53,6 +55,7 @@ module.exports = async function handler(req, res) {
     }
 
     record.name = clip(answers['profile.name'], 80).trim();
+    if (body.test === true) record.test = true;
     record.answers = answers;
     record.answered = int(body.answered, 1000);
     record.total = int(body.total, 1000);

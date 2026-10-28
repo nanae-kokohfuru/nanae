@@ -14,6 +14,7 @@
    GET  ?action=list        回答者一覧（名前・状況・送信日時・最終更新）
    GET  ?action=get&id=...  1人分の回答
    GET  ?action=status      保存先の接続確認
+   GET  ?action=invite      招待コード（ログイン済みのときだけ。裏カルテで招待リンクを作るため）
    POST { action: 'delete', id }  回答者の削除
    ===================================================================== */
 
@@ -29,7 +30,8 @@ function summary(r) {
   return {
     id: r.id, name: r.name || '', status: r.status || 'in_progress',
     answered: r.answered || 0, total: r.total || 0,
-    createdAt: r.createdAt || null, updatedAt: r.updatedAt || null, submittedAt: r.submittedAt || null
+    createdAt: r.createdAt || null, updatedAt: r.updatedAt || null, submittedAt: r.submittedAt || null,
+    test: r.test === true
   };
 }
 
@@ -104,6 +106,12 @@ module.exports = async function handler(req, res) {
       const pong = await bc.redis(['PING']);
       return bc.send(res, 200, { ok: true, storage: pong === 'PONG', storageVars: bc.storageVarNames(), invite: !!process.env.BC_INVITE_CODE,
         adminVars: Object.keys(process.env).filter((k) => k === 'BC_ADMIN_PASSPHRASE' || /^BC_.*PASS/i.test(k)).sort() });
+    }
+
+    if (action === 'invite' && req.method === 'GET') {
+      const code = String(process.env.BC_INVITE_CODE || '').trim();
+      if (!code) return bc.send(res, 503, { error: 'invite_not_configured' });
+      return bc.send(res, 200, { code: code });
     }
 
     if (action === 'list' && req.method === 'GET') {

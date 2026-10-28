@@ -1248,3 +1248,16 @@ body[data-tone="stone"] { background: var(--stone); }
   .cmp__block, .cmp__product, .cmp__fact, .cmp__entry { break-inside: avoid; }
   .cmp__overview { grid-template-columns: 1fr; padding: 16px 0 24px; }
 }
+
+/* =====================================================================
+   保存の状態のお知らせ（画面上部）・招待リンクなしの表紙の注記
+   ===================================================================== */
+.bc-notice { position: relative; z-index: 5; padding: 12px 16px; background: #F6E7DF; border-bottom: 1px solid rgba(154, 79, 50, .35); }
+.bc-notice[hidden] { display: none; }
+.bc-notice__item { max-width: 720px; margin: 0 auto; padding-left: 14px; border-left: 2px solid var(--terracotta); font-size: 13px; line-height: 1.9; color: var(--ink); word-break: auto-phrase; }
+.bc-notice__item + .bc-notice__item { margin-top: 10px; }
+.bc-notice__item.is-test { border-left-color: var(--gold); color: var(--ink-soft); }
+.bc-notice:has(.is-test:only-child) { background: var(--paper); border-bottom-color: var(--line); }
+.cover__note { margin-top: 22px; font-size: 12px; line-height: 1.9; color: var(--on-dark-soft); word-break: auto-phrase; }
+.fin__copy { font-size: 13px; }
+@media print { .bc-notice { display: none !important; } }
