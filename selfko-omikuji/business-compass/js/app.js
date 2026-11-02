@@ -570,7 +570,8 @@
         el('p', { class: 'fin__count' }, c.count + '　', el('strong', { text: String(totalAnswered()) }), ' / ' + TOTAL)),
       el('div', { class: 'fin__ctas' },
         compassCta(c),
-        invited ? sendCta(c) : keepPanel(c)),
+        invited ? sendCta(c) : null,
+        keepPanel(c, invited)),
       el('div', { class: 'fin__links' },
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'),
         invited ? el('button', { type: 'button', class: 'text-btn fin__copy', onclick: downloadJSON }, C.send.keepCopy) : null,
@@ -645,17 +646,23 @@
     return el('div', { class: 'fin__send' }, btn, status, hint, done);
   }
 
-  /* 招待リンクなしで開いた人：回答を手元に残す（印刷・回答データの書き出し） */
-  function keepPanel(c) {
+  /* 回答を手元に残す：印刷・PDF（招待リンクの有無にかかわらず表示）
+     招待リンクなしの人には、これまでどおり回答データの書き出しも出す */
+  function keepPanel(c, invited) {
     return el('div', { class: 'fin__keep' },
       el('p', { class: 'fin__keep-title', text: c.keepTitle }),
-      el('p', { class: 'fin__keep-body', text: c.keepBody }),
+      el('p', { class: 'fin__keep-body', text: invited ? c.keepBodyInvited : c.keepBody }),
       el('div', { class: 'fin__keep-actions' },
-        el('button', { type: 'button', class: 'btn-line', onclick: function () {
-          go('compass', { instant: true });
-          setTimeout(function () { window.print(); }, 300);
-        } }, C.compass.print),
-        el('button', { type: 'button', class: 'btn-line', onclick: downloadJSON }, '回答データを書き出す')));
+        el('button', { type: 'button', class: 'btn-line fin__print', onclick: printAnswers }, C.compass.print),
+        invited ? null : el('button', { type: 'button', class: 'btn-line', onclick: downloadJSON }, '回答データを書き出す')));
+  }
+
+  /* 印刷・PDFで保存：80問すべての回答（私の回答）の画面にしてから、すぐに印刷画面を開く
+     ・回答は読むだけ。保存されている回答には触れない（画面の位置だけが「私の回答」になる）
+     ・iPhone の Safari でも印刷画面が開くよう、ボタンを押した流れのまま（待たずに）呼ぶ */
+  function printAnswers() {
+    go('mine', { instant: true });
+    try { window.print(); } catch (e) { /* 印刷できない環境でも画面はそのまま */ }
   }
 
   /* CTA の小さな線画（画像ファイルを使わない） */
@@ -888,7 +895,7 @@
           el('span', { class: 'cmp__all-label', text: c.all }), el('span', { class: 'cmp__all-arrow', 'aria-hidden': 'true', text: '→' })),
         el('div', { class: 'cmp__foot-links' },
           el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, '← ' + c.back),
-          remoteOn() ? null : el('button', { type: 'button', class: 'text-btn', onclick: function () { window.print(); } }, c.print),
+          el('button', { type: 'button', class: 'text-btn', onclick: printAnswers }, c.print),
           el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ'))),
       copyright()));
     return s;
@@ -1024,9 +1031,11 @@
         el('p', { class: 'eyebrow', text: 'MY ANSWERS' }),
         heading('h1', C.send.mineTitle, 'page__title'),
         el('p', { class: 'mine__meta' }, (name ? name + ' さん　' : '') + '記入した問い ' + totalAnswered() + ' / ' + TOTAL),
+        el('p', { class: 'mine__printed', text: '作成　' + formatDateTime(new Date().toISOString()) }),
         el('p', { class: 'page__lead', text: C.send.mineLead })),
       karteNode(),
       el('div', { class: 'final__actions' },
+        el('button', { type: 'button', class: 'btn-line mine__print', onclick: printAnswers }, C.compass.print),
         el('button', { type: 'button', class: 'btn-line', onclick: function () { go('compass'); } }, '← 骨子へ戻る'),
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('final'); } }, '完了画面へ'),
         el('button', { type: 'button', class: 'text-btn', onclick: function () { go('index'); } }, '目次へ')),
@@ -1048,7 +1057,9 @@
       lastSec = secKey;
       var sum = F.get(q.type).summarize(q, getter);
       out.push(el('div', { class: 'karte__entry' + (q.feature ? ' is-feature' : '') + (sum ? '' : ' is-empty') },
-        el('dt', { class: 'karte__q', text: q.label || q.title.replace(/\n/g, '') }),
+        el('dt', { class: 'karte__q' },
+          el('span', { class: 'karte__qno', text: 'Q' + pad(questionNo[q.id]) }), q.label || q.title.replace(/\n/g, ''),
+          q.title && q.label ? el('span', { class: 'karte__qtitle', text: q.title.replace(/\n/g, '') }) : null),
         el('dd', { class: 'karte__a' }, summaryNode(sum))));
     });
     return out;

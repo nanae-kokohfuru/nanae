@@ -1261,3 +1261,16 @@ body[data-tone="stone"] { background: var(--stone); }
 .cover__note { margin-top: 22px; font-size: 12px; line-height: 1.9; color: var(--on-dark-soft); word-break: auto-phrase; }
 .fin__copy { font-size: 13px; }
 @media print { .bc-notice { display: none !important; } }
+
+/* ---------- 印刷・PDF（80問すべての回答）---------- */
+.karte__qno { margin-right: 10px; font-family: var(--en); font-size: 13px; letter-spacing: .06em; color: var(--gold-ink); }
+.karte__qtitle { display: none; }
+.mine__printed { margin-top: 4px; font-size: 12px; color: var(--ink-mute); letter-spacing: .06em; }
+.fin__send + .fin__keep { margin-top: 4px; }
+@media print {
+  .mine__print, .copyright { display: none !important; }
+  .karte__chapter { break-inside: auto; }
+  .karte__entry { break-inside: avoid; }
+  .karte__qtitle { display: block; margin-top: 2px; font-size: 11.5px; font-weight: 400; letter-spacing: .04em; color: var(--ink-soft); }
+  .karte__entry.is-empty .karte__a { color: var(--ink-mute); }
+}
